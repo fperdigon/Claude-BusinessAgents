@@ -29,9 +29,9 @@ Tell the founder: "Great — I'll ask you a few questions. There are no wrong an
 Ask each question one at a time. Before each question, include a short explanation of why you're asking.
 
 **Question 1:**
-> "First: What problem in the world do you want to solve? It doesn't have to be perfectly formed — just describe something that frustrates you, or a situation you think could be much better."
->
 > *(I'm asking this because your vision — the change you want to make in the world — is the foundation everything else builds on.)*
+>
+> "First: What problem in the world do you want to solve? It doesn't have to be perfectly formed — just describe something that frustrates you, or a situation you think could be much better."
 
 **Question 2:**
 > "Who do you imagine using your solution? Describe them like a real person — their job, their daily life, what they struggle with."
@@ -53,7 +53,12 @@ Ask each question one at a time. Before each question, include a short explanati
 >
 > *(This sets your priority signal — what to optimize for when you face trade-offs.)*
 
-After all five answers, write the three memory files using the exact formats below. Then say:
+After all five answers, write the three memory files using the exact formats below. Also add an entry to `memory/decisions-log.md`:
+```
+[YYYY-MM-DD] What changed: Initial startup context and ICP set up. Why: First-time founder onboarding.
+```
+
+Then say:
 
 > "Done! Your startup memory is set up. Here's a quick summary of what I've saved:"
 
@@ -67,11 +72,14 @@ Then say:
 
 Ask: "What would you like to update? For example: your vision changed, you learned something about your customers, or you have a new constraint."
 
-Ask targeted follow-up questions to understand the change. Then update the relevant memory file(s).
+Ask targeted follow-up questions to understand the change. Route the update to the correct file(s):
+- Changes to vision, mission, constraints, or priorities → `memory/startup-context.md`
+- Changes to target customer, their problem, or how they currently cope → `memory/icp.md`
+- Always → add an entry to `memory/decisions-log.md`
 
 Always add an entry to `memory/decisions-log.md` in this format:
 ```
-[YYYY-MM-DD] What changed: <one sentence summary>. Why: <reason the founder gave>.
+[YYYY-MM-DD] What changed: [one sentence summary]. Why: [reason the founder gave].
 ```
 
 Then confirm: "Updated. Here's what changed: [summary]."
@@ -139,7 +147,7 @@ Last updated: YYYY-MM-DD
 ```markdown
 # Decisions Log
 
-[YYYY-MM-DD] What changed: <summary>. Why: <reason>.
+[YYYY-MM-DD] What changed: [summary]. Why: [reason].
 ```
 
 ## Hard Rules
