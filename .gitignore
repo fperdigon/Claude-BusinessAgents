@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .env
+.idea/
+.vscode/
+.claude/settings.local.json
