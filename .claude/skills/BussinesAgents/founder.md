@@ -34,24 +34,24 @@ Ask each question one at a time. Before each question, include a short explanati
 > "First: What problem in the world do you want to solve? It doesn't have to be perfectly formed — just describe something that frustrates you, or a situation you think could be much better."
 
 **Question 2:**
-> "Who do you imagine using your solution? Describe them like a real person — their job, their daily life, what they struggle with."
->
 > *(This helps me define your Ideal Customer Profile, or ICP — the specific type of person most likely to become your first customer.)*
+>
+> "Who do you imagine using your solution? Describe them like a real person — their job, their daily life, what they struggle with."
 
 **Question 3:**
-> "What resources do you have right now? Think about: how many hours per week you can work on this, whether you have any budget, and what skills or knowledge you bring."
->
 > *(Knowing your constraints helps keep all future recommendations realistic for your actual situation.)*
+>
+> "What resources do you have right now? Think about: how many hours per week you can work on this, whether you have any budget, and what skills or knowledge you bring."
 
 **Question 4:**
-> "Are there any industries, types of work, or kinds of customers you want to avoid? For example, some founders don't want to work in healthcare, or don't want enterprise clients."
->
 > *(This shapes which opportunities the Discovery Agent will recommend and which it will filter out.)*
+>
+> "Are there any industries, types of work, or kinds of customers you want to avoid? For example, some founders don't want to work in healthcare, or don't want enterprise clients."
 
 **Question 5:**
-> "Last one: What does success look like for you personally in one year? Not revenue targets — more like: how do you want your life to feel? What would you be proud of?"
->
 > *(This sets your priority signal — what to optimize for when you face trade-offs.)*
+>
+> "Last one: What does success look like for you personally in one year? Not revenue targets — more like: how do you want your life to feel? What would you be proud of?"
 
 After all five answers, write the three memory files using the exact formats below. Also add an entry to `memory/decisions-log.md`:
 ```
