@@ -47,7 +47,7 @@ When required information is missing, insert a placeholder in this exact format:
 
 Show the document in chat first, then save it to `outputs/docs/<document-name>-<YYYY-MM-DD>.md`.
 
-Tell the founder: "Here's your [document name]. Placeholders show where more information is needed — you can fill those in after your next discovery or validation session."
+Tell the founder: "Here's your [document name]. Placeholders show where more information is needed — run `/BussinesAgents:discover` or `/BussinesAgents:validate` to gather that information, then come back here to update the document."
 
 ### Vision & Mission Statement
 
@@ -147,9 +147,9 @@ Tell the founder: "Here's your [document name]. Placeholders show where more inf
 
 **The Problem:** [1-2 sentences]
 **Our Solution:** [1-2 sentences]
-**Market Size:** [TAM/SAM numbers if available, or PLACEHOLDER]
+**Market Size:** [PLACEHOLDER: market size not yet researched — run /BussinesAgents:discover]
 **Business Model:** [How you make money]
-**Traction:** [Any validation evidence from output files, or PLACEHOLDER]
+**Traction:** [PLACEHOLDER: no validation data yet — run /BussinesAgents:validate]
 **Team:** [PLACEHOLDER: team description]
 **Ask:** [PLACEHOLDER: funding amount and use of funds]
 
@@ -175,7 +175,7 @@ Date: YYYY-MM-DD
 [From icp.md and discovery reports]
 
 ## Business Model
-[How you make money — PLACEHOLDER if not yet defined]
+[PLACEHOLDER: revenue model not yet defined]
 
 ## Go-to-Market Strategy
 [How you'll reach your first customers]
@@ -191,6 +191,124 @@ Date: YYYY-MM-DD
 
 ## What We Need
 [PLACEHOLDER: funding ask and use of funds]
+```
+
+### Go-to-Market Strategy
+
+```markdown
+# Go-to-Market Strategy
+
+## Target Customer
+[Who you're targeting first — from ICP]
+
+## Channels
+[How you'll reach them — e.g., LinkedIn outreach, content marketing, cold email]
+
+## First 30 Days
+[Specific actions to take in the first month]
+
+## First Customer Milestone
+[What "first customer" looks like and how you'll get there]
+
+## Metrics to Track
+[What you'll measure — e.g., signups, conversations, conversions]
+```
+
+### MVP Feature Specification
+
+```markdown
+# MVP Feature Specification
+
+## Core Problem Being Solved
+[One sentence]
+
+## Must-Have Features (without these, the product doesn't work)
+- [Feature 1]: [What it does and why it's essential]
+- [Feature 2]: [What it does and why it's essential]
+
+## Out of Scope for MVP (deliberately excluded)
+- [Feature]: [Why it's excluded — adding this later is fine]
+
+## Success Criteria for MVP Launch
+[How you'll know the MVP is ready to ship]
+```
+
+### Customer Journey Map
+
+```markdown
+# Customer Journey Map
+
+| Stage | What the Customer Does | What They Feel | Your Touchpoint |
+|-------|----------------------|----------------|-----------------|
+| Awareness | [How they discover the problem exists] | [Emotion] | [Your action] |
+| Consideration | [How they evaluate options] | [Emotion] | [Your action] |
+| Decision | [How they decide to try your solution] | [Emotion] | [Your action] |
+| Onboarding | [First steps with the product] | [Emotion] | [Your action] |
+| Retention | [Ongoing use and value] | [Emotion] | [Your action] |
+```
+
+### Financial Projections Template
+
+```markdown
+# Financial Projections Template
+
+## Revenue Model
+[PLACEHOLDER: how you charge — subscription, one-time, usage-based]
+
+## Year 1 Assumptions
+- Customers by end of year: [PLACEHOLDER: target number]
+- Average revenue per customer/month: [PLACEHOLDER: price point]
+- **Estimated Year 1 Revenue:** [PLACEHOLDER: calculation]
+
+## Key Costs
+- [Cost category 1]: [PLACEHOLDER: estimated monthly amount]
+- [Cost category 2]: [PLACEHOLDER: estimated monthly amount]
+
+## Break-Even Point
+[PLACEHOLDER: estimated month when revenue covers costs]
+
+*Fill in the placeholders above after defining your pricing and customer targets.*
+```
+
+### Competitive Landscape Summary
+
+```markdown
+# Competitive Landscape Summary
+
+## Direct Competitors (solving the same problem the same way)
+
+| Competitor | What They Do | Price | Key Weakness |
+|------------|--------------|-------|--------------|
+| [Name] | [Description] | [PLACEHOLDER: price] | [Gap they leave] |
+| [Name] | [Description] | [PLACEHOLDER: price] | [Gap they leave] |
+
+## Indirect Competitors (alternative ways customers solve the problem today)
+- [Alternative]: [How customers use it and why it falls short]
+
+## Our Differentiation
+[What makes our approach better for our specific target customer — 2-3 sentences]
+```
+
+### Market Size Breakdown (TAM/SAM/SOM)
+
+```markdown
+# Market Size Breakdown
+
+*TAM = Total Addressable Market: everyone who could theoretically benefit*
+*SAM = Serviceable Addressable Market: the segment you can realistically reach*
+*SOM = Serviceable Obtainable Market: what you can realistically capture in 3 years*
+
+## TAM (Total Addressable Market)
+[PLACEHOLDER: total market size — e.g., "5 million freelancers in the US"]
+
+## SAM (Serviceable Addressable Market)
+[PLACEHOLDER: segment you're targeting — e.g., "500K freelancers who use invoicing software"]
+
+## SOM (Serviceable Obtainable Market)
+[PLACEHOLDER: realistic 3-year capture — e.g., "5K customers = 1% of SAM"]
+
+## Source / Assumptions
+[PLACEHOLDER: where these numbers come from — run /BussinesAgents:discover for market research data]
 ```
 
 ## Slide Generation
@@ -308,12 +426,13 @@ Use this base HTML template and fill in the slide content:
 
 Save to: `outputs/slides/<presentation-name>-<YYYY-MM-DD>.html`
 
-Tell the founder: "Slides saved to `outputs/slides/[filename].html`. Open that file in any browser to present. Use arrow keys or the on-screen buttons to navigate."
+Tell the founder: "Slides saved to `outputs/slides/[filename].html`. Open that file in any browser to present. Use arrow keys or the on-screen buttons to navigate. When you have more information, run `/BussinesAgents:docs` again to update it."
 
 ## Hard Rules
 
 - Read all memory files and all outputs before generating anything
 - Explain every document type before generating it (one sentence description)
+- Ask one question at a time
 - Always ask all 4 questions before generating slides — never skip or combine them
 - Explanation comes BEFORE each slide question, not after
 - Use `[PLACEHOLDER: description]` for any missing information — never invent facts
