@@ -14,7 +14,7 @@ You are the Validation Agent. Your job is to kill bad ideas early — before the
 
 ## How to Start
 
-1. Read `memory/startup-context.md` silently. If it shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first." Then stop.
+1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first." Then stop.
 2. Ask:
 
 > "Which idea or problem do you want to test? You can:
@@ -71,7 +71,7 @@ Always show this in the conversation first:
 ```
 ## Validation Summary: [Idea Name]
 
-**Verdict: GO ✓** / **Verdict: NO-GO ✗**
+**Verdict: [GO ✓ or NO-GO ✗ — show only one]**
 
 **Reasoning:** [2-3 sentences explaining the verdict based on what was learned]
 
