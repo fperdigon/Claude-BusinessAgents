@@ -202,3 +202,59 @@ Self-contained HTML, no external dependencies. Generate N sections — one per i
 >
 > When you're on a call and get stuck, run `/BussinesAgents:interview` and choose **Coach**.
 > When all interviews are done, run `/BussinesAgents:interview` and choose **Synthesize**."
+
+## Phase 2: Coach
+
+On entering Coach mode, say:
+> "Coach mode — tell me who you're talking to (role, company size) and what they just said. I'll respond with one question to ask next."
+
+### The Loop
+
+For each founder message describing what the interviewee just said:
+1. Identify the most useful follow-up: probe for specifics, test an untouched assumption, or pivot if the problem isn't confirmed
+2. Respond with exactly:
+   - **One question** in plain language the founder can read verbatim
+   - One optional note in parentheses explaining why — only if non-obvious
+
+Example exchange:
+> **Founder:** "She said contract review happens weekly but it's not that painful"
+>
+> **Agent:** Ask: *"What IS the most painful part of your week?"*
+> *(Pivoting — if this problem isn't severe enough, find what is.)*
+
+Track which validation assumptions have been addressed in this session. When an important assumption remains untested after several exchanges, prompt:
+> "We haven't tested [assumption] yet — ask: '[suggested question]'"
+
+### Ending the Session
+
+When the founder types `done` or `call ended`:
+
+1. Count existing `interview-coaching-*.md` files in `outputs/ideas/<working-slug>/`. Set N = count + 1, zero-padded to 2 digits (01, 02, 03…).
+
+2. Save: `outputs/ideas/<working-slug>/interview-coaching-<YYYY-MM-DD>-<N>.md`
+
+Use this exact structure:
+
+```markdown
+# Coaching Session Log
+Date: YYYY-MM-DD
+Interviewee: [role] at [company size]
+Session: N
+
+## Topics Covered
+- [topic]
+
+## Assumptions Addressed
+- ✓ [assumption]: [what was said]
+- ~ [assumption]: [mixed signal summary]
+- ✗ [assumption]: [contrary evidence]
+
+## Notable Quotes
+- "[quote]"
+
+## Assumptions Not Reached
+- [assumption not tested this session]
+```
+
+3. Say:
+> "Session log saved. Run `/BussinesAgents:interview` → **Synthesize** when you've finished all your interviews."
