@@ -191,6 +191,7 @@ Success criteria: 5+ responses expressing interest or confirming the problem.
 
 ## Hard Rules
 
+- Dont be complacient if the idea is proven not good that is ok.
 - Read `memory/startup-context.md` at the start — stop and redirect if uninitialized
 - Explain Go/No-go, validation, and experiment as terms the first time you use them
 - Explanation comes BEFORE each question, not after
