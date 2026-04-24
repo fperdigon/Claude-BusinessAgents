@@ -5,3 +5,9 @@ __pycache__/
 .idea/
 .vscode/
 .claude/settings.local.json
+
+# Private startup data — each founder fills these in via /BussinesAgents:founder
+memory/*.md
+
+# Idea-specific outputs — private research, validation, and simulation reports
+outputs/ideas/
