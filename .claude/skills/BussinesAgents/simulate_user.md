@@ -52,8 +52,7 @@ If no output files exist:
 Wait for confirmation or description.
 
 **Question 3 — Choose situations:**
-> *(I need to know which real moments in your user's day we're going to simulate — the more specific, the more convincing the result.)*
->
+*(I need to know which real moments in your user's day we're going to simulate — the more specific, the more convincing the result.)*
 > "What are 2–3 real situations where your target user runs into this problem? For example: 'when onboarding a new client', 'when preparing for a deadline', or 'during a weekly team review.'
 >
 > If you're not sure, just say 'suggest' and I'll research some common ones for this role."
@@ -62,8 +61,10 @@ If the founder says "suggest":
 - Use web search to find 3–4 common workflow pain points for this role and industry.
 - Present them as a numbered list and ask the founder to pick 2–3.
 
+If the founder provides fewer than 2 situations, say: "To make the simulation useful, it helps to look at 2 or 3 different moments where the problem shows up — that way you can show a range of benefits. Can you think of one more situation, or would you like me to suggest one?"
+
 **Question 4 — Per-situation clarification (only if needed):**
-For each situation, before generating the simulation, attempt web search first (see Research Phase below). Only ask this question if web search does not give enough detail about the workflow:
+For each situation, before generating the simulation, attempt web search first (see Research Phase below). Only ask this question if web search returns fewer than 3 concrete, specific workflow steps for the situation (e.g., vague results like "lawyers review documents" do not count — you need step-level specifics like "opens email attachment, copies key dates into case management system, flags discrepancies manually"):
 > "Can you walk me through how [persona role] currently handles [situation name]? Even a rough description helps — I'll fill in the details."
 
 ## Research Phase
@@ -168,6 +169,8 @@ After completing Steps A–D for all situations, generate a summary:
 
 ### Full Report
 
+Use today's date (from the system) for all file names.
+
 Save to: `outputs/simulation-<persona-role>-<YYYY-MM-DD>.md`
 
 Use a short, descriptive persona role name (e.g., `paralegal`, `project-manager`, `freelance-designer`).
@@ -202,9 +205,17 @@ Date: YYYY-MM-DD
 | Review | ... |
 | Hand off | ... |
 
-#### Task-level detail: [Most painful phase]
+#### Task-level detail: [Most painful phase — or two if both are significantly painful]
+*Drill into the 1–2 phases that are most time-consuming or error-prone. Repeat this block if drilling two phases.*
+
+**[Phase name] — current steps:**
 1. [step]
 2. [step]
+...
+
+*(Optional — include only if a second phase also warrants task-level detail)*
+**[Second phase name] — current steps:**
+1. [step]
 ...
 
 ### After (with [solution name])
@@ -217,9 +228,17 @@ Date: YYYY-MM-DD
 | Review | ... |
 | Hand off | ... |
 
-#### Task-level detail: [Same phase — improved]
+#### Task-level detail: [Most painful phase — or two if both are significantly painful]
+*Repeat this block if two phases were drilled in the Before section.*
+
+**[Phase name] — steps with [solution name]:**
 1. [step]
 2. ✓ [eliminated step — handled automatically]
+...
+
+*(Optional — include only if a second phase was drilled above)*
+**[Second phase name] — steps with [solution name]:**
+1. [step]
 ...
 
 ### Benefits for this situation
@@ -263,6 +282,8 @@ Date: YYYY-MM-DD
 Save to: `outputs/simulation-<persona-role>-onepager-<YYYY-MM-DD>.md`
 
 Plain language, no jargon. This file is designed to be shared with real end users.
+
+For each situation in the one-pager, pick the 3 most impactful benefits from Step D. Translate each into a single plain-language sentence — no metrics, no jargon. Focus on what the end user *feels* (e.g., "No more manually copying from three different tabs" rather than "Reduces data consolidation time by 40%").
 
 ```markdown
 # What [Solution Name] Could Change for [Role]
@@ -308,7 +329,7 @@ Always show this in the conversation before mentioning the saved files:
 2. [Benefit]
 3. [Benefit]
 
-**Key talking point:**
+**Key talking point:** *(pick the one that names the most time saved or the most vivid pain eliminated)*
 "[One sentence the founder can use verbatim with a potential user]"
 
 Full report saved to: outputs/simulation-<persona>-<YYYY-MM-DD>.md
