@@ -258,3 +258,116 @@ Session: N
 
 3. Say:
 > "Session log saved. Run `/BussinesAgents:interview` → **Synthesize** when you've finished all your interviews."
+
+## Phase 3: Synthesize
+
+Load all `interview-coaching-*.md` files in `outputs/ideas/<working-slug>/`.
+
+Say:
+> "I can see [N] coaching session log(s) for **[slug]**. Do you have additional notes to add — from interviews where you didn't use Coach mode, or anything else? Paste them here, or say 'no' to proceed."
+
+Wait for the founder's response. Then run the full analysis.
+
+### Analysis
+
+Produce a structured cross-interview analysis covering all of these sections:
+
+**Assumptions audit** — for each assumption from the validation report:
+- `✓ Confirmed` — how many interviewees supported it and what they said
+- `✗ Busted` — contradicting evidence with specifics
+- `~ Partial` — mixed signals with explanation
+
+**New findings** — patterns that emerged outside the original assumptions
+
+**ICP refinement signals** — specific things interviewees said that suggest changes to role, pain, workaround, or willingness to pay in `memory/icp.md`
+
+**Top 3 quotes** — most useful verbatim quotes across all interviews
+
+### ICP Update Step
+
+For each ICP refinement signal found, present specific proposed edits before writing anything:
+
+> "Based on your interviews, here's what I think should change in your ICP:
+>
+> — [Field]: '[current value]' → '[proposed value]' ([evidence: N of M interviewees said…])
+>
+> Confirm and I'll update `memory/icp.md` and log the changes — same way `/BussinesAgents:founder` would. Or say 'skip' to leave the ICP unchanged."
+
+Wait for the founder's response.
+
+If confirmed:
+1. Write the updates to `memory/icp.md`
+2. Update `Last updated:` in `memory/icp.md` to today's date
+3. Add an entry to `memory/decisions-log.md`:
+```
+[YYYY-MM-DD] What changed: ICP updated after customer interviews (<working-slug>). Why: [one-sentence summary of what interviews revealed].
+```
+
+### Output File
+
+Save to: `outputs/ideas/<working-slug>/interview-insights-<YYYY-MM-DD>.md`
+
+Use this exact structure:
+
+```markdown
+# Interview Insights: [Idea Name]
+Date: YYYY-MM-DD
+Interviews conducted: N
+
+## Assumptions Audit
+
+### ✓ Confirmed
+- **[Assumption]:** [evidence from N of M interviews] — "[representative quote]"
+
+### ✗ Busted
+- **[Assumption]:** [contradicting evidence] — "[representative quote]"
+
+### ~ Partial
+- **[Assumption]:** [mixed signal explanation]
+
+## New Findings
+- [Finding]: [evidence]
+
+## ICP Refinement Signals
+- [Signal]: [what changed and why]
+
+## Top Quotes
+1. "[quote]" — [role], [company size]
+2. "[quote]" — [role], [company size]
+3. "[quote]" — [role], [company size]
+
+## Summary
+[3 sentences: what was learned, what changed, what to do next]
+```
+
+### Closing Message
+
+> "Insights saved. [If ICP was updated: 'Your ICP has been updated based on what you heard.']
+>
+> Next step: run `/BussinesAgents:simulate_user` for a refined simulation — this time grounded in what real users told you."
+
+---
+
+## Registry Update
+
+After saving `interview-insights-<YYYY-MM-DD>.md`:
+
+1. Find the entry for `<working-slug>` in `memory/ideas.md`.
+2. Set `**Status:**` to `interviewed`.
+3. Set the `Interview:` stage line to today's date.
+4. Update `Last updated:` at the top of `memory/ideas.md` to today's date.
+
+---
+
+## Hard Rules
+
+- Always read `memory/icp.md` and `memory/startup-context.md` at the start — stop and redirect to `/BussinesAgents:founder` if uninitialized
+- Only accept `validated-go` or `interviewed` ideas — never run on `discovered` or earlier statuses
+- Phase picker must check existing files before offering phases — never offer Coach or Synthesize if no script exists
+- Coach mode responses must be one question maximum — never multiple questions at once
+- In Synthesize, always propose ICP changes before writing them — never update `memory/icp.md` without explicit founder confirmation
+- Always log ICP changes to `memory/decisions-log.md` using the founder agent's entry format
+- Always produce `interview-insights-<date>.md` — never skip the synthesis output file
+- Always update `memory/ideas.md` after saving insights — set status to `interviewed` and record the date
+- Save all output files to `outputs/ideas/<working-slug>/` — never to the flat `outputs/` folder
+- Ask one question at a time in Prepare phase
