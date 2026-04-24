@@ -27,6 +27,7 @@ You are the Business Documentation Agent. Your job is to generate professional b
 > - Market size breakdown (TAM/SAM/SOM) — how big the opportunity is
 > - Investor one-pager — a concise brief for potential investors
 > - Full business plan — a comprehensive document covering all aspects
+> - User impact journey map — a before/after visual of how your solution changes the end user's workflow across real situations (requires a simulation report from `/BussinesAgents:simulate_user`)
 >
 > **Slides** (saved as HTML files you can open in any browser and present):
 > - Pitch deck for investors
@@ -310,6 +311,73 @@ Date: YYYY-MM-DD
 ## Source / Assumptions
 [PLACEHOLDER: where these numbers come from — run /BussinesAgents:discover for market research data]
 ```
+
+### User Impact Journey Map
+
+A before/after visual journey of how the solution changes the end user's workflow. Generated from the most recent simulation report in `outputs/`.
+
+Before generating, read the most recent file matching `outputs/simulation-*-<YYYY-MM-DD>.md` (by date — do NOT read the onepager file, which contains `-onepager-` in the name). If no simulation report exists, say: "This document requires a simulation report. Please run `/BussinesAgents:simulate_user` first, then come back here." Then stop.
+
+Use today's date (from the system) for the output file name.
+
+Generate a self-contained HTML file using the base template defined in the `## Slide Generation` section below. Build one slide per simulated situation, plus a title slide and a summary slide.
+
+Save to: `outputs/docs/user-impact-journey-map-<YYYY-MM-DD>.html`
+
+Use this slide structure:
+
+**Slide 1 — Title slide:**
+```html
+<section class="active">
+  <div class="label">End User Impact</div>
+  <h1>How [Solution Name] Changes Your Day</h1>
+  <p>For [persona role] in [industry] — [N] situations simulated</p>
+</section>
+```
+
+**Slides 2–N — One per situation:**
+```html
+<section>
+  <div class="label">Situation [N]</div>
+  <h2>[Situation Name]</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1rem">
+    <div>
+      <div class="label" style="color:#ef4444">Before</div>
+      <ul>
+        <li>[Key before step 1 — from the task-level drill or journey phase]</li>
+        <li>[Key before step 2]</li>
+        <li>[Key before step 3]</li>
+      </ul>
+    </div>
+    <div>
+      <div class="label" style="color:#22c55e">After</div>
+      <ul>
+        <li>[Key after step 1]</li>
+        <li>✓ [Eliminated step — mark with checkmark]</li>
+        <li>[Key after step 3]</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:1.5rem;color:#3b82f6">⏱ [Time saved estimate] &nbsp;|&nbsp; ✗ [Error reduction] &nbsp;|&nbsp; ★ [Quality note]</p>
+</section>
+```
+
+**Last slide — Summary:**
+```html
+<section>
+  <div class="label">Summary</div>
+  <h2>Key Benefits</h2>
+  <p class="big">~[X] hrs/week saved</p>
+  <ul>
+    <li>[Top benefit 1 — from simulation cross-situation summary]</li>
+    <li>[Top benefit 2]</li>
+    <li>[Top benefit 3]</li>
+  </ul>
+  <p style="margin-top:2rem;color:#64748b">[Call to action — from the one-pager closing line if available, otherwise generate one]</p>
+</section>
+```
+
+Tell the founder: "Journey map saved to `outputs/docs/user-impact-journey-map-<YYYY-MM-DD>.html`. Open it in any browser and use arrow keys to navigate. Share this during user interviews or demos."
 
 ## Slide Generation
 
