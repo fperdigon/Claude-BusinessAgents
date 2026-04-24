@@ -52,11 +52,33 @@ A system of five AI agents that guide a founder from raw idea to validated busin
 **Outputs:**
 - `outputs/validation-<idea-name>-<YYYY-MM-DD>.md` — evidence audit, assumptions, 3 experiments with success/failure criteria, and Go/No-go verdict.
 
-**Hands off to:** `/BussinesAgents:simulate_user` — run it after a Go verdict.
+**Hands off to:** `/BussinesAgents:simulate_user` — run it for a first hypothesis simulation, then run `/BussinesAgents:interview`.
 
 ---
 
-### 4. `/BussinesAgents:simulate_user` — End User Simulator
+### 4. `/BussinesAgents:interview` — Customer Interview Agent
+
+**Job:** Guide founders through the full interview lifecycle — generating a tailored script and tracking documents before calls, coaching live during calls, and synthesizing learnings into structured insights and ICP updates.
+
+**Reads:** `memory/startup-context.md`, `memory/icp.md` + the validation report
+
+**Three phases:**
+- **Prepare** — generates a tailored interview script, a CSV tracker (one row per interviewee), and a printable HTML interview sheet
+- **Coach** — live coaching during a call: founder describes what was said, agent responds with one follow-up question; saves a session log when the call ends
+- **Synthesize** — after all interviews, audits assumptions (confirmed / busted / partial), surfaces new findings, proposes specific ICP updates for the founder to confirm
+
+**Outputs:**
+- `outputs/ideas/<slug>/interview-script-<YYYY-MM-DD>.md`
+- `outputs/ideas/<slug>/interview-tracker-<YYYY-MM-DD>.csv`
+- `outputs/ideas/<slug>/interview-sheet-<YYYY-MM-DD>.html`
+- `outputs/ideas/<slug>/interview-coaching-<YYYY-MM-DD>-<N>.md` (one per session)
+- `outputs/ideas/<slug>/interview-insights-<YYYY-MM-DD>.md`
+
+**Hands off to:** `/BussinesAgents:simulate_user` — run it again after interviews for a refined simulation.
+
+---
+
+### 5. `/BussinesAgents:simulate_user` — End User Simulator
 
 **Job:** Show founders — and their potential customers — exactly how the solution changes a real person's daily work. Concrete, believable, shareable.
 
@@ -76,7 +98,7 @@ A system of five AI agents that guide a founder from raw idea to validated busin
 
 ---
 
-### 5. `/BussinesAgents:docs` — Business Documentation Agent
+### 6. `/BussinesAgents:docs` — Business Documentation Agent
 
 **Job:** Turn everything captured so far into polished business documents and presentations.
 
@@ -114,15 +136,19 @@ Missing information is marked `[PLACEHOLDER: description]` — never invented.
 ## Intended Flow
 
 ```
-1. /BussinesAgents:founder   →  Initialize memory (run once at the start)
+1. /BussinesAgents:founder        →  Initialize memory (run once at the start)
          ↓
-2. /BussinesAgents:discover  →  Find top 3 problems worth solving
+2. /BussinesAgents:discover       →  Find top 3 problems worth solving
          ↓
-3. /BussinesAgents:validate  →  Test the top problem. Get a Go/No-go verdict.
+3. /BussinesAgents:simulate_user  →  1st run: hypothesis — what do we think changes for the user?
+         ↓
+4. /BussinesAgents:validate       →  Test the top problem. Get a Go/No-go verdict.
          ↓ (Go)
-4. /BussinesAgents:simulate_user  →  Show how the solution changes the user's day
+5. /BussinesAgents:interview      →  Talk to real users. Refine the ICP.
          ↓
-5. /BussinesAgents:docs      →  Generate documents and pitch materials
+6. /BussinesAgents:simulate_user  →  2nd run: refined — what actually changes, based on real data
+         ↓
+7. /BussinesAgents:docs           →  Generate documents and pitch materials
 ```
 
 You can re-run any agent at any point:
@@ -150,6 +176,11 @@ outputs/
     <slug>/              ← one folder per product idea (slug = short lowercase name)
       opportunity-discovery-*.md          ← discovery report
       validation-*.md                     ← validation plan with Go/No-go verdict
+      interview-script-*.md               ← tailored interview question guide
+      interview-tracker-*.csv             ← spreadsheet to fill in during/after calls
+      interview-sheet-*.html              ← printable interview sheet
+      interview-coaching-*-*.md           ← per-session coaching log
+      interview-insights-*.md             ← synthesis: assumptions audit + ICP updates
       simulation-<persona>-*.md           ← end user simulation report
       simulation-<persona>-onepager-*.md  ← plain-language user-facing summary
       docs/
