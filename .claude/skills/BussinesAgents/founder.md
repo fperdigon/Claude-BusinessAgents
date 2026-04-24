@@ -18,7 +18,10 @@ Read all three memory files silently first. Then ask:
 >
 > 1. **Initialize** — Set everything up for the first time (takes about 5 minutes)
 > 2. **Update** — Change something that has evolved (your focus shifted, new constraint, etc.)
-> 3. **Review** — Show me a plain-language summary of where things stand"
+> 3. **Review** — Show me a plain-language summary of where things stand
+> 4. **New idea** — Register a new product or business idea to explore
+> 5. **List ideas** — See all registered ideas and their current status
+> 6. **Archive idea** — Mark an idea as no longer active so it stops appearing in agent menus"
 
 Wait for the founder's choice before doing anything else.
 
@@ -97,6 +100,68 @@ Read all three memory files. Summarize in plain language — no jargon without e
 
 Then ask: "Does anything need updating?"
 
+## Ideas Mode
+
+### New Idea
+
+Ask: "What's a short name for this idea? Use lowercase with hyphens — for example: `ai-legal-assistant` or `invoice-tool`. This becomes the folder name for all its files."
+
+Wait for the slug. Then ask: "Describe it in one sentence — what does it do and who does it help?"
+
+Then:
+
+1. Add an entry to `memory/ideas.md` using this exact format:
+
+```markdown
+## <slug>
+**Description:** [founder's one-sentence description]
+**Created:** [today's date]
+**Status:** new
+**Folder:** outputs/ideas/<slug>/
+**Stages:**
+- Discovery:   —
+- Validation:  —
+- Simulation:  —
+- Docs:        —
+```
+
+2. Update the `Last updated:` line at the top of `memory/ideas.md` to today's date.
+
+3. Add an entry to `memory/decisions-log.md`:
+```
+[YYYY-MM-DD] What changed: New idea registered — <slug>. Why: Founder wants to explore this opportunity.
+```
+
+4. Confirm: "Idea **<slug>** is registered. Your next step: run `/BussinesAgents:discover` to find and rank the real problems this idea could solve."
+
+### List Ideas
+
+Read `memory/ideas.md`. If it does not exist or contains no idea entries, say: "No ideas registered yet. Choose 'New idea' to register your first one."
+
+Otherwise, display all ideas in this table format:
+
+```
+| # | Idea | Description | Status | Discovery | Validation | Simulation | Docs |
+|---|------|-------------|--------|-----------|------------|------------|------|
+| 1 | [slug] | [description] | [status] | [date or —] | [verdict + date or —] | [date or —] | [date or —] |
+```
+
+Then ask: "Would you like to do anything else — update memory, archive an idea, or register a new one?"
+
+### Archive Idea
+
+Read `memory/ideas.md`. Show only non-archived ideas by number, slug, and description. Ask: "Which idea would you like to archive?"
+
+After the founder confirms:
+
+1. Update that idea's `**Status:**` to `archived` in `memory/ideas.md`.
+2. Update the `Last updated:` line at the top of `memory/ideas.md` to today's date.
+3. Add to `memory/decisions-log.md`:
+```
+[YYYY-MM-DD] What changed: Idea <slug> archived. Why: [reason the founder gave].
+```
+4. Confirm: "Idea **<slug>** is archived. It will no longer appear in agent menus, but its files remain in `outputs/ideas/<slug>/`."
+
 ## Memory File Formats
 
 When writing memory files, use these exact formats:
@@ -157,3 +222,5 @@ Last updated: YYYY-MM-DD
 - Explain any business term before using it
 - Ask only one question at a time
 - Do not do research, validation, or document generation — refer the founder to the appropriate agent
+- Never create output folders directly — downstream agents create their files when they first run for an idea
+- Always update the `Last updated:` date in `memory/ideas.md` whenever you modify it
