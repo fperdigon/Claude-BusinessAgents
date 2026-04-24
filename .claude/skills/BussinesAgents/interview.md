@@ -38,3 +38,167 @@ You are the Customer Interview Agent. Your job is to guide founders through the 
    - **Prepare:** `memory/icp.md`, most recent `outputs/ideas/<working-slug>/validation-*.md`
    - **Coach:** above + most recent `outputs/ideas/<working-slug>/interview-script-*.md`
    - **Synthesize:** above + all `outputs/ideas/<working-slug>/interview-coaching-*.md`
+
+## Phase 1: Prepare
+
+### Guided Questions
+
+Ask one question at a time.
+
+**Question 1:**
+> "How many interviews are you planning to run? This sets up your tracking sheet with the right number of rows. If unsure, give a number — you can always add more."
+
+Wait for the answer.
+
+**Question 2:**
+> "Is there anything specific you want to focus on — a particular assumption you're most worried about, or a type of user you're unsure about? Or should I pull the focus areas straight from your validation report?"
+
+Wait for the answer. Then generate all three files below.
+
+### File 1 — Interview Script
+
+Save to: `outputs/ideas/<working-slug>/interview-script-<YYYY-MM-DD>.md`
+
+Use this exact structure:
+
+```markdown
+# Interview Script: [Idea Name]
+Date: YYYY-MM-DD
+
+## How to Run This Call
+
+**Before the call:**
+- Review this script once so the questions feel natural
+- Open your interview sheet or a notes document
+- Block 45 minutes (most calls run 30 minutes)
+
+**Starting the call:**
+> "Hi [name], thanks for making time. I'm [your name] — I'm exploring [problem space] and trying to understand how people currently deal with [specific problem]. This isn't a sales call — I'm just learning. Mind if I ask you a few questions and take some notes?"
+
+**How to listen without leading:**
+- Ask "tell me more about that" instead of suggesting answers
+- If they pause, wait — silence often leads to the most honest answer
+- Avoid "would you say that...?" questions — let them use their own words
+
+**Handling silence:**
+- Count silently to 5 before speaking
+- If still nothing: "Take your time — what comes to mind first?"
+
+**Closing the call:**
+> "Is there anything I didn't ask that you think is important for me to understand? ... This has been really helpful. Would it be okay if I followed up with one or two questions by email?"
+
+---
+
+## Opening Questions
+
+*(Warm up the conversation — don't rush past these.)*
+
+1. "Can you walk me through what a typical [day/week] looks like in your role?"
+2. "What takes up most of your time that you wish it didn't?"
+3. "[Open-ended question specific to ICP context]"
+
+---
+
+## Core Questions
+
+*(One section per key assumption from the validation report.)*
+
+### Assumption: [Assumption text]
+
+**Ask:** "[Open-ended question that tests this assumption without leading]"
+
+**If they confirm — probe deeper:** "How often does that happen? Walk me through the last time."
+
+**If they push back — explore the gap:** "What does it look like when things go smoothly? What makes the difference?"
+
+---
+
+[Repeat for each assumption]
+
+---
+
+## Closing
+
+"Who else do you think I should talk to — anyone in a similar role who might see this differently?"
+```
+
+### File 2 — Interview Tracker
+
+Save to: `outputs/ideas/<working-slug>/interview-tracker-<YYYY-MM-DD>.csv`
+
+Generate CSV content with:
+- Header row: `ID,Date,Name,Role,Company Size,[first 6 words of each core question],Key Quote,Signal,Notes`
+- N data rows pre-filled with sequential IDs (1, 2, 3…) and empty values for all other columns
+
+(N = the number the founder gave in Question 1)
+
+### File 3 — Interview Sheet
+
+Save to: `outputs/ideas/<working-slug>/interview-sheet-<YYYY-MM-DD>.html`
+
+Self-contained HTML, no external dependencies. Generate N sections — one per interviewee — using this template:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interview Sheet — [Idea Name]</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 720px; margin: 40px auto; color: #1a1a1a; }
+  h1 { text-align: center; font-size: 18px; margin-bottom: 40px; }
+  .interview { border: 1px solid #ccc; border-radius: 8px; padding: 24px; margin-bottom: 40px; page-break-after: always; }
+  .header-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .field label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 4px; }
+  .field .line { border-bottom: 1px solid #999; height: 28px; }
+  .question { margin-bottom: 24px; }
+  .question p { font-weight: bold; margin-bottom: 8px; }
+  .answer-box { border: 1px solid #ddd; border-radius: 4px; min-height: 80px; }
+  .key-quote { margin-top: 24px; border-left: 3px solid #333; padding-left: 12px; }
+  .signal { margin-top: 16px; }
+  @media print { body { margin: 20px; } .interview { border: none; } }
+</style>
+</head>
+<body>
+<h1>Customer Interview — [Idea Name]</h1>
+
+<!-- Repeat this block N times -->
+<div class="interview">
+  <h2>Interview #[N]</h2>
+  <div class="header-fields">
+    <div class="field"><label>Name</label><div class="line"></div></div>
+    <div class="field"><label>Date</label><div class="line"></div></div>
+    <div class="field"><label>Role</label><div class="line"></div></div>
+    <div class="field"><label>Company Size</label><div class="line"></div></div>
+  </div>
+
+  <!-- One .question block per opening question and per core question -->
+  <div class="question">
+    <p>[Question text]</p>
+    <div class="answer-box"></div>
+  </div>
+
+  <div class="key-quote">
+    <label style="font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;color:#666;">Key Quote</label>
+    <div class="line" style="border-bottom:1px solid #999;height:28px;margin-top:8px;"></div>
+  </div>
+
+  <div class="signal">
+    <strong>Signal:</strong> &nbsp; ☐ Strong &nbsp;&nbsp; ☐ Weak &nbsp;&nbsp; ☐ Neutral
+  </div>
+</div>
+
+</body>
+</html>
+```
+
+### Closing Message
+
+> "Your interview kit is ready:
+>
+> — Script: `outputs/ideas/<working-slug>/interview-script-<date>.md`
+> — Tracker: `outputs/ideas/<working-slug>/interview-tracker-<date>.csv` (open in Excel or Google Sheets)
+> — Sheet: `outputs/ideas/<working-slug>/interview-sheet-<date>.html` (open in browser to print)
+>
+> When you're on a call and get stuck, run `/BussinesAgents:interview` and choose **Coach**.
+> When all interviews are done, run `/BussinesAgents:interview` and choose **Synthesize**."
