@@ -17,6 +17,7 @@ Agents are organized around decisions a founder must make, not business departme
 | `/BussinesAgents:founder` | Startup memory manager + context keeper |
 | `/BussinesAgents:discover` | Opportunity research + problem ranking |
 | `/BussinesAgents:validate` | Idea validation + go/no-go recommendation |
+| `/BussinesAgents:simulate_user` | End user workflow simulation + benefit quantification |
 | `/BussinesAgents:docs` | Business document + slide generation |
 
 ---
@@ -67,6 +68,14 @@ BussinesAgents/
   reads  → memory/startup-context.md
            outputs/opportunity-discovery-*.md (user references a specific file)
   writes → outputs/validation-<idea-name>-<date>.md
+
+/BussinesAgents:simulate_user
+  reads  → memory/startup-context.md
+           memory/icp.md
+           outputs/validation-*.md (most recent by date — priority)
+           outputs/opportunity-discovery-*.md (fallback if no validation report)
+  writes → outputs/simulation-<persona>-<YYYY-MM-DD>.md
+           outputs/simulation-<persona>-onepager-<YYYY-MM-DD>.md
 
 /BussinesAgents:docs
   reads  → memory/ (all files)
@@ -244,9 +253,11 @@ Reads all files in `memory/` and all files in `outputs/`. For early runs with li
 
 1. Run `/BussinesAgents:founder` in **Initialize** mode — sets up all memory files
 2. Run `/BussinesAgents:discover` — research problems in your chosen space
-3. Run `/BussinesAgents:validate` — test the most promising problem from step 2
-4. Run `/BussinesAgents:docs` — generate a business plan or pitch deck once you have a validated idea
-5. Return to `/BussinesAgents:founder` **Update** mode whenever your thinking evolves
+3. Run `/BussinesAgents:simulate_user` (optional early run) — simulate the end user's workflow before validating to sharpen your understanding of the benefit
+4. Run `/BussinesAgents:validate` — test the most promising problem from step 2
+5. Run `/BussinesAgents:simulate_user` (post-validation run) — now with more evidence, produce the shareable user one-pager
+6. Run `/BussinesAgents:docs` — generate a business plan, pitch deck, or User Impact Journey Map slide
+7. Return to `/BussinesAgents:founder` **Update** mode whenever your thinking evolves
 
 Steps 2–4 can be repeated as many times as needed. The system has no "done" state — it supports ongoing iteration.
 
