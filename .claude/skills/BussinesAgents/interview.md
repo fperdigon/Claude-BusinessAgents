@@ -136,7 +136,9 @@ Generate CSV content with:
 
 Save to: `outputs/ideas/<working-slug>/interview-sheet-<YYYY-MM-DD>.html`
 
-Self-contained HTML, no external dependencies. Generate N sections — one per interviewee — using this template:
+Self-contained HTML, no external dependencies. All fields are editable and auto-saved to `localStorage` so the founder can close the browser and resume later. Generate N interview sections — one per interviewee.
+
+Use `data-key` attributes to uniquely identify each field: pattern is `i{N}-name`, `i{N}-date`, `i{N}-role`, `i{N}-company`, `i{N}-q{M}` (one per question, M starting at 1), `i{N}-quote`, and `i{N}-signal` for the radio group. The `STORAGE_KEY` must embed the working slug and date so different sheets never collide in storage.
 
 ```html
 <!DOCTYPE html>
@@ -146,48 +148,145 @@ Self-contained HTML, no external dependencies. Generate N sections — one per i
 <title>Interview Sheet — [Idea Name]</title>
 <style>
   body { font-family: Georgia, serif; max-width: 720px; margin: 40px auto; color: #1a1a1a; }
-  h1 { text-align: center; font-size: 18px; margin-bottom: 40px; }
+  h1 { text-align: center; font-size: 18px; margin-bottom: 8px; }
+  .toolbar { text-align: center; margin-bottom: 8px; }
+  .toolbar button { font-family: Georgia, serif; font-size: 13px; padding: 6px 18px; border: 1px solid #999; border-radius: 4px; background: #f5f5f5; cursor: pointer; }
+  .toolbar button:hover { background: #e8e8e8; }
+  .save-status { text-align: center; font-size: 12px; color: #888; margin-bottom: 36px; }
   .interview { border: 1px solid #ccc; border-radius: 8px; padding: 24px; margin-bottom: 40px; page-break-after: always; }
   .header-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
   .field label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 4px; }
-  .field .line { border-bottom: 1px solid #999; height: 28px; }
+  .field input[type="text"] { width: 100%; border: none; border-bottom: 1px solid #999; font-family: Georgia, serif; font-size: 14px; padding: 4px 0; box-sizing: border-box; background: transparent; outline: none; }
+  .field input[type="text"]:focus { border-bottom-color: #333; }
   .question { margin-bottom: 24px; }
   .question p { font-weight: bold; margin-bottom: 8px; }
-  .answer-box { border: 1px solid #ddd; border-radius: 4px; min-height: 80px; }
+  .question textarea { width: 100%; border: 1px solid #ddd; border-radius: 4px; min-height: 80px; font-family: Georgia, serif; font-size: 14px; padding: 8px; box-sizing: border-box; resize: vertical; outline: none; }
+  .question textarea:focus { border-color: #999; }
   .key-quote { margin-top: 24px; border-left: 3px solid #333; padding-left: 12px; }
+  .key-quote label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #666; margin-bottom: 4px; }
+  .key-quote input[type="text"] { width: 100%; border: none; border-bottom: 1px solid #999; font-family: Georgia, serif; font-size: 14px; padding: 4px 0; box-sizing: border-box; background: transparent; outline: none; }
   .signal { margin-top: 16px; }
-  @media print { body { margin: 20px; } .interview { border: none; } }
+  .signal label { margin-right: 16px; cursor: pointer; font-weight: normal; }
+  @media print { body { margin: 20px; } .interview { border: none; } .save-status { display: none; } }
 </style>
 </head>
 <body>
 <h1>Customer Interview — [Idea Name]</h1>
+<div class="toolbar"><button onclick="exportCSV()">Export to CSV</button></div>
+<p class="save-status" id="saveStatus">Changes are saved automatically in this browser.</p>
 
-<!-- Repeat this block N times -->
+<!-- Repeat this block N times, substituting the interview number for {N} and question number for {M} -->
 <div class="interview">
-  <h2>Interview #[N]</h2>
+  <h2>Interview #{N}</h2>
   <div class="header-fields">
-    <div class="field"><label>Name</label><div class="line"></div></div>
-    <div class="field"><label>Date</label><div class="line"></div></div>
-    <div class="field"><label>Role</label><div class="line"></div></div>
-    <div class="field"><label>Company Size</label><div class="line"></div></div>
+    <div class="field"><label>Name</label><input type="text" data-key="i{N}-name" placeholder="Interviewee name"></div>
+    <div class="field"><label>Date</label><input type="text" data-key="i{N}-date" placeholder="YYYY-MM-DD"></div>
+    <div class="field"><label>Role</label><input type="text" data-key="i{N}-role" placeholder="Job title"></div>
+    <div class="field"><label>Company Size</label><input type="text" data-key="i{N}-company" placeholder="e.g. 10-50 employees"></div>
   </div>
 
   <!-- One .question block per opening question and per core question -->
   <div class="question">
-    <p>[Question text]</p>
-    <div class="answer-box"></div>
+    <p>{M}. [Question text]</p>
+    <textarea data-key="i{N}-q{M}" rows="4" placeholder="Notes…"></textarea>
   </div>
 
   <div class="key-quote">
-    <label style="font-size:11px;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;color:#666;">Key Quote</label>
-    <div class="line" style="border-bottom:1px solid #999;height:28px;margin-top:8px;"></div>
+    <label>Key Quote</label>
+    <input type="text" data-key="i{N}-quote" placeholder="Most memorable thing they said…">
   </div>
 
   <div class="signal">
-    <strong>Signal:</strong> &nbsp; ☐ Strong &nbsp;&nbsp; ☐ Weak &nbsp;&nbsp; ☐ Neutral
+    <strong>Signal:</strong> &nbsp;
+    <label><input type="radio" name="signal-{N}" data-key="i{N}-signal" value="Strong"> Strong</label>
+    <label><input type="radio" name="signal-{N}" data-key="i{N}-signal" value="Weak"> Weak</label>
+    <label><input type="radio" name="signal-{N}" data-key="i{N}-signal" value="Neutral"> Neutral</label>
   </div>
 </div>
 
+<script>
+  var STORAGE_KEY = 'interview-[working-slug]-[YYYY-MM-DD]';
+
+  function save() {
+    var data = {};
+    document.querySelectorAll('[data-key]').forEach(function(el) {
+      if (el.type === 'radio') { if (el.checked) data[el.dataset.key] = el.value; }
+      else { data[el.dataset.key] = el.value; }
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    var s = document.getElementById('saveStatus');
+    s.textContent = 'Saved at ' + new Date().toLocaleTimeString();
+  }
+
+  function load() {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    var data = JSON.parse(raw);
+    document.querySelectorAll('[data-key]').forEach(function(el) {
+      var val = data[el.dataset.key];
+      if (val === undefined) return;
+      if (el.type === 'radio') { el.checked = (el.value === val); }
+      else { el.value = val; }
+    });
+  }
+
+  function exportCSV() {
+    var qTexts = [];
+    document.querySelector('.interview').querySelectorAll('.question p').forEach(function(p) {
+      qTexts.push(p.textContent.trim());
+    });
+    var headers = ['Interview #', 'Name', 'Date', 'Role', 'Company Size'];
+    qTexts.forEach(function(q, i) { headers.push('Q' + (i + 1) + ': ' + q.substring(0, 50)); });
+    headers.push('Key Quote', 'Signal');
+
+    var rows = [headers];
+    document.querySelectorAll('.interview').forEach(function(div, idx) {
+      var n = idx + 1;
+      var row = [
+        n,
+        (document.querySelector('[data-key="i' + n + '-name"]') || {}).value || '',
+        (document.querySelector('[data-key="i' + n + '-date"]') || {}).value || '',
+        (document.querySelector('[data-key="i' + n + '-role"]') || {}).value || '',
+        (document.querySelector('[data-key="i' + n + '-company"]') || {}).value || ''
+      ];
+      var q = 1;
+      while (true) {
+        var el = document.querySelector('[data-key="i' + n + '-q' + q + '"]');
+        if (!el) break;
+        row.push(el.value);
+        q++;
+      }
+      var checked = document.querySelector('input[name="signal-' + n + '"]:checked');
+      row.push(
+        (document.querySelector('[data-key="i' + n + '-quote"]') || {}).value || '',
+        checked ? checked.value : ''
+      );
+      rows.push(row);
+    });
+
+    var csv = rows.map(function(row) {
+      return row.map(function(val) {
+        val = String(val == null ? '' : val).replace(/"/g, '""');
+        if (/[,"\n\r]/.test(val)) val = '"' + val + '"';
+        return val;
+      }).join(',');
+    }).join('\n');
+
+    var blob = new Blob([csv], { type: 'text/csv' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'interviews-[working-slug]-[YYYY-MM-DD].csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  document.addEventListener('input', save);
+  document.addEventListener('change', save);
+  load();
+</script>
 </body>
 </html>
 ```
