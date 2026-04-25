@@ -122,17 +122,7 @@ Date: YYYY-MM-DD
 "Who else do you think I should talk to — anyone in a similar role who might see this differently?"
 ```
 
-### File 2 — Interview Tracker
-
-Save to: `outputs/ideas/<working-slug>/interview-tracker-<YYYY-MM-DD>.csv`
-
-Generate CSV content with:
-- Header row: `ID,Date,Name,Role,Company Size,[first 6 words of each core question],Key Quote,Signal,Notes`
-- N data rows pre-filled with sequential IDs (1, 2, 3…) and empty values for all other columns
-
-(N = the number the founder gave in Question 1)
-
-### File 3 — Interview Sheet
+### File 2 — Interview Sheet
 
 Save to: `outputs/ideas/<working-slug>/interview-sheet-<YYYY-MM-DD>.html`
 
@@ -296,8 +286,7 @@ Use `data-key` attributes to uniquely identify each field: pattern is `i{N}-name
 > "Your interview kit is ready:
 >
 > — Script: `outputs/ideas/<working-slug>/interview-script-<date>.md`
-> — Tracker: `outputs/ideas/<working-slug>/interview-tracker-<date>.csv` (open in Excel or Google Sheets)
-> — Sheet: `outputs/ideas/<working-slug>/interview-sheet-<date>.html` (open in browser to print)
+> — Sheet: `outputs/ideas/<working-slug>/interview-sheet-<date>.html` (open in browser — fill in notes, export to CSV when done)
 >
 > When you're on a call and get stuck, run `/BussinesAgents:interview` and choose **Coach**.
 > When all interviews are done, run `/BussinesAgents:interview` and choose **Synthesize**."

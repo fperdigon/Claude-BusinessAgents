@@ -63,13 +63,12 @@ A system of five AI agents that guide a founder from raw idea to validated busin
 **Reads:** `memory/startup-context.md`, `memory/icp.md` + the validation report
 
 **Three phases:**
-- **Prepare** — generates a tailored interview script, a CSV tracker (one row per interviewee), and a printable HTML interview sheet
+- **Prepare** — generates a tailored interview script and an editable HTML interview sheet (fill in browser, export to CSV when done)
 - **Coach** — live coaching during a call: founder describes what was said, agent responds with one follow-up question; saves a session log when the call ends
 - **Synthesize** — after all interviews, audits assumptions (confirmed / busted / partial), surfaces new findings, proposes specific ICP updates for the founder to confirm
 
 **Outputs:**
 - `outputs/ideas/<slug>/interview-script-<YYYY-MM-DD>.md`
-- `outputs/ideas/<slug>/interview-tracker-<YYYY-MM-DD>.csv`
 - `outputs/ideas/<slug>/interview-sheet-<YYYY-MM-DD>.html`
 - `outputs/ideas/<slug>/interview-coaching-<YYYY-MM-DD>-<N>.md` (one per session)
 - `outputs/ideas/<slug>/interview-insights-<YYYY-MM-DD>.md`
@@ -177,8 +176,7 @@ outputs/
       opportunity-discovery-*.md          ← discovery report
       validation-*.md                     ← validation plan with Go/No-go verdict
       interview-script-*.md               ← tailored interview question guide
-      interview-tracker-*.csv             ← spreadsheet to fill in during/after calls
-      interview-sheet-*.html              ← printable interview sheet
+      interview-sheet-*.html              ← editable interview sheet (fill in browser, export to CSV)
       interview-coaching-*-*.md           ← per-session coaching log
       interview-insights-*.md             ← synthesis: assumptions audit + ICP updates
       simulation-<persona>-*.md           ← end user simulation report
