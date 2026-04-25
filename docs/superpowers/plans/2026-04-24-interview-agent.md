@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add `/BussinesAgents:interview` — a three-phase customer interview agent (Prepare / Coach / Synthesize) — and update the pipeline so `simulate_user` can also run right after discovery.
+**Goal:** Add `/BusinessAgents:interview` — a three-phase customer interview agent (Prepare / Coach / Synthesize) — and update the pipeline so `simulate_user` can also run right after discovery.
 
 **Architecture:** This is a pure markdown skill system. There is no runtime code — each agent is a markdown prompt file that Claude reads and follows. "Tests" in this plan are manual: invoke the skill in Claude Code and verify the described behavior. Each task produces a self-contained, working change and ends with a commit.
 
@@ -14,10 +14,10 @@
 
 | Action | Path | What it does |
 |--------|------|-------------|
-| Create | `.claude/skills/BussinesAgents/interview.md` | Full interview agent skill prompt |
-| Create | `.claude/commands/BussinesAgents/interview.md` | Slash command stub that invokes the skill |
-| Modify | `.claude/skills/BussinesAgents/simulate_user.md` | Widen idea status filter to include `discovered` and `interviewed` |
-| Modify | `.claude/skills/BussinesAgents/founder.md` | Add `Interview: —` line to the New Idea template |
+| Create | `.claude/skills/BusinessAgents/interview.md` | Full interview agent skill prompt |
+| Create | `.claude/commands/BusinessAgents/interview.md` | Slash command stub that invokes the skill |
+| Modify | `.claude/skills/BusinessAgents/simulate_user.md` | Widen idea status filter to include `discovered` and `interviewed` |
+| Modify | `.claude/skills/BusinessAgents/founder.md` | Add `Interview: —` line to the New Idea template |
 | Modify | `memory/ideas.md` | Add `Interview: —` line to the existing idea entry |
 | Modify | `CLAUDE.md` | Add interview agent section; update flow and file structure |
 | Modify | `README.md` | Add interview agent to agent table and flow section |
@@ -27,26 +27,26 @@
 ## Task 1: Create the slash command stub
 
 **Files:**
-- Create: `.claude/commands/BussinesAgents/interview.md`
+- Create: `.claude/commands/BusinessAgents/interview.md`
 
 - [ ] **Step 1: Create the command stub file**
 
-Write `.claude/commands/BussinesAgents/interview.md` with exactly this content:
+Write `.claude/commands/BusinessAgents/interview.md` with exactly this content:
 
 ```markdown
-Follow the Customer Interview Agent skill defined in `.claude/skills/BussinesAgents/interview.md` exactly. Read that file first, then execute it from the beginning.
+Follow the Customer Interview Agent skill defined in `.claude/skills/BusinessAgents/interview.md` exactly. Read that file first, then execute it from the beginning.
 ```
 
 - [ ] **Step 2: Verify**
 
-Run: `cat .claude/commands/BussinesAgents/interview.md`
+Run: `cat .claude/commands/BusinessAgents/interview.md`
 
 Expected output: the single line above.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add .claude/commands/BussinesAgents/interview.md
+git add .claude/commands/BusinessAgents/interview.md
 git commit -m "feat: add interview slash command stub"
 ```
 
@@ -55,13 +55,13 @@ git commit -m "feat: add interview slash command stub"
 ## Task 2: Create the interview skill — How to Start
 
 **Files:**
-- Create: `.claude/skills/BussinesAgents/interview.md`
+- Create: `.claude/skills/BusinessAgents/interview.md`
 
 This task writes the file header and the How to Start section only. Phases are added in Tasks 3–5.
 
 - [ ] **Step 1: Create the skill file with header and How to Start**
 
-Write `.claude/skills/BussinesAgents/interview.md` with exactly this content:
+Write `.claude/skills/BusinessAgents/interview.md` with exactly this content:
 
 ```markdown
 # Customer Interview Agent
@@ -72,10 +72,10 @@ You are the Customer Interview Agent. Your job is to guide founders through the 
 
 ## How to Start
 
-1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", stop and say: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first — it only takes 5 minutes." Then stop.
+1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", stop and say: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes." Then stop.
 
 2. Read `memory/ideas.md`. Filter to ideas with status `validated-go` or `interviewed`. Select the working idea for this session:
-   - If the file does not exist or has no ideas with status `validated-go` or `interviewed`: say "No ideas are ready for interviews. Run `/BussinesAgents:validate` first and get a Go verdict." Then stop.
+   - If the file does not exist or has no ideas with status `validated-go` or `interviewed`: say "No ideas are ready for interviews. Run `/BusinessAgents:validate` first and get a Go verdict." Then stop.
    - If exactly one qualifying idea exists: confirm — "I'll run interviews for: **[slug]** — [description]. Is that right?" Wait for confirmation.
    - If multiple qualifying ideas exist: say "Which idea do you want to work on?" and show a numbered list (filtered ideas only):
      ```
@@ -108,14 +108,14 @@ You are the Customer Interview Agent. Your job is to guide founders through the 
 
 - [ ] **Step 2: Verify**
 
-Run: `head -60 .claude/skills/BussinesAgents/interview.md`
+Run: `head -60 .claude/skills/BusinessAgents/interview.md`
 
 Expected: file starts with `# Customer Interview Agent`, contains the How to Start section with 4 numbered steps, phase picker table present.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/interview.md
+git add .claude/skills/BusinessAgents/interview.md
 git commit -m "feat: add interview agent — How to Start section"
 ```
 
@@ -124,11 +124,11 @@ git commit -m "feat: add interview agent — How to Start section"
 ## Task 3: Add Phase 1 (Prepare) to the interview skill
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/interview.md` (append)
+- Modify: `.claude/skills/BusinessAgents/interview.md` (append)
 
 - [ ] **Step 1: Append Phase 1 to the skill file**
 
-Append to `.claude/skills/BussinesAgents/interview.md`:
+Append to `.claude/skills/BusinessAgents/interview.md`:
 
 ````markdown
 
@@ -293,20 +293,20 @@ Self-contained HTML, no external dependencies. Generate N sections — one per i
 > — Tracker: `outputs/ideas/<working-slug>/interview-tracker-<date>.csv` (open in Excel or Google Sheets)
 > — Sheet: `outputs/ideas/<working-slug>/interview-sheet-<date>.html` (open in browser to print)
 >
-> When you're on a call and get stuck, run `/BussinesAgents:interview` and choose **Coach**.
-> When all interviews are done, run `/BussinesAgents:interview` and choose **Synthesize**."
+> When you're on a call and get stuck, run `/BusinessAgents:interview` and choose **Coach**.
+> When all interviews are done, run `/BusinessAgents:interview` and choose **Synthesize**."
 ````
 
 - [ ] **Step 2: Verify**
 
-Run: `grep -n "Phase 1\|File 1\|File 2\|File 3\|Closing Message" .claude/skills/BussinesAgents/interview.md`
+Run: `grep -n "Phase 1\|File 1\|File 2\|File 3\|Closing Message" .claude/skills/BusinessAgents/interview.md`
 
 Expected: all six labels present, in order.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/interview.md
+git add .claude/skills/BusinessAgents/interview.md
 git commit -m "feat: add interview agent — Phase 1 Prepare"
 ```
 
@@ -315,11 +315,11 @@ git commit -m "feat: add interview agent — Phase 1 Prepare"
 ## Task 4: Add Phase 2 (Coach) to the interview skill
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/interview.md` (append)
+- Modify: `.claude/skills/BusinessAgents/interview.md` (append)
 
 - [ ] **Step 1: Append Phase 2 to the skill file**
 
-Append to `.claude/skills/BussinesAgents/interview.md`:
+Append to `.claude/skills/BusinessAgents/interview.md`:
 
 ````markdown
 
@@ -377,19 +377,19 @@ Session: N
 ```
 
 3. Say:
-> "Session log saved. Run `/BussinesAgents:interview` → **Synthesize** when you've finished all your interviews."
+> "Session log saved. Run `/BusinessAgents:interview` → **Synthesize** when you've finished all your interviews."
 ````
 
 - [ ] **Step 2: Verify**
 
-Run: `grep -n "Phase 2\|Coach mode\|Ending the Session\|interview-coaching" .claude/skills/BussinesAgents/interview.md`
+Run: `grep -n "Phase 2\|Coach mode\|Ending the Session\|interview-coaching" .claude/skills/BusinessAgents/interview.md`
 
 Expected: all four labels present.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/interview.md
+git add .claude/skills/BusinessAgents/interview.md
 git commit -m "feat: add interview agent — Phase 2 Coach"
 ```
 
@@ -398,11 +398,11 @@ git commit -m "feat: add interview agent — Phase 2 Coach"
 ## Task 5: Add Phase 3 (Synthesize), Registry Update, and Hard Rules
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/interview.md` (append)
+- Modify: `.claude/skills/BusinessAgents/interview.md` (append)
 
 - [ ] **Step 1: Append Phase 3, Registry Update, and Hard Rules**
 
-Append to `.claude/skills/BussinesAgents/interview.md`:
+Append to `.claude/skills/BusinessAgents/interview.md`:
 
 ````markdown
 
@@ -438,7 +438,7 @@ For each ICP refinement signal found, present specific proposed edits before wri
 >
 > — [Field]: '[current value]' → '[proposed value]' ([evidence: N of M interviewees said…])
 >
-> Confirm and I'll update `memory/icp.md` and log the changes — same way `/BussinesAgents:founder` would. Or say 'skip' to leave the ICP unchanged."
+> Confirm and I'll update `memory/icp.md` and log the changes — same way `/BusinessAgents:founder` would. Or say 'skip' to leave the ICP unchanged."
 
 Wait for the founder's response.
 
@@ -491,7 +491,7 @@ Interviews conducted: N
 
 > "Insights saved. [If ICP was updated: 'Your ICP has been updated based on what you heard.']
 >
-> Next step: run `/BussinesAgents:simulate_user` for a refined simulation — this time grounded in what real users told you."
+> Next step: run `/BusinessAgents:simulate_user` for a refined simulation — this time grounded in what real users told you."
 
 ---
 
@@ -508,7 +508,7 @@ After saving `interview-insights-<YYYY-MM-DD>.md`:
 
 ## Hard Rules
 
-- Always read `memory/icp.md` and `memory/startup-context.md` at the start — stop and redirect to `/BussinesAgents:founder` if uninitialized
+- Always read `memory/icp.md` and `memory/startup-context.md` at the start — stop and redirect to `/BusinessAgents:founder` if uninitialized
 - Only accept `validated-go` or `interviewed` ideas — never run on `discovered` or earlier statuses
 - Phase picker must check existing files before offering phases — never offer Coach or Synthesize if no script exists
 - Coach mode responses must be one question maximum — never multiple questions at once
@@ -522,18 +522,18 @@ After saving `interview-insights-<YYYY-MM-DD>.md`:
 
 - [ ] **Step 2: Verify the complete skill file**
 
-Run: `grep -c "^##" .claude/skills/BussinesAgents/interview.md`
+Run: `grep -c "^##" .claude/skills/BusinessAgents/interview.md`
 
 Expected: 9 (How to Start, Phase 1, Phase 2, Phase 3, Registry Update, Hard Rules, plus 3 sub-headings inside phases)
 
-Run: `wc -l .claude/skills/BussinesAgents/interview.md`
+Run: `wc -l .claude/skills/BusinessAgents/interview.md`
 
 Expected: more than 200 lines.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/interview.md
+git add .claude/skills/BusinessAgents/interview.md
 git commit -m "feat: add interview agent — Phase 3 Synthesize, Registry Update, Hard Rules"
 ```
 
@@ -544,13 +544,13 @@ git commit -m "feat: add interview agent — Phase 3 Synthesize, Registry Update
 **Context:** `simulate_user` currently only accepts `validated-go` ideas. The new flow requires it to also run on `discovered` ideas (1st simulation run, hypothesis) and `interviewed` ideas (2nd run, refined).
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/simulate_user.md`
+- Modify: `.claude/skills/BusinessAgents/simulate_user.md`
 
 The current lines 11–19 read:
 
 ```
 2. Read `memory/ideas.md`. Filter to ideas with status `validated-go`. Select the working idea for this session:
-   - If the file does not exist or has no ideas with status `validated-go`: say "No ideas are ready for simulation. Run `/BussinesAgents:validate` first and get a Go verdict." Then stop.
+   - If the file does not exist or has no ideas with status `validated-go`: say "No ideas are ready for simulation. Run `/BusinessAgents:validate` first and get a Go verdict." Then stop.
    - If exactly one `validated-go` idea exists: confirm — "I'll simulate end users for: **[slug]** — [description]. Is that right?" Wait for confirmation.
    - If multiple `validated-go` ideas exist: say "Which idea do you want to simulate?" and show a numbered list (`validated-go` ideas only):
      ```
@@ -562,11 +562,11 @@ The current lines 11–19 read:
 
 - [ ] **Step 1: Replace the status filter block**
 
-In `.claude/skills/BussinesAgents/simulate_user.md`, replace the block above with:
+In `.claude/skills/BusinessAgents/simulate_user.md`, replace the block above with:
 
 ```
 2. Read `memory/ideas.md`. Filter to ideas with status `discovered`, `validated-go`, or `interviewed`. Select the working idea for this session:
-   - If the file does not exist or has no qualifying ideas: say "No ideas are ready for simulation. Run `/BussinesAgents:discover` first to generate a discovery report." Then stop.
+   - If the file does not exist or has no qualifying ideas: say "No ideas are ready for simulation. Run `/BusinessAgents:discover` first to generate a discovery report." Then stop.
    - If exactly one qualifying idea exists: confirm — "I'll simulate end users for: **[slug]** — [description]. Is that right?" Wait for confirmation.
    - If multiple qualifying ideas exist: say "Which idea do you want to simulate?" and show a numbered list (qualifying ideas only):
      ```
@@ -578,14 +578,14 @@ In `.claude/skills/BussinesAgents/simulate_user.md`, replace the block above wit
 
 - [ ] **Step 2: Verify**
 
-Run: `grep -n "discovered\|validated-go\|interviewed" .claude/skills/BussinesAgents/simulate_user.md | head -10`
+Run: `grep -n "discovered\|validated-go\|interviewed" .claude/skills/BusinessAgents/simulate_user.md | head -10`
 
 Expected: line 11 area contains all three statuses: `discovered`, `validated-go`, `interviewed`.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/simulate_user.md
+git add .claude/skills/BusinessAgents/simulate_user.md
 git commit -m "feat: allow simulate_user to run on discovered and interviewed ideas"
 ```
 
@@ -594,7 +594,7 @@ git commit -m "feat: allow simulate_user to run on discovered and interviewed id
 ## Task 7: Update founder.md template and memory/ideas.md
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/founder.md`
+- Modify: `.claude/skills/BusinessAgents/founder.md`
 - Modify: `memory/ideas.md`
 
 ### Part A — founder.md New Idea template
@@ -611,7 +611,7 @@ The current New Idea template in `founder.md` (inside the `### New Idea` section
 
 - [ ] **Step 1: Add Interview stage line to the template**
 
-In `.claude/skills/BussinesAgents/founder.md`, replace that block with:
+In `.claude/skills/BusinessAgents/founder.md`, replace that block with:
 
 ```markdown
 **Stages:**
@@ -624,7 +624,7 @@ In `.claude/skills/BussinesAgents/founder.md`, replace that block with:
 
 - [ ] **Step 2: Verify**
 
-Run: `grep -A6 "\*\*Stages:\*\*" .claude/skills/BussinesAgents/founder.md`
+Run: `grep -A6 "\*\*Stages:\*\*" .claude/skills/BusinessAgents/founder.md`
 
 Expected: 5 stage lines with Interview between Validation and Simulation.
 
@@ -663,7 +663,7 @@ Expected: Interview line present between Validation and Simulation.
 - [ ] **Step 5: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/founder.md memory/ideas.md
+git add .claude/skills/BusinessAgents/founder.md memory/ideas.md
 git commit -m "feat: add Interview stage line to ideas template and existing entry"
 ```
 
@@ -681,21 +681,21 @@ Three changes: add interview agent section, update the flow diagram, update the 
 In `CLAUDE.md`, find the section:
 
 ```markdown
-**Hands off to:** `/BussinesAgents:simulate_user` — run it after a Go verdict.
+**Hands off to:** `/BusinessAgents:simulate_user` — run it after a Go verdict.
 
 ---
 
-### 4. `/BussinesAgents:simulate_user` — End User Simulator
+### 4. `/BusinessAgents:simulate_user` — End User Simulator
 ```
 
 Replace with:
 
 ```markdown
-**Hands off to:** `/BussinesAgents:simulate_user` — run it for a first hypothesis simulation, then run `/BussinesAgents:interview`.
+**Hands off to:** `/BusinessAgents:simulate_user` — run it for a first hypothesis simulation, then run `/BusinessAgents:interview`.
 
 ---
 
-### 4. `/BussinesAgents:interview` — Customer Interview Agent
+### 4. `/BusinessAgents:interview` — Customer Interview Agent
 
 **Job:** Guide founders through the full interview lifecycle — generating a tailored script and tracking documents before calls, coaching live during calls, and synthesizing learnings into structured insights and ICP updates.
 
@@ -713,53 +713,53 @@ Replace with:
 - `outputs/ideas/<slug>/interview-coaching-<YYYY-MM-DD>-<N>.md` (one per session)
 - `outputs/ideas/<slug>/interview-insights-<YYYY-MM-DD>.md`
 
-**Hands off to:** `/BussinesAgents:simulate_user` — run it again after interviews for a refined simulation.
+**Hands off to:** `/BusinessAgents:simulate_user` — run it again after interviews for a refined simulation.
 
 ---
 
-### 5. `/BussinesAgents:simulate_user` — End User Simulator
+### 5. `/BusinessAgents:simulate_user` — End User Simulator
 ```
 
 - [ ] **Step 2: Update the agent numbering**
 
 In `CLAUDE.md`, the old sections 4 and 5 become 5 and 6. Find and update:
 
-Replace `### 4. \`/BussinesAgents:simulate_user\`` with `### 5. \`/BussinesAgents:simulate_user\``
+Replace `### 4. \`/BusinessAgents:simulate_user\`` with `### 5. \`/BusinessAgents:simulate_user\``
 
-Replace `### 5. \`/BussinesAgents:docs\`` with `### 6. \`/BussinesAgents:docs\``
+Replace `### 5. \`/BusinessAgents:docs\`` with `### 6. \`/BusinessAgents:docs\``
 
 - [ ] **Step 3: Update the Intended Flow section**
 
 Find the Intended Flow code block:
 
 ```
-1. /BussinesAgents:founder   →  Initialize memory (run once at the start)
+1. /BusinessAgents:founder   →  Initialize memory (run once at the start)
          ↓
-2. /BussinesAgents:discover  →  Find top 3 problems worth solving
+2. /BusinessAgents:discover  →  Find top 3 problems worth solving
          ↓
-3. /BussinesAgents:validate  →  Test the top problem. Get a Go/No-go verdict.
+3. /BusinessAgents:validate  →  Test the top problem. Get a Go/No-go verdict.
          ↓ (Go)
-4. /BussinesAgents:simulate_user  →  Show how the solution changes the user's day
+4. /BusinessAgents:simulate_user  →  Show how the solution changes the user's day
          ↓
-5. /BussinesAgents:docs      →  Generate documents and pitch materials
+5. /BusinessAgents:docs      →  Generate documents and pitch materials
 ```
 
 Replace with:
 
 ```
-1. /BussinesAgents:founder        →  Initialize memory (run once at the start)
+1. /BusinessAgents:founder        →  Initialize memory (run once at the start)
          ↓
-2. /BussinesAgents:discover       →  Find top 3 problems worth solving
+2. /BusinessAgents:discover       →  Find top 3 problems worth solving
          ↓
-3. /BussinesAgents:simulate_user  →  1st run: hypothesis — what do we think changes for the user?
+3. /BusinessAgents:simulate_user  →  1st run: hypothesis — what do we think changes for the user?
          ↓
-4. /BussinesAgents:validate       →  Test the top problem. Get a Go/No-go verdict.
+4. /BusinessAgents:validate       →  Test the top problem. Get a Go/No-go verdict.
          ↓ (Go)
-5. /BussinesAgents:interview      →  Talk to real users. Refine the ICP.
+5. /BusinessAgents:interview      →  Talk to real users. Refine the ICP.
          ↓
-6. /BussinesAgents:simulate_user  →  2nd run: refined — what actually changes, based on real data
+6. /BusinessAgents:simulate_user  →  2nd run: refined — what actually changes, based on real data
          ↓
-7. /BussinesAgents:docs           →  Generate documents and pitch materials
+7. /BusinessAgents:docs           →  Generate documents and pitch materials
 ```
 
 - [ ] **Step 4: Update the file structure block**
@@ -820,11 +820,11 @@ In `README.md`, find the table:
 ```markdown
 | Step | Agent | What you get |
 |------|-------|-------------|
-| 1 | `/BussinesAgents:founder` | Your startup context saved to memory — vision, constraints, ideal customer |
-| 2 | `/BussinesAgents:discover` | Top 3 problems worth solving, ranked by evidence and market timing |
-| 3 | `/BussinesAgents:validate` | Go / No-go verdict + 3 cheap experiments to test before building anything |
-| 4 | `/BussinesAgents:simulate_user` | Before/after workflow simulations showing exactly what changes for your user |
-| 5 | `/BussinesAgents:docs` | Business plan, pitch deck, value proposition, canvas, and more |
+| 1 | `/BusinessAgents:founder` | Your startup context saved to memory — vision, constraints, ideal customer |
+| 2 | `/BusinessAgents:discover` | Top 3 problems worth solving, ranked by evidence and market timing |
+| 3 | `/BusinessAgents:validate` | Go / No-go verdict + 3 cheap experiments to test before building anything |
+| 4 | `/BusinessAgents:simulate_user` | Before/after workflow simulations showing exactly what changes for your user |
+| 5 | `/BusinessAgents:docs` | Business plan, pitch deck, value proposition, canvas, and more |
 ```
 
 Replace with:
@@ -832,13 +832,13 @@ Replace with:
 ```markdown
 | Step | Agent | What you get |
 |------|-------|-------------|
-| 1 | `/BussinesAgents:founder` | Your startup context saved to memory — vision, constraints, ideal customer |
-| 2 | `/BussinesAgents:discover` | Top 3 problems worth solving, ranked by evidence and market timing |
-| 3 | `/BussinesAgents:simulate_user` | 1st simulation: hypothesis of what changes for your user, based on discovery |
-| 4 | `/BussinesAgents:validate` | Go / No-go verdict + 3 cheap experiments to test before building anything |
-| 5 | `/BussinesAgents:interview` | Interview script, tracker CSV, printable sheet + live coaching + insight synthesis |
-| 6 | `/BussinesAgents:simulate_user` | 2nd simulation: refined — grounded in what real users told you |
-| 7 | `/BussinesAgents:docs` | Business plan, pitch deck, value proposition, canvas, and more |
+| 1 | `/BusinessAgents:founder` | Your startup context saved to memory — vision, constraints, ideal customer |
+| 2 | `/BusinessAgents:discover` | Top 3 problems worth solving, ranked by evidence and market timing |
+| 3 | `/BusinessAgents:simulate_user` | 1st simulation: hypothesis of what changes for your user, based on discovery |
+| 4 | `/BusinessAgents:validate` | Go / No-go verdict + 3 cheap experiments to test before building anything |
+| 5 | `/BusinessAgents:interview` | Interview script, tracker CSV, printable sheet + live coaching + insight synthesis |
+| 6 | `/BusinessAgents:simulate_user` | 2nd simulation: refined — grounded in what real users told you |
+| 7 | `/BusinessAgents:docs` | Business plan, pitch deck, value proposition, canvas, and more |
 ```
 
 - [ ] **Step 2: Update the flow section**
@@ -846,33 +846,33 @@ Replace with:
 Find the flow code block:
 
 ```
-/BussinesAgents:founder       →  Set up memory (run once)
+/BusinessAgents:founder       →  Set up memory (run once)
          ↓
-/BussinesAgents:discover      →  Find real problems worth solving
+/BusinessAgents:discover      →  Find real problems worth solving
          ↓
-/BussinesAgents:validate      →  Test the top problem. Get a Go/No-go.
+/BusinessAgents:validate      →  Test the top problem. Get a Go/No-go.
          ↓  (Go)
-/BussinesAgents:simulate_user →  Show how your solution changes the user's day
+/BusinessAgents:simulate_user →  Show how your solution changes the user's day
          ↓
-/BussinesAgents:docs          →  Generate documents and pitch materials
+/BusinessAgents:docs          →  Generate documents and pitch materials
 ```
 
 Replace with:
 
 ```
-/BussinesAgents:founder        →  Set up memory (run once)
+/BusinessAgents:founder        →  Set up memory (run once)
          ↓
-/BussinesAgents:discover       →  Find real problems worth solving
+/BusinessAgents:discover       →  Find real problems worth solving
          ↓
-/BussinesAgents:simulate_user  →  1st run: hypothesis simulation
+/BusinessAgents:simulate_user  →  1st run: hypothesis simulation
          ↓
-/BussinesAgents:validate       →  Test the top problem. Get a Go/No-go.
+/BusinessAgents:validate       →  Test the top problem. Get a Go/No-go.
          ↓  (Go)
-/BussinesAgents:interview      →  Prepare → Coach → Synthesize
+/BusinessAgents:interview      →  Prepare → Coach → Synthesize
          ↓
-/BussinesAgents:simulate_user  →  2nd run: refined simulation
+/BusinessAgents:simulate_user  →  2nd run: refined simulation
          ↓
-/BussinesAgents:docs           →  Generate documents and pitch materials
+/BusinessAgents:docs           →  Generate documents and pitch materials
 ```
 
 - [ ] **Step 3: Add interview agent section**
@@ -880,7 +880,7 @@ Replace with:
 In `README.md`, after the `validate` agent section and before the `simulate_user` section, add:
 
 ```markdown
-### `/BussinesAgents:interview` — Customer Interview Agent
+### `/BusinessAgents:interview` — Customer Interview Agent
 
 Guides founders through the full interview lifecycle. Generates a tailored question script, a CSV tracker to fill in across interviewees, and a printable HTML sheet for use on calls. Provides live coaching during calls — describe what the interviewee said, get one follow-up question back. After all calls, synthesizes findings: which assumptions held, which broke, what was unexpected. Proposes specific ICP updates for the founder to confirm before writing anything.
 
@@ -913,7 +913,7 @@ git commit -m "docs: update README for interview agent and revised flow"
 
 After all tasks are committed, run this check:
 
-- [ ] `/BussinesAgents:interview` command stub exists and points to the skill file
+- [ ] `/BusinessAgents:interview` command stub exists and points to the skill file
 - [ ] Skill file has all three phases (Prepare, Coach, Synthesize), Registry Update, and Hard Rules
 - [ ] `simulate_user.md` accepts `discovered`, `validated-go`, and `interviewed`
 - [ ] `founder.md` New Idea template has 5 stage lines including Interview

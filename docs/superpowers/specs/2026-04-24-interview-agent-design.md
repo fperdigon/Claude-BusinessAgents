@@ -4,7 +4,7 @@
 
 ## Goal
 
-Add `/BussinesAgents:interview` — a customer interview agent that guides founders through the full interview lifecycle: generating a tailored script and tracking documents before calls, coaching live during calls, and synthesizing learnings into structured insights and ICP updates afterward.
+Add `/BusinessAgents:interview` — a customer interview agent that guides founders through the full interview lifecycle: generating a tailored script and tracking documents before calls, coaching live during calls, and synthesizing learnings into structured insights and ICP updates afterward.
 
 ## Fit in the System
 
@@ -64,10 +64,10 @@ All saved to `outputs/ideas/<slug>/`:
 
 ## How to Start
 
-1. Read `memory/startup-context.md` and `memory/icp.md` silently. If uninitialized, stop: *"Run `/BussinesAgents:founder` first."*
+1. Read `memory/startup-context.md` and `memory/icp.md` silently. If uninitialized, stop: *"Run `/BusinessAgents:founder` first."*
 
 2. **Idea picker.** Read `memory/ideas.md`. Filter to ideas with status `validated-go` or `interviewed`.
-   - None found → *"No ideas are ready for interviews. Run `/BussinesAgents:validate` first."* Stop.
+   - None found → *"No ideas are ready for interviews. Run `/BusinessAgents:validate` first."* Stop.
    - One found → confirm with founder.
    - Multiple found → show numbered list, wait for choice.
 
@@ -133,8 +133,8 @@ Designed for printing or screen use on a tablet during the call.
 > *— Tracker: `outputs/ideas/<slug>/interview-tracker-<date>.csv` (open in Excel or Google Sheets)*
 > *— Sheet: `outputs/ideas/<slug>/interview-sheet-<date>.html` (open in browser to print)*
 >
-> *When you're on a call and get stuck, run `/BussinesAgents:interview` → Coach.*
-> *When all interviews are done, run `/BussinesAgents:interview` → Synthesize."*
+> *When you're on a call and get stuck, run `/BusinessAgents:interview` → Coach.*
+> *When all interviews are done, run `/BusinessAgents:interview` → Synthesize."*
 
 ---
 
@@ -174,7 +174,7 @@ Contents:
 - Notable quotes captured during the session
 
 Then:
-> *"Saved. Run `/BussinesAgents:interview` → Synthesize when you've finished all your interviews."*
+> *"Saved. Run `/BusinessAgents:interview` → Synthesize when you've finished all your interviews."*
 
 ---
 
@@ -209,7 +209,7 @@ For each ICP refinement signal, propose a specific edit:
 > *— Role: 'paralegal' → 'junior associate' (3 of 4 interviewees were associates)*
 > *— Pain: refine to 'deadline-driven contract review under partner supervision'*
 >
-> *Confirm and I'll update `memory/icp.md` and log the changes — same way `/BussinesAgents:founder` would. Or say 'skip' to leave the ICP as-is."*
+> *Confirm and I'll update `memory/icp.md` and log the changes — same way `/BusinessAgents:founder` would. Or say 'skip' to leave the ICP as-is."*
 
 If confirmed: write updates to `memory/icp.md`. Add entry to `memory/decisions-log.md`:
 ```
@@ -251,7 +251,7 @@ Interviews conducted: N
 
 > *"Insights saved. Your ICP has been updated.*
 >
-> *Next step: run `/BussinesAgents:simulate_user` for a refined simulation — this time grounded in what you heard from real users."*
+> *Next step: run `/BusinessAgents:simulate_user` for a refined simulation — this time grounded in what you heard from real users."*
 
 ---
 
@@ -287,14 +287,14 @@ The existing fallback logic (validation report → discovery report) already han
 
 | File | Purpose |
 |------|---------|
-| `.claude/skills/BussinesAgents/interview.md` | Agent skill prompt |
-| `.claude/commands/BussinesAgents/interview.md` | Slash command stub |
+| `.claude/skills/BusinessAgents/interview.md` | Agent skill prompt |
+| `.claude/commands/BusinessAgents/interview.md` | Slash command stub |
 
 ## Modified Files
 
 | File | Change |
 |------|--------|
-| `.claude/skills/BussinesAgents/simulate_user.md` | Widen idea picker filter to include `discovered` and `interviewed` |
+| `.claude/skills/BusinessAgents/simulate_user.md` | Widen idea picker filter to include `discovered` and `interviewed` |
 | `memory/ideas.md` format (in `founder.md`) | Add `Interview: —` stage line to the New Idea template |
 | `CLAUDE.md` | Add interview agent description; update flow diagram; update file structure |
 | `README.md` | Add interview agent to the agent table and flow section |

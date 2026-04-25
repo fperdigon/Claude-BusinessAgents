@@ -15,11 +15,11 @@
 | File | Action | What changes |
 |------|--------|--------------|
 | `memory/ideas.md` | CREATE | New ideas registry file |
-| `.claude/skills/BussinesAgents/founder.md` | MODIFY | Add Ideas mode (New / List / Archive) |
-| `.claude/skills/BussinesAgents/discover.md` | MODIFY | Idea picker + new output path + registry update |
-| `.claude/skills/BussinesAgents/validate.md` | MODIFY | Idea picker + new output path + registry update |
-| `.claude/skills/BussinesAgents/simulate_user.md` | MODIFY | Idea picker + new output paths + registry update |
-| `.claude/skills/BussinesAgents/docs.md` | MODIFY | Idea picker + new output paths (docs/ + slides/) + registry update |
+| `.claude/skills/BusinessAgents/founder.md` | MODIFY | Add Ideas mode (New / List / Archive) |
+| `.claude/skills/BusinessAgents/discover.md` | MODIFY | Idea picker + new output path + registry update |
+| `.claude/skills/BusinessAgents/validate.md` | MODIFY | Idea picker + new output path + registry update |
+| `.claude/skills/BusinessAgents/simulate_user.md` | MODIFY | Idea picker + new output paths + registry update |
+| `.claude/skills/BusinessAgents/docs.md` | MODIFY | Idea picker + new output paths (docs/ + slides/) + registry update |
 | `CLAUDE.md` | MODIFY | Update file structure and key rules sections |
 | `outputs/ideas/private-ai-montreal-legal/` | CREATE | Migrate all existing output files |
 
@@ -65,7 +65,7 @@ git commit -m "feat: add ideas registry file (idea namespacing B+C)"
 ### Task 2: Update founder.md — Add Ideas Mode
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/founder.md`
+- Modify: `.claude/skills/BusinessAgents/founder.md`
 
 - [ ] **Step 1: Expand the How to Start menu to add options 4–6**
 
@@ -123,7 +123,7 @@ Then:
 [YYYY-MM-DD] What changed: New idea registered — <slug>. Why: Founder wants to explore this opportunity.
 ```
 
-4. Confirm: "Idea **<slug>** is registered. Your next step: run `/BussinesAgents:discover` to find and rank the real problems this idea could solve."
+4. Confirm: "Idea **<slug>** is registered. Your next step: run `/BusinessAgents:discover` to find and rank the real problems this idea could solve."
 
 ### List Ideas
 
@@ -166,7 +166,7 @@ In the `## Hard Rules` section at the bottom of founder.md, add after the last r
 - [ ] **Step 4: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/founder.md
+git add .claude/skills/BusinessAgents/founder.md
 git commit -m "feat: add Ideas mode to Founder Agent (new/list/archive)"
 ```
 
@@ -175,22 +175,22 @@ git commit -m "feat: add Ideas mode to Founder Agent (new/list/archive)"
 ### Task 3: Update discover.md — Idea picker + new output path + registry update
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/discover.md`
+- Modify: `.claude/skills/BusinessAgents/discover.md`
 
 - [ ] **Step 1: Add idea selection into How to Start**
 
 Find in `## How to Start`:
 ```
-1. Read `memory/startup-context.md` and `memory/icp.md` silently. Use the vision, constraints, and ICP to inform all your questions and research. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first — it only takes 5 minutes and will make this research much more focused." Then stop.
+1. Read `memory/startup-context.md` and `memory/icp.md` silently. Use the vision, constraints, and ICP to inform all your questions and research. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes and will make this research much more focused." Then stop.
 2. Tell the founder:
 ```
 
 Replace with:
 ```
-1. Read `memory/startup-context.md` and `memory/icp.md` silently. Use the vision, constraints, and ICP to inform all your questions and research. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first — it only takes 5 minutes and will make this research much more focused." Then stop.
+1. Read `memory/startup-context.md` and `memory/icp.md` silently. Use the vision, constraints, and ICP to inform all your questions and research. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes and will make this research much more focused." Then stop.
 
 2. Read `memory/ideas.md`. Select the working idea for this session:
-   - If the file does not exist or has no non-archived ideas: say "No ideas registered yet. Please run `/BussinesAgents:founder` and choose 'New idea' to register one first." Then stop.
+   - If the file does not exist or has no non-archived ideas: say "No ideas registered yet. Please run `/BusinessAgents:founder` and choose 'New idea' to register one first." Then stop.
    - If exactly one non-archived idea exists: confirm — "I'll run discovery for: **[slug]** — [description]. Is that right?" Wait for confirmation.
    - If multiple non-archived ideas exist: say "Which idea are you running discovery for?" and show a numbered list:
      ```
@@ -261,7 +261,7 @@ After the last rule in `## Hard Rules`, add:
 - [ ] **Step 6: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/discover.md
+git add .claude/skills/BusinessAgents/discover.md
 git commit -m "feat: add idea picker and namespaced output path to discover agent"
 ```
 
@@ -270,22 +270,22 @@ git commit -m "feat: add idea picker and namespaced output path to discover agen
 ### Task 4: Update validate.md — Idea picker + new output path + registry update
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/validate.md`
+- Modify: `.claude/skills/BusinessAgents/validate.md`
 
 - [ ] **Step 1: Add idea selection into How to Start**
 
 Find in `## How to Start`:
 ```
-1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first." Then stop.
+1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first." Then stop.
 2. Ask:
 ```
 
 Replace with:
 ```
-1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first." Then stop.
+1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first." Then stop.
 
 2. Read `memory/ideas.md`. Filter to ideas with status `discovered`. Select the working idea for this session:
-   - If the file does not exist or has no ideas with status `discovered`: say "No ideas are ready for validation. Run `/BussinesAgents:discover` first to generate a discovery report for an idea." Then stop.
+   - If the file does not exist or has no ideas with status `discovered`: say "No ideas are ready for validation. Run `/BusinessAgents:discover` first to generate a discovery report for an idea." Then stop.
    - If exactly one `discovered` idea exists: confirm — "I'll validate: **[slug]** — [description]. Is that right?" Wait for confirmation.
    - If multiple `discovered` ideas exist: say "Which idea do you want to validate?" and show a numbered list (discovered ideas only):
      ```
@@ -352,7 +352,7 @@ After the last rule in `## Hard Rules`, add:
 - [ ] **Step 6: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/validate.md
+git add .claude/skills/BusinessAgents/validate.md
 git commit -m "feat: add idea picker and namespaced output path to validate agent"
 ```
 
@@ -361,7 +361,7 @@ git commit -m "feat: add idea picker and namespaced output path to validate agen
 ### Task 5: Update simulate_user.md — Idea picker + new output paths + registry update
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/simulate_user.md`
+- Modify: `.claude/skills/BusinessAgents/simulate_user.md`
 
 - [ ] **Step 1: Replace How to Start steps 1–3 with idea-aware version**
 
@@ -373,17 +373,17 @@ Find this block in `## How to Start`:
    - The most recent file matching `outputs/validation-*.md` (by date — this takes priority)
    - If no validation report exists, read the most recent `outputs/opportunity-discovery-*.md` instead
 
-2. If `memory/startup-context.md` shows "(not yet initialized)", stop and say: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first — it only takes 5 minutes." Then stop.
+2. If `memory/startup-context.md` shows "(not yet initialized)", stop and say: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes." Then stop.
 
 3. Extract from what you read:
 ```
 
 Replace with:
 ```
-1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", stop and say: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first — it only takes 5 minutes." Then stop.
+1. Read `memory/startup-context.md` and `memory/icp.md` silently. If `startup-context.md` shows "(not yet initialized)", stop and say: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes." Then stop.
 
 2. Read `memory/ideas.md`. Filter to ideas with status `validated-go`. Select the working idea for this session:
-   - If the file does not exist or has no ideas with status `validated-go`: say "No ideas are ready for simulation. Run `/BussinesAgents:validate` first and get a Go verdict." Then stop.
+   - If the file does not exist or has no ideas with status `validated-go`: say "No ideas are ready for simulation. Run `/BusinessAgents:validate` first and get a Go verdict." Then stop.
    - If exactly one `validated-go` idea exists: confirm — "I'll simulate end users for: **[slug]** — [description]. Is that right?" Wait for confirmation.
    - If multiple `validated-go` ideas exist: say "Which idea do you want to simulate?" and show a numbered list (`validated-go` ideas only):
      ```
@@ -460,7 +460,7 @@ After the last rule in `## Hard Rules`, add:
 - [ ] **Step 7: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/simulate_user.md
+git add .claude/skills/BusinessAgents/simulate_user.md
 git commit -m "feat: add idea picker and namespaced output paths to simulate_user agent"
 ```
 
@@ -469,7 +469,7 @@ git commit -m "feat: add idea picker and namespaced output paths to simulate_use
 ### Task 6: Update docs.md — Idea picker + new output paths + registry update
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/docs.md`
+- Modify: `.claude/skills/BusinessAgents/docs.md`
 
 - [ ] **Step 1: Replace How to Start steps 1–4 with idea-aware version**
 
@@ -477,16 +477,16 @@ Find this block in `## How to Start`:
 ```
 1. Read all files in `memory/` silently: `startup-context.md`, `icp.md`, `decisions-log.md`.
 2. Read all `.md` files in `outputs/` silently (discovery and validation reports if they exist).
-3. If `memory/startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first — it only takes 5 minutes." Then stop.
+3. If `memory/startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes." Then stop.
 4. Ask:
 ```
 
 Replace with:
 ```
 1. Read all files in `memory/` silently: `startup-context.md`, `icp.md`, `decisions-log.md`.
-2. If `memory/startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first — it only takes 5 minutes." Then stop.
+2. If `memory/startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes." Then stop.
 3. Read `memory/ideas.md`. Select the working idea for this session:
-   - If the file does not exist or has no non-archived ideas: say "No ideas registered yet. Please run `/BussinesAgents:founder` and choose 'New idea' first." Then stop.
+   - If the file does not exist or has no non-archived ideas: say "No ideas registered yet. Please run `/BusinessAgents:founder` and choose 'New idea' first." Then stop.
    - If exactly one non-archived idea exists: confirm — "I'll generate documents for: **[slug]** — [description]. Is that right?" Wait for confirmation.
    - If multiple non-archived ideas exist: say "Which idea do you want to generate documents for?" and show a numbered list:
      ```
@@ -558,12 +558,12 @@ Save to: `outputs/ideas/<working-slug>/slides/<presentation-name>-<YYYY-MM-DD>.h
 
 Find the slides confirmation message:
 ```
-Tell the founder: "Slides saved to `outputs/slides/[filename].html`. Open that file in any browser to present. Use arrow keys or the on-screen buttons to navigate. When you have more information, run `/BussinesAgents:docs` again to update it."
+Tell the founder: "Slides saved to `outputs/slides/[filename].html`. Open that file in any browser to present. Use arrow keys or the on-screen buttons to navigate. When you have more information, run `/BusinessAgents:docs` again to update it."
 ```
 
 Replace with:
 ```
-Tell the founder: "Slides saved to `outputs/ideas/<working-slug>/slides/[filename].html`. Open that file in any browser to present. Use arrow keys or the on-screen buttons to navigate. When you have more information, run `/BussinesAgents:docs` again to update it."
+Tell the founder: "Slides saved to `outputs/ideas/<working-slug>/slides/[filename].html`. Open that file in any browser to present. Use arrow keys or the on-screen buttons to navigate. When you have more information, run `/BusinessAgents:docs` again to update it."
 ```
 
 - [ ] **Step 5: Add Registry Update section before Hard Rules**
@@ -591,7 +591,7 @@ After the last rule in `## Hard Rules`, add:
 - [ ] **Step 7: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/docs.md
+git add .claude/skills/BusinessAgents/docs.md
 git commit -m "feat: add idea picker and namespaced output paths to docs agent"
 ```
 
@@ -715,13 +715,13 @@ outputs/
 
 Find in `## Key Rules Across All Agents`:
 ```
-- `/BussinesAgents:founder` must run first — all other agents stop and redirect if memory is uninitialized.
+- `/BusinessAgents:founder` must run first — all other agents stop and redirect if memory is uninitialized.
 - Each agent reads memory and prior outputs before asking questions — you never explain your context twice.
 ```
 
 Add after these two lines:
 ```
-- Register every new product idea with `/BussinesAgents:founder` → "New idea" before running any downstream agent — all agents require an entry in `memory/ideas.md`.
+- Register every new product idea with `/BusinessAgents:founder` → "New idea" before running any downstream agent — all agents require an entry in `memory/ideas.md`.
 - Each downstream agent asks "which idea?" at startup and scopes all file reads and writes to `outputs/ideas/<slug>/` — files from different ideas are never mixed.
 ```
 
@@ -730,22 +730,22 @@ Add after these two lines:
 Find:
 ```
 You can re-run any agent at any point:
-- Re-run `/BussinesAgents:founder` (Update mode) whenever your constraints or target customer changes.
-- Re-run `/BussinesAgents:discover` to explore a different problem space.
-- Re-run `/BussinesAgents:validate` on a new problem after a No-go verdict.
-- Re-run `/BussinesAgents:docs` to update documents as new information comes in.
+- Re-run `/BusinessAgents:founder` (Update mode) whenever your constraints or target customer changes.
+- Re-run `/BusinessAgents:discover` to explore a different problem space.
+- Re-run `/BusinessAgents:validate` on a new problem after a No-go verdict.
+- Re-run `/BusinessAgents:docs` to update documents as new information comes in.
 ```
 
 Replace with:
 ```
 You can re-run any agent at any point:
-- Re-run `/BussinesAgents:founder` (Update mode) whenever your constraints or target customer changes.
-- Re-run `/BussinesAgents:founder` → "New idea" to register a second product idea and explore it in parallel.
-- Re-run `/BussinesAgents:discover` to explore a different problem space for any registered idea.
-- Re-run `/BussinesAgents:validate` on a new problem after a No-go verdict.
-- Re-run `/BussinesAgents:docs` to update documents as new information comes in.
+- Re-run `/BusinessAgents:founder` (Update mode) whenever your constraints or target customer changes.
+- Re-run `/BusinessAgents:founder` → "New idea" to register a second product idea and explore it in parallel.
+- Re-run `/BusinessAgents:discover` to explore a different problem space for any registered idea.
+- Re-run `/BusinessAgents:validate` on a new problem after a No-go verdict.
+- Re-run `/BusinessAgents:docs` to update documents as new information comes in.
 
-**Working on multiple ideas:** Register each product idea separately with `/BussinesAgents:founder` → "New idea". Each downstream agent will show a numbered menu so you can pick which idea to work on for that session. All files stay scoped to their idea's folder in `outputs/ideas/`.
+**Working on multiple ideas:** Register each product idea separately with `/BusinessAgents:founder` → "New idea". Each downstream agent will show a numbered menu so you can pick which idea to work on for that session. All files stay scoped to their idea's folder in `outputs/ideas/`.
 ```
 
 - [ ] **Step 4: Commit**

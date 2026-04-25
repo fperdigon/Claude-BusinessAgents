@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the `/BussinesAgents:simulate_user` agent that simulates an end user's current workflow in 2–3 real situations and shows how the proposed solution changes each one, producing a full report and a shareable user-facing one-pager.
+**Goal:** Build the `/BusinessAgents:simulate_user` agent that simulates an end user's current workflow in 2–3 real situations and shows how the proposed solution changes each one, producing a full report and a shareable user-facing one-pager.
 
 **Architecture:** A single skill file drives the agent behavior. A one-line command stub invokes the skill. The docs agent skill file is updated to support a new "User Impact Journey Map" document type that reads from simulation output files.
 
@@ -14,9 +14,9 @@
 
 | Action | Path | Responsibility |
 |--------|------|----------------|
-| Create | `.claude/skills/BussinesAgents/simulate_user.md` | Full agent behavior — the source of truth |
-| Create | `.claude/commands/BussinesAgents/simulate_user.md` | Slash command stub that invokes the skill |
-| Modify | `.claude/skills/BussinesAgents/docs.md` | Add "User Impact Journey Map" document type |
+| Create | `.claude/skills/BusinessAgents/simulate_user.md` | Full agent behavior — the source of truth |
+| Create | `.claude/commands/BusinessAgents/simulate_user.md` | Slash command stub that invokes the skill |
+| Modify | `.claude/skills/BusinessAgents/docs.md` | Add "User Impact Journey Map" document type |
 | Modify | `docs/superpowers/specs/2026-04-22-business-agents-design.md` | Add simulate_user to the agent lineup table |
 
 ---
@@ -24,34 +24,34 @@
 ## Task 1: Create the slash command stub
 
 **Files:**
-- Create: `.claude/commands/BussinesAgents/simulate_user.md`
+- Create: `.claude/commands/BusinessAgents/simulate_user.md`
 
 - [ ] **Step 1: Create the command file**
 
-Write `.claude/commands/BussinesAgents/simulate_user.md` with this exact content:
+Write `.claude/commands/BusinessAgents/simulate_user.md` with this exact content:
 
 ```
-Follow the End User Simulator Agent skill defined in `.claude/skills/BussinesAgents/simulate_user.md` exactly. Read that file first, then execute it from the beginning.
+Follow the End User Simulator Agent skill defined in `.claude/skills/BusinessAgents/simulate_user.md` exactly. Read that file first, then execute it from the beginning.
 ```
 
 - [ ] **Step 2: Verify the file exists and matches the pattern**
 
 Run:
 ```bash
-cat .claude/commands/BussinesAgents/simulate_user.md
+cat .claude/commands/BusinessAgents/simulate_user.md
 ```
 Expected: the one-line stub above, no extra content.
 
 Compare against an existing stub to confirm pattern match:
 ```bash
-cat .claude/commands/BussinesAgents/validate.md
+cat .claude/commands/BusinessAgents/validate.md
 ```
 Expected: same single-line pattern, only the skill name differs.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add .claude/commands/BussinesAgents/simulate_user.md
+git add .claude/commands/BusinessAgents/simulate_user.md
 git commit -m "feat: add simulate_user slash command stub"
 ```
 
@@ -60,11 +60,11 @@ git commit -m "feat: add simulate_user slash command stub"
 ## Task 2: Write the simulate_user skill file
 
 **Files:**
-- Create: `.claude/skills/BussinesAgents/simulate_user.md`
+- Create: `.claude/skills/BusinessAgents/simulate_user.md`
 
 - [ ] **Step 1: Create the skill file**
 
-Write `.claude/skills/BussinesAgents/simulate_user.md` with this exact content:
+Write `.claude/skills/BusinessAgents/simulate_user.md` with this exact content:
 
 ```markdown
 # End User Simulator Agent
@@ -81,7 +81,7 @@ You are the End User Simulator Agent. Your job is to show founders — and their
    - The most recent file matching `outputs/validation-*.md` (by date — this takes priority)
    - If no validation report exists, read the most recent `outputs/opportunity-discovery-*.md` instead
 
-2. If `memory/startup-context.md` shows "(not yet initialized)", stop and say: "It looks like your startup context hasn't been set up yet. Please run `/BussinesAgents:founder` first — it only takes 5 minutes." Then stop.
+2. If `memory/startup-context.md` shows "(not yet initialized)", stop and say: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes." Then stop.
 
 3. Extract from what you read:
    - **Persona** — the ICP from `memory/icp.md`
@@ -383,12 +383,12 @@ Always show this in the conversation before mentioning the saved files:
 Full report saved to: outputs/simulation-<persona>-<YYYY-MM-DD>.md
 One-pager saved to: outputs/simulation-<persona>-onepager-<YYYY-MM-DD>.md
 
-Next step: Run `/BussinesAgents:docs` and choose "User Impact Journey Map" to create a visual slide from this simulation.
+Next step: Run `/BusinessAgents:docs` and choose "User Impact Journey Map" to create a visual slide from this simulation.
 ```
 
 ## Hard Rules
 
-- Always read `memory/icp.md` and `memory/startup-context.md` at the start — stop and redirect to `/BussinesAgents:founder` if uninitialized
+- Always read `memory/icp.md` and `memory/startup-context.md` at the start — stop and redirect to `/BusinessAgents:founder` if uninitialized
 - Validation report takes priority over discovery report when loading the solution description
 - Use web search before asking the founder about workflow details — never make the founder do research the agent can do
 - Always announce which situation you are simulating before generating it
@@ -403,19 +403,19 @@ Next step: Run `/BussinesAgents:docs` and choose "User Impact Journey Map" to cr
 - [ ] **Step 2: Verify the file was created**
 
 ```bash
-wc -l .claude/skills/BussinesAgents/simulate_user.md
+wc -l .claude/skills/BusinessAgents/simulate_user.md
 ```
 Expected: more than 150 lines (the full skill content).
 
 ```bash
-head -5 .claude/skills/BussinesAgents/simulate_user.md
+head -5 .claude/skills/BusinessAgents/simulate_user.md
 ```
 Expected: first line is `# End User Simulator Agent`.
 
 - [ ] **Step 3: Verify all sections are present**
 
 ```bash
-grep "^##" .claude/skills/BussinesAgents/simulate_user.md
+grep "^##" .claude/skills/BusinessAgents/simulate_user.md
 ```
 Expected output (in this order):
 ```
@@ -431,7 +431,7 @@ Expected output (in this order):
 - [ ] **Step 4: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/simulate_user.md
+git add .claude/skills/BusinessAgents/simulate_user.md
 git commit -m "feat: add simulate_user skill — end user workflow simulation agent"
 ```
 
@@ -440,14 +440,14 @@ git commit -m "feat: add simulate_user skill — end user workflow simulation ag
 ## Task 3: Update docs.md to add User Impact Journey Map
 
 **Files:**
-- Modify: `.claude/skills/BussinesAgents/docs.md`
+- Modify: `.claude/skills/BusinessAgents/docs.md`
 
 - [ ] **Step 1: Add the new document type to the menu**
 
-In `.claude/skills/BussinesAgents/docs.md`, find the `**Documents**` menu block that lists available document types. It ends before the `**Slides**` section. Add this entry at the end of the Documents list, before the `**Slides**` header:
+In `.claude/skills/BusinessAgents/docs.md`, find the `**Documents**` menu block that lists available document types. It ends before the `**Slides**` section. Add this entry at the end of the Documents list, before the `**Slides**` header:
 
 ```
-> - User impact journey map — a before/after visual of how your solution changes the end user's workflow across real situations (requires a simulation report from `/BussinesAgents:simulate_user`)
+> - User impact journey map — a before/after visual of how your solution changes the end user's workflow across real situations (requires a simulation report from `/BusinessAgents:simulate_user`)
 ```
 
 - [ ] **Step 2: Add the User Impact Journey Map generation section**
@@ -459,7 +459,7 @@ After the `### Competitive Landscape Summary` section and before `## Slide Gener
 
 A before/after visual journey of how the solution changes the end user's workflow. Generated from the most recent simulation report in `outputs/`.
 
-Before generating, read the most recent file matching `outputs/simulation-*-<YYYY-MM-DD>.md` (by date, not the onepager). If no simulation report exists, say: "This document requires a simulation report. Please run `/BussinesAgents:simulate_user` first, then come back here."
+Before generating, read the most recent file matching `outputs/simulation-*-<YYYY-MM-DD>.md` (by date, not the onepager). If no simulation report exists, say: "This document requires a simulation report. Please run `/BusinessAgents:simulate_user` first, then come back here."
 
 Generate a self-contained HTML file using the base template in the Slide Generation section. Build one slide per simulated situation, plus a summary slide. Each situation slide shows a two-column before/after table.
 
@@ -524,14 +524,14 @@ Tell the founder: "Journey map saved to `outputs/docs/user-impact-journey-map-<Y
 - [ ] **Step 3: Verify the docs.md file still has all original sections intact**
 
 ```bash
-grep "^###" .claude/skills/BussinesAgents/docs.md
+grep "^###" .claude/skills/BusinessAgents/docs.md
 ```
 Expected: all original section headers present, plus `### User Impact Journey Map` in the list.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/docs.md
+git add .claude/skills/BusinessAgents/docs.md
 git commit -m "feat: add User Impact Journey Map document type to docs agent"
 ```
 
@@ -549,16 +549,16 @@ In `docs/superpowers/specs/2026-04-22-business-agents-design.md`, find the Agent
 ```markdown
 | Slash Command | Role |
 |---|---|
-| `/BussinesAgents:founder` | Startup memory manager + context keeper |
-| `/BussinesAgents:discover` | Opportunity research + problem ranking |
-| `/BussinesAgents:validate` | Idea validation + go/no-go recommendation |
-| `/BussinesAgents:docs` | Business document + slide generation |
+| `/BusinessAgents:founder` | Startup memory manager + context keeper |
+| `/BusinessAgents:discover` | Opportunity research + problem ranking |
+| `/BusinessAgents:validate` | Idea validation + go/no-go recommendation |
+| `/BusinessAgents:docs` | Business document + slide generation |
 ```
 
-Add the new row after `/BussinesAgents:validate`:
+Add the new row after `/BusinessAgents:validate`:
 
 ```markdown
-| `/BussinesAgents:simulate_user` | End user workflow simulation + benefit quantification |
+| `/BusinessAgents:simulate_user` | End user workflow simulation + benefit quantification |
 ```
 
 - [ ] **Step 2: Update the Recommended First-Use Flow section**
@@ -566,31 +566,31 @@ Add the new row after `/BussinesAgents:validate`:
 Find the existing flow:
 
 ```
-1. Run `/BussinesAgents:founder` in **Initialize** mode — sets up all memory files
-2. Run `/BussinesAgents:discover` — research problems in your chosen space
-3. Run `/BussinesAgents:validate` — test the most promising problem from step 2
-4. Run `/BussinesAgents:docs` — generate a business plan or pitch deck once you have a validated idea
-5. Return to `/BussinesAgents:founder` **Update** mode whenever your thinking evolves
+1. Run `/BusinessAgents:founder` in **Initialize** mode — sets up all memory files
+2. Run `/BusinessAgents:discover` — research problems in your chosen space
+3. Run `/BusinessAgents:validate` — test the most promising problem from step 2
+4. Run `/BusinessAgents:docs` — generate a business plan or pitch deck once you have a validated idea
+5. Return to `/BusinessAgents:founder` **Update** mode whenever your thinking evolves
 ```
 
 Replace with:
 
 ```
-1. Run `/BussinesAgents:founder` in **Initialize** mode — sets up all memory files
-2. Run `/BussinesAgents:discover` — research problems in your chosen space
-3. Run `/BussinesAgents:simulate_user` (optional early run) — simulate the end user's workflow before validating to sharpen your understanding of the benefit
-4. Run `/BussinesAgents:validate` — test the most promising problem from step 2
-5. Run `/BussinesAgents:simulate_user` (post-validation run) — now with more evidence, produce the shareable user one-pager
-6. Run `/BussinesAgents:docs` — generate a business plan, pitch deck, or User Impact Journey Map slide
-7. Return to `/BussinesAgents:founder` **Update** mode whenever your thinking evolves
+1. Run `/BusinessAgents:founder` in **Initialize** mode — sets up all memory files
+2. Run `/BusinessAgents:discover` — research problems in your chosen space
+3. Run `/BusinessAgents:simulate_user` (optional early run) — simulate the end user's workflow before validating to sharpen your understanding of the benefit
+4. Run `/BusinessAgents:validate` — test the most promising problem from step 2
+5. Run `/BusinessAgents:simulate_user` (post-validation run) — now with more evidence, produce the shareable user one-pager
+6. Run `/BusinessAgents:docs` — generate a business plan, pitch deck, or User Impact Journey Map slide
+7. Return to `/BusinessAgents:founder` **Update** mode whenever your thinking evolves
 ```
 
 - [ ] **Step 3: Add the data flow entry for simulate_user**
 
-Find the Memory & Data Flow section. After the `/BussinesAgents:validate` block, add:
+Find the Memory & Data Flow section. After the `/BusinessAgents:validate` block, add:
 
 ```
-/BussinesAgents:simulate_user
+/BusinessAgents:simulate_user
   reads  → memory/startup-context.md
            memory/icp.md
            outputs/validation-*.md (most recent by date — priority)
@@ -632,10 +632,10 @@ git commit -m "docs: add simulate_user agent to design spec agent lineup and flo
 | User-facing one-pager output | Task 2, Output section |
 | Validation report takes priority over discovery report | Task 2, How to Start + Hard Rules |
 | Docs agent: User Impact Journey Map | Task 3 |
-| Slash command `/BussinesAgents:simulate_user` | Task 1 |
+| Slash command `/BusinessAgents:simulate_user` | Task 1 |
 | Design spec updated | Task 4 |
 | Hard rules (one question at a time, no invented numbers, etc.) | Task 2, Hard Rules |
 
 **Placeholder scan:** No TBD, TODO, or vague steps in this plan.
 
-**Type/name consistency:** The output filenames use `simulation-<persona>-<YYYY-MM-DD>.md` and `simulation-<persona>-onepager-<YYYY-MM-DD>.md` consistently across Task 2 skill content, Task 3 docs.md addition, and Task 4 spec update. The slash command `/BussinesAgents:simulate_user` is consistent across all tasks.
+**Type/name consistency:** The output filenames use `simulation-<persona>-<YYYY-MM-DD>.md` and `simulation-<persona>-onepager-<YYYY-MM-DD>.md` consistently across Task 2 skill content, Task 3 docs.md addition, and Task 4 spec update. The slash command `/BusinessAgents:simulate_user` is consistent across all tasks.

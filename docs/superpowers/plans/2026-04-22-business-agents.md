@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build four Claude Code skills (`/BussinesAgents:founder`, `/BussinesAgents:discover`, `/BussinesAgents:validate`, `/BussinesAgents:docs`) that guide a non-business-savvy founder through startup ideation, validation, and documentation.
+**Goal:** Build four Claude Code skills (`/BusinessAgents:founder`, `/BusinessAgents:discover`, `/BusinessAgents:validate`, `/BusinessAgents:docs`) that guide a non-business-savvy founder through startup ideation, validation, and documentation.
 
-**Architecture:** Each agent is a Markdown skill file in `.claude/skills/BussinesAgents/`. Skills read from `memory/` (structured Markdown files) and write reports to `outputs/`. Only the Founder Agent writes to memory; all others write to outputs. Skills are pure prompt files — no code required.
+**Architecture:** Each agent is a Markdown skill file in `.claude/skills/BusinessAgents/`. Skills read from `memory/` (structured Markdown files) and write reports to `outputs/`. Only the Founder Agent writes to memory; all others write to outputs. Skills are pure prompt files — no code required.
 
 **Tech Stack:** Claude Code skills (Markdown), Markdown memory files, self-contained HTML for slides. No external dependencies.
 
@@ -14,10 +14,10 @@
 
 | Action | Path | Responsibility |
 |--------|------|----------------|
-| Create | `.claude/skills/BussinesAgents/founder.md` | Founder Agent skill prompt |
-| Create | `.claude/skills/BussinesAgents/discover.md` | Discovery Agent skill prompt |
-| Create | `.claude/skills/BussinesAgents/validate.md` | Validation Agent skill prompt |
-| Create | `.claude/skills/BussinesAgents/docs.md` | Docs Agent skill prompt |
+| Create | `.claude/skills/BusinessAgents/founder.md` | Founder Agent skill prompt |
+| Create | `.claude/skills/BusinessAgents/discover.md` | Discovery Agent skill prompt |
+| Create | `.claude/skills/BusinessAgents/validate.md` | Validation Agent skill prompt |
+| Create | `.claude/skills/BusinessAgents/docs.md` | Docs Agent skill prompt |
 | Create | `memory/startup-context.md` | Empty template for startup context |
 | Create | `memory/icp.md` | Empty template for ideal customer profile |
 | Create | `memory/decisions-log.md` | Empty template for decision log |
@@ -30,7 +30,7 @@
 ## Task 1: Project Scaffolding
 
 **Files:**
-- Create: `.claude/skills/BussinesAgents/` (directory)
+- Create: `.claude/skills/BusinessAgents/` (directory)
 - Create: `memory/startup-context.md`
 - Create: `memory/icp.md`
 - Create: `memory/decisions-log.md`
@@ -39,17 +39,17 @@
 - [ ] **Step 1: Initialize git repository**
 
 ```bash
-cd /home/fco/PycharmProjects/BussinesAgents
+cd /home/fco/PycharmProjects/BusinessAgents
 git init
 git branch -M main
 ```
 
-Expected: `Initialized empty Git repository in .../BussinesAgents/.git/`
+Expected: `Initialized empty Git repository in .../BusinessAgents/.git/`
 
 - [ ] **Step 2: Create directory structure**
 
 ```bash
-mkdir -p .claude/skills/BussinesAgents
+mkdir -p .claude/skills/BusinessAgents
 mkdir -p memory
 mkdir -p outputs/docs
 mkdir -p outputs/slides
@@ -63,7 +63,7 @@ Create the file with this exact content:
 
 ```markdown
 # Startup Context
-Last updated: (not yet initialized — run /BussinesAgents:founder to set up)
+Last updated: (not yet initialized — run /BusinessAgents:founder to set up)
 ```
 
 - [ ] **Step 4: Create memory/icp.md template**
@@ -72,7 +72,7 @@ Create the file with this exact content:
 
 ```markdown
 # Ideal Customer Profile
-Last updated: (not yet initialized — run /BussinesAgents:founder to set up)
+Last updated: (not yet initialized — run /BusinessAgents:founder to set up)
 ```
 
 - [ ] **Step 5: Create memory/decisions-log.md template**
@@ -82,7 +82,7 @@ Create the file with this exact content:
 ```markdown
 # Decisions Log
 
-(No decisions logged yet — run /BussinesAgents:founder to initialize)
+(No decisions logged yet — run /BusinessAgents:founder to initialize)
 ```
 
 - [ ] **Step 6: Create gitkeep files**
@@ -116,7 +116,7 @@ Expected: Commit created successfully. Output shows multiple files including mem
 ## Task 2: Founder Agent Skill
 
 **Files:**
-- Create: `.claude/skills/BussinesAgents/founder.md`
+- Create: `.claude/skills/BusinessAgents/founder.md`
 
 **Acceptance criteria before writing:**
 - When invoked, the skill asks which mode (Initialize / Update / Review)
@@ -127,7 +127,7 @@ Expected: Commit created successfully. Output shows multiple files including mem
 
 - [ ] **Step 1: Write the Founder Agent skill file**
 
-Create `.claude/skills/BussinesAgents/founder.md` with this exact content:
+Create `.claude/skills/BusinessAgents/founder.md` with this exact content:
 
 ````markdown
 # Founder Agent — Startup Memory Manager
@@ -193,7 +193,7 @@ Then give a 3–4 sentence plain-language summary of what was written.
 
 Then say:
 
-> "Your next step: run `/BussinesAgents:discover` to start finding problems worth solving."
+> "Your next step: run `/BusinessAgents:discover` to start finding problems worth solving."
 
 ## Update Mode
 
@@ -285,31 +285,31 @@ Last updated: YYYY-MM-DD
 
 - [ ] **Step 2: Verify the skill is discoverable**
 
-In Claude Code, type `/BussinesAgents:` and confirm `founder` appears in the autocomplete list.
+In Claude Code, type `/BusinessAgents:` and confirm `founder` appears in the autocomplete list.
 
-Expected: `/BussinesAgents:founder` is listed as an available skill.
+Expected: `/BusinessAgents:founder` is listed as an available skill.
 
 - [ ] **Step 3: Test Initialize mode**
 
-Invoke `/BussinesAgents:founder` and select Initialize. Verify:
+Invoke `/BusinessAgents:founder` and select Initialize. Verify:
 - It greets you and explains what it does
 - It asks exactly one question at a time
 - Each question includes a brief explanation of why it's being asked
 - After all 5 questions, it writes the three memory files
 - It gives a plain-language summary of what was saved
-- It suggests running `/BussinesAgents:discover` as the next step
+- It suggests running `/BusinessAgents:discover` as the next step
 
 - [ ] **Step 4: Test Review mode**
 
-Invoke `/BussinesAgents:founder` and select Review. Verify:
+Invoke `/BusinessAgents:founder` and select Review. Verify:
 - It reads the memory files and summarizes in plain language
 - It offers to update anything
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/founder.md
-git commit -m "feat: add Founder Agent skill (/BussinesAgents:founder)"
+git add .claude/skills/BusinessAgents/founder.md
+git commit -m "feat: add Founder Agent skill (/BusinessAgents:founder)"
 ```
 
 ---
@@ -317,7 +317,7 @@ git commit -m "feat: add Founder Agent skill (/BussinesAgents:founder)"
 ## Task 3: Opportunity Discovery Agent Skill
 
 **Files:**
-- Create: `.claude/skills/BussinesAgents/discover.md`
+- Create: `.claude/skills/BusinessAgents/discover.md`
 
 **Acceptance criteria before writing:**
 - Reads memory/startup-context.md at the start
@@ -329,7 +329,7 @@ git commit -m "feat: add Founder Agent skill (/BussinesAgents:founder)"
 
 - [ ] **Step 1: Write the Discovery Agent skill file**
 
-Create `.claude/skills/BussinesAgents/discover.md` with this exact content:
+Create `.claude/skills/BusinessAgents/discover.md` with this exact content:
 
 ````markdown
 # Opportunity Discovery Agent
@@ -420,7 +420,7 @@ Always show this in the conversation first:
 
 **Recommended ICP (Ideal Customer Profile):** [One sentence describing who to target first]
 
-**Next step:** Run `/BussinesAgents:validate` to test Problem #1.
+**Next step:** Run `/BusinessAgents:validate` to test Problem #1.
 
 Full report saved to: outputs/opportunity-discovery-[topic]-[YYYY-MM-DD].md
 ```
@@ -467,7 +467,7 @@ Date: YYYY-MM-DD
 
 **Start with Problem [N] because:** [2-3 sentences explaining the recommendation]
 
-**Suggested next step:** Run `/BussinesAgents:validate` with this problem.
+**Suggested next step:** Run `/BusinessAgents:validate` with this problem.
 ```
 
 ## Hard Rules
@@ -482,13 +482,13 @@ Date: YYYY-MM-DD
 
 - [ ] **Step 2: Verify the skill is discoverable**
 
-In Claude Code, type `/BussinesAgents:` and confirm `discover` appears in autocomplete.
+In Claude Code, type `/BusinessAgents:` and confirm `discover` appears in autocomplete.
 
-Expected: `/BussinesAgents:discover` is listed.
+Expected: `/BusinessAgents:discover` is listed.
 
 - [ ] **Step 3: Test the skill flow**
 
-Invoke `/BussinesAgents:discover`. Verify:
+Invoke `/BusinessAgents:discover`. Verify:
 - It reads memory silently and greets without asking what memory says
 - It asks exactly 5 questions, one at a time, each with an explanation
 - After questions, it performs web searches
@@ -499,8 +499,8 @@ Invoke `/BussinesAgents:discover`. Verify:
 - [ ] **Step 4: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/discover.md
-git commit -m "feat: add Opportunity Discovery Agent skill (/BussinesAgents:discover)"
+git add .claude/skills/BusinessAgents/discover.md
+git commit -m "feat: add Opportunity Discovery Agent skill (/BusinessAgents:discover)"
 ```
 
 ---
@@ -508,7 +508,7 @@ git commit -m "feat: add Opportunity Discovery Agent skill (/BussinesAgents:disc
 ## Task 4: Validation Agent Skill
 
 **Files:**
-- Create: `.claude/skills/BussinesAgents/validate.md`
+- Create: `.claude/skills/BusinessAgents/validate.md`
 
 **Acceptance criteria before writing:**
 - Reads memory/startup-context.md at start
@@ -520,7 +520,7 @@ git commit -m "feat: add Opportunity Discovery Agent skill (/BussinesAgents:disc
 
 - [ ] **Step 1: Write the Validation Agent skill file**
 
-Create `.claude/skills/BussinesAgents/validate.md` with this exact content:
+Create `.claude/skills/BusinessAgents/validate.md` with this exact content:
 
 ````markdown
 # Validation Agent
@@ -707,13 +707,13 @@ Success criteria: 5+ responses expressing interest or confirming the problem.
 
 - [ ] **Step 2: Verify the skill is discoverable**
 
-In Claude Code, type `/BussinesAgents:` and confirm `validate` appears in autocomplete.
+In Claude Code, type `/BusinessAgents:` and confirm `validate` appears in autocomplete.
 
-Expected: `/BussinesAgents:validate` is listed.
+Expected: `/BusinessAgents:validate` is listed.
 
 - [ ] **Step 3: Test the skill flow**
 
-Invoke `/BussinesAgents:validate`. Verify:
+Invoke `/BusinessAgents:validate`. Verify:
 - It asks for the idea (description, filename, or pasted content)
 - It asks 6 questions, one at a time, each with explanation
 - Chat summary shows a clear Go/No-go with reasoning
@@ -723,8 +723,8 @@ Invoke `/BussinesAgents:validate`. Verify:
 - [ ] **Step 4: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/validate.md
-git commit -m "feat: add Validation Agent skill (/BussinesAgents:validate)"
+git add .claude/skills/BusinessAgents/validate.md
+git commit -m "feat: add Validation Agent skill (/BusinessAgents:validate)"
 ```
 
 ---
@@ -732,7 +732,7 @@ git commit -m "feat: add Validation Agent skill (/BussinesAgents:validate)"
 ## Task 5: Business Documentation Agent Skill
 
 **Files:**
-- Create: `.claude/skills/BussinesAgents/docs.md`
+- Create: `.claude/skills/BusinessAgents/docs.md`
 
 **Acceptance criteria before writing:**
 - Reads all memory files and all output reports at the start
@@ -744,7 +744,7 @@ git commit -m "feat: add Validation Agent skill (/BussinesAgents:validate)"
 
 - [ ] **Step 1: Write the Docs Agent skill file**
 
-Create `.claude/skills/BussinesAgents/docs.md` with this exact content:
+Create `.claude/skills/BusinessAgents/docs.md` with this exact content:
 
 ````markdown
 # Business Documentation Agent
@@ -1023,13 +1023,13 @@ Tell the founder: "Slides saved to `outputs/slides/[filename].html`. Open that f
 
 - [ ] **Step 2: Verify the skill is discoverable**
 
-In Claude Code, type `/BussinesAgents:` and confirm `docs` appears in autocomplete.
+In Claude Code, type `/BusinessAgents:` and confirm `docs` appears in autocomplete.
 
-Expected: `/BussinesAgents:docs` is listed.
+Expected: `/BusinessAgents:docs` is listed.
 
 - [ ] **Step 3: Test document generation**
 
-Invoke `/BussinesAgents:docs` and request a Vision & Mission statement. Verify:
+Invoke `/BusinessAgents:docs` and request a Vision & Mission statement. Verify:
 - It lists the menu of available document types before asking for a choice
 - It generates the document in the correct format
 - Missing information shows as `[PLACEHOLDER: description]`, not invented content
@@ -1037,7 +1037,7 @@ Invoke `/BussinesAgents:docs` and request a Vision & Mission statement. Verify:
 
 - [ ] **Step 4: Test slide generation**
 
-Invoke `/BussinesAgents:docs` and request a pitch deck. Verify:
+Invoke `/BusinessAgents:docs` and request a pitch deck. Verify:
 - It asks all 4 questions (audience, goal, sections, tone) before generating
 - The generated HTML file opens in a browser without errors
 - Slides navigate with arrow keys and on-screen buttons
@@ -1047,8 +1047,8 @@ Invoke `/BussinesAgents:docs` and request a pitch deck. Verify:
 - [ ] **Step 5: Commit**
 
 ```bash
-git add .claude/skills/BussinesAgents/docs.md
-git commit -m "feat: add Business Documentation Agent skill (/BussinesAgents:docs)"
+git add .claude/skills/BusinessAgents/docs.md
+git commit -m "feat: add Business Documentation Agent skill (/BusinessAgents:docs)"
 ```
 
 ---
@@ -1061,11 +1061,11 @@ git commit -m "feat: add Business Documentation Agent skill (/BussinesAgents:doc
 
 Test the complete founder workflow in order:
 
-1. Run `/BussinesAgents:founder` → Initialize → answer 5 questions → verify all 3 memory files are written
-2. Run `/BussinesAgents:discover` → answer 5 questions → verify chat summary appears → verify report saved to `outputs/`
-3. Run `/BussinesAgents:validate` → paste the discovery report filename → answer 6 questions → verify Go/No-go in chat → verify validation report saved to `outputs/`
-4. Run `/BussinesAgents:docs` → request a Lean Canvas → verify Lean Canvas generated with correct placeholders → verify saved to `outputs/docs/`
-5. Run `/BussinesAgents:docs` → request investor slides → answer 4 questions → verify HTML opens in browser
+1. Run `/BusinessAgents:founder` → Initialize → answer 5 questions → verify all 3 memory files are written
+2. Run `/BusinessAgents:discover` → answer 5 questions → verify chat summary appears → verify report saved to `outputs/`
+3. Run `/BusinessAgents:validate` → paste the discovery report filename → answer 6 questions → verify Go/No-go in chat → verify validation report saved to `outputs/`
+4. Run `/BusinessAgents:docs` → request a Lean Canvas → verify Lean Canvas generated with correct placeholders → verify saved to `outputs/docs/`
+5. Run `/BusinessAgents:docs` → request investor slides → answer 4 questions → verify HTML opens in browser
 
 - [ ] **Step 2: Verify memory is not written by non-Founder agents**
 
@@ -1086,7 +1086,7 @@ git commit -m "chore: verify full agent integration flow"
 
 | Skill | Invoke | Reads | Writes |
 |-------|--------|-------|--------|
-| Founder Agent | `/BussinesAgents:founder` | `memory/*` | `memory/*` |
-| Discovery Agent | `/BussinesAgents:discover` | `memory/startup-context.md` | `outputs/opportunity-discovery-*.md` |
-| Validation Agent | `/BussinesAgents:validate` | `memory/startup-context.md`, `outputs/opportunity-discovery-*.md` | `outputs/validation-*.md` |
-| Docs Agent | `/BussinesAgents:docs` | `memory/*`, `outputs/*` | `outputs/docs/*.md`, `outputs/slides/*.html` |
+| Founder Agent | `/BusinessAgents:founder` | `memory/*` | `memory/*` |
+| Discovery Agent | `/BusinessAgents:discover` | `memory/startup-context.md` | `outputs/opportunity-discovery-*.md` |
+| Validation Agent | `/BusinessAgents:validate` | `memory/startup-context.md`, `outputs/opportunity-discovery-*.md` | `outputs/validation-*.md` |
+| Docs Agent | `/BusinessAgents:docs` | `memory/*`, `outputs/*` | `outputs/docs/*.md`, `outputs/slides/*.html` |

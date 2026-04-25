@@ -14,25 +14,25 @@ Agents are organized around decisions a founder must make, not business departme
 
 | Slash Command | Role |
 |---|---|
-| `/BussinesAgents:founder` | Startup memory manager + context keeper |
-| `/BussinesAgents:discover` | Opportunity research + problem ranking |
-| `/BussinesAgents:validate` | Idea validation + go/no-go recommendation |
-| `/BussinesAgents:simulate_user` | End user workflow simulation + benefit quantification |
-| `/BussinesAgents:docs` | Business document + slide generation |
+| `/BusinessAgents:founder` | Startup memory manager + context keeper |
+| `/BusinessAgents:discover` | Opportunity research + problem ranking |
+| `/BusinessAgents:validate` | Idea validation + go/no-go recommendation |
+| `/BusinessAgents:simulate_user` | End user workflow simulation + benefit quantification |
+| `/BusinessAgents:docs` | Business document + slide generation |
 
 ---
 
 ## Project Structure
 
 ```
-BussinesAgents/
+BusinessAgents/
 ├── .claude/
 │   └── skills/
-│       └── BussinesAgents/
-│           ├── founder.md         # /BussinesAgents:founder
-│           ├── discover.md        # /BussinesAgents:discover
-│           ├── validate.md        # /BussinesAgents:validate
-│           └── docs.md            # /BussinesAgents:docs
+│       └── BusinessAgents/
+│           ├── founder.md         # /BusinessAgents:founder
+│           ├── discover.md        # /BusinessAgents:discover
+│           ├── validate.md        # /BusinessAgents:validate
+│           └── docs.md            # /BusinessAgents:docs
 ├── memory/
 │   ├── startup-context.md         # vision, mission, constraints, priorities
 │   ├── icp.md                     # ideal customer profile
@@ -55,21 +55,21 @@ BussinesAgents/
 ## Memory & Data Flow
 
 ```
-/BussinesAgents:founder
+/BusinessAgents:founder
   writes → memory/startup-context.md
            memory/icp.md
            memory/decisions-log.md
 
-/BussinesAgents:discover
+/BusinessAgents:discover
   reads  → memory/startup-context.md
   writes → outputs/opportunity-discovery-<topic>-<date>.md
 
-/BussinesAgents:validate
+/BusinessAgents:validate
   reads  → memory/startup-context.md
            outputs/opportunity-discovery-*.md (user references a specific file)
   writes → outputs/validation-<idea-name>-<date>.md
 
-/BussinesAgents:simulate_user
+/BusinessAgents:simulate_user
   reads  → memory/startup-context.md
            memory/icp.md
            outputs/validation-*.md (most recent by date — priority)
@@ -77,14 +77,14 @@ BussinesAgents/
   writes → outputs/simulation-<persona>-<YYYY-MM-DD>.md
            outputs/simulation-<persona>-onepager-<YYYY-MM-DD>.md
 
-/BussinesAgents:docs
+/BusinessAgents:docs
   reads  → memory/ (all files)
            outputs/ (all reports)
   writes → outputs/docs/<document-name>-<date>.md
            outputs/slides/<presentation-name>-<date>.html
 ```
 
-**Key rule:** Only `/BussinesAgents:founder` writes to `memory/`. All other agents write to `outputs/`. The user decides (via the Founder Agent) whether findings from outputs should be promoted into core memory. This keeps the source of truth clean and under the founder's control.
+**Key rule:** Only `/BusinessAgents:founder` writes to `memory/`. All other agents write to `outputs/`. The user decides (via the Founder Agent) whether findings from outputs should be promoted into core memory. This keeps the source of truth clean and under the founder's control.
 
 ---
 
@@ -97,7 +97,7 @@ Every agent produces two things:
 
 ---
 
-## Agent 1: Founder Agent (`/BussinesAgents:founder`)
+## Agent 1: Founder Agent (`/BusinessAgents:founder`)
 
 ### Purpose
 The startup's memory manager. Maintains the single source of truth about your company. Acts as your "executive brain" — not a researcher or advisor, just the keeper of what you've decided.
@@ -126,7 +126,7 @@ Research, validation, document generation. It only reads and writes memory.
 
 ---
 
-## Agent 2: Opportunity Discovery Agent (`/BussinesAgents:discover`)
+## Agent 2: Opportunity Discovery Agent (`/BusinessAgents:discover`)
 
 ### Purpose
 Find viable problems worth solving. Prevents building products nobody wants. Produces a ranked list of opportunities with supporting market evidence.
@@ -161,7 +161,7 @@ The agent also reads `memory/startup-context.md` automatically to apply your exi
 
 ---
 
-## Agent 3: Validation Agent (`/BussinesAgents:validate`)
+## Agent 3: Validation Agent (`/BusinessAgents:validate`)
 
 ### Purpose
 Kill bad ideas early before spending money or months building. Designs cheap experiments to test whether a problem is real and whether people will pay for a solution.
@@ -192,7 +192,7 @@ It reads `memory/startup-context.md` automatically. If a discovery report exists
 
 ---
 
-## Agent 4: Business Documentation Agent (`/BussinesAgents:docs`)
+## Agent 4: Business Documentation Agent (`/BusinessAgents:docs`)
 
 ### Purpose
 Generate formal business documents and presentations from everything captured in memory and output files. Produces polished, professional content without requiring business writing skills.
@@ -251,13 +251,13 @@ Reads all files in `memory/` and all files in `outputs/`. For early runs with li
 
 ## Recommended First-Use Flow
 
-1. Run `/BussinesAgents:founder` in **Initialize** mode — sets up all memory files
-2. Run `/BussinesAgents:discover` — research problems in your chosen space
-3. Run `/BussinesAgents:simulate_user` (optional early run) — simulate the end user's workflow before validating to sharpen your understanding of the benefit
-4. Run `/BussinesAgents:validate` — test the most promising problem from step 2
-5. Run `/BussinesAgents:simulate_user` (post-validation run) — now with more evidence, produce the shareable user one-pager
-6. Run `/BussinesAgents:docs` — generate a business plan, pitch deck, or User Impact Journey Map slide
-7. Return to `/BussinesAgents:founder` **Update** mode whenever your thinking evolves
+1. Run `/BusinessAgents:founder` in **Initialize** mode — sets up all memory files
+2. Run `/BusinessAgents:discover` — research problems in your chosen space
+3. Run `/BusinessAgents:simulate_user` (optional early run) — simulate the end user's workflow before validating to sharpen your understanding of the benefit
+4. Run `/BusinessAgents:validate` — test the most promising problem from step 2
+5. Run `/BusinessAgents:simulate_user` (post-validation run) — now with more evidence, produce the shareable user one-pager
+6. Run `/BusinessAgents:docs` — generate a business plan, pitch deck, or User Impact Journey Map slide
+7. Return to `/BusinessAgents:founder` **Update** mode whenever your thinking evolves
 
 Steps 2–4 can be repeated as many times as needed. The system has no "done" state — it supports ongoing iteration.
 

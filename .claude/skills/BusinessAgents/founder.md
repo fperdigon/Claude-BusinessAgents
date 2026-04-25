@@ -69,7 +69,7 @@ Then give a 3–4 sentence plain-language summary of what was written.
 
 Then say:
 
-> "Your next step: run `/BussinesAgents:discover` to start finding problems worth solving."
+> "Your next step: run `/BusinessAgents:discover` to start finding problems worth solving."
 
 ## Update Mode
 
@@ -133,7 +133,7 @@ Then:
 [YYYY-MM-DD] What changed: New idea registered — <slug>. Why: Founder wants to explore this opportunity.
 ```
 
-4. Confirm: "Idea **<slug>** is registered. Your next step: run `/BussinesAgents:discover` to find and rank the real problems this idea could solve."
+4. Confirm: "Idea **<slug>** is registered. Your next step: run `/BusinessAgents:discover` to find and rank the real problems this idea could solve."
 
 ### List Ideas
 

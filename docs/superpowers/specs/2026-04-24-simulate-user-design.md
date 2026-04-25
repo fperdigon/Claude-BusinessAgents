@@ -12,7 +12,7 @@ The End User Simulator helps founders show end users the concrete benefits of th
 
 ## Slash Command
 
-`/BussinesAgents:simulate_user`
+`/BusinessAgents:simulate_user`
 
 ---
 
@@ -29,7 +29,7 @@ Can run after `/discover` (early, exploratory) or after `/validate` (refined, mo
 ## Data Flow
 
 ```
-/BussinesAgents:simulate_user
+/BusinessAgents:simulate_user
   reads  → memory/startup-context.md
            memory/icp.md
            outputs/validation-*.md (most recent by date, if exists — takes priority)
@@ -45,7 +45,7 @@ Can run after `/discover` (early, exploratory) or after `/validate` (refined, mo
 The agent always runs these steps in order:
 
 ### Step 1 — Load context silently
-Read `memory/icp.md`, `memory/startup-context.md`, and the most recent discovery and validation reports in `outputs/` (if they exist). If `startup-context.md` is uninitialized, stop and redirect: "Please run `/BussinesAgents:founder` first."
+Read `memory/icp.md`, `memory/startup-context.md`, and the most recent discovery and validation reports in `outputs/` (if they exist). If `startup-context.md` is uninitialized, stop and redirect: "Please run `/BusinessAgents:founder` first."
 
 ### Step 2 — Confirm persona (Question 1)
 Present the loaded ICP to the founder:
@@ -224,18 +224,18 @@ Plain language, no jargon. Framed as "here's what this could change for you."
 
 ## Docs Agent Addition
 
-When `/BussinesAgents:docs` is run, a new document type is available:
+When `/BusinessAgents:docs` is run, a new document type is available:
 
 **"User Impact Journey Map"** — an HTML slide showing the before/after workflow for each simulated situation. Uses the same visual style as existing slides (dark navy background, white text, blue accent). Reads from the most recent simulation report in `outputs/`.
 
-Add to the `/BussinesAgents:docs` menu:
-> - User impact journey map — a before/after visual of how your solution changes the end user's workflow (requires a simulation report from `/BussinesAgents:simulate_user`)
+Add to the `/BusinessAgents:docs` menu:
+> - User impact journey map — a before/after visual of how your solution changes the end user's workflow (requires a simulation report from `/BusinessAgents:simulate_user`)
 
 ---
 
 ## Hard Rules
 
-- Always read `memory/icp.md` and `memory/startup-context.md` at the start — stop and redirect to `/BussinesAgents:founder` if uninitialized
+- Always read `memory/icp.md` and `memory/startup-context.md` at the start — stop and redirect to `/BusinessAgents:founder` if uninitialized
 - Use web search before asking the founder about workflow details — never make the founder do research the agent can do
 - Always tell the founder which situation is being simulated before generating it
 - Never invent benefit numbers without a source or clear estimate basis — label all estimates as estimates with the reasoning shown
@@ -277,4 +277,4 @@ One-pager saved to: outputs/simulation-<persona>-onepager-<YYYY-MM-DD>.md
 - No multi-persona simulation in a single run (one persona per run)
 - No automated chaining with other agents — founder manually decides when to run this
 - No real user data or interviews — simulation is based on web research + founder input only
-- No quantitative ROI or revenue projections — that belongs in `/BussinesAgents:docs`
+- No quantitative ROI or revenue projections — that belongs in `/BusinessAgents:docs`
