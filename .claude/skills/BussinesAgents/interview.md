@@ -170,7 +170,7 @@ Use `data-key` attributes to uniquely identify each field: pattern is `i{N}-name
   <h2>Interview #{N}</h2>
   <div class="header-fields">
     <div class="field"><label>Name</label><input type="text" data-key="i{N}-name" placeholder="Interviewee name"></div>
-    <div class="field"><label>Date</label><input type="text" data-key="i{N}-date" placeholder="YYYY-MM-DD"></div>
+    <div class="field"><label>Date</label><input type="date" data-key="i{N}-date"></div>
     <div class="field"><label>Role</label><input type="text" data-key="i{N}-role" placeholder="Job title"></div>
     <div class="field"><label>Company Size</label><input type="text" data-key="i{N}-company" placeholder="e.g. 10-50 employees"></div>
   </div>
