@@ -190,6 +190,34 @@ If the founder picks option 2, ask which platforms, then generate only those. St
 
 ---
 
+## Theme Mode Detection (automatic — no question needed)
+
+After all color choices are confirmed (either from Question 4 or from the website extraction in Question 1), silently classify the brand theme before generating any assets.
+
+**How to classify:**
+
+Find the brand's dominant background color — the one used for page background, hero sections, or primary surfaces. Calculate its perceived brightness:
+
+`brightness = 0.299 × R + 0.587 × G + 0.114 × B` (R, G, B are 0–255)
+
+| Brightness | Classification |
+|-----------|---------------|
+| Below 110 | **dark** — the brand uses a dark background |
+| Above 145 | **light** — the brand uses a light background |
+| 110–145 | **neutral** — mixed or ambiguous theme |
+
+Store as `<brand-theme>` = "dark", "light", or "neutral".
+
+**Determine which mode variant(s) to generate** and store as `<mode-variants>`:
+- `<brand-theme>` = "dark" → `<mode-variants>` = ["light"] — only generate a light mode variant
+- `<brand-theme>` = "light" → `<mode-variants>` = ["dark"] — only generate a dark mode variant
+- `<brand-theme>` = "neutral" → `<mode-variants>` = ["dark", "light"] — generate both
+
+**Tell the founder** (one sentence, before moving to logo generation):
+> "Your brand palette reads as **[dark / light / neutral]**-themed. I'll generate **[light mode / dark mode / both dark and light mode]** variant(s) alongside the main kit so your assets work in both contexts."
+
+---
+
 ## Logo Generation (SVG)
 
 Generate four logo variants as separate SVG files. All SVGs must be:
@@ -263,6 +291,152 @@ Primary logo with all colors replaced by a single dark color (`#1a1a1a` or the d
 ```
 
 Choose the icon style that best matches the brand feeling and product positioning from `memory/startup-context.md`.
+
+---
+
+## Dark/Light Mode Variant Generation
+
+Run this section immediately after the main logo kit is generated. Generate mode variants for every entry in `<mode-variants>`.
+
+### Palette Derivation
+
+For each mode, derive an adapted palette from the confirmed brand colors. Show the derived palette in chat and wait for the founder's confirmation before generating logos for that mode.
+
+**Deriving a dark mode palette** (run when "dark" is in `<mode-variants>`):
+
+| Token | How to derive |
+|-------|--------------|
+| Background | Take the darkest brand color and push it toward near-black. Target brightness < 30. Example: primary `#1a3a6b` → dark bg `#0d1b36`. If the brand has no dark color, derive one from the primary hue at 10–15% lightness. |
+| Surface (cards/panels) | Background + 8–12% brightness increase. |
+| Text (primary) | `#f8fafc` or `#e2e8f0` |
+| Text muted | `#94a3b8` |
+| Accent | Keep brand accent. If contrast ratio against the dark background is below 3:1, increase brightness by ~10% and note the adjustment. |
+| Border/divider | `rgba(255,255,255,0.1)` |
+
+**Deriving a light mode palette** (run when "light" is in `<mode-variants>`):
+
+| Token | How to derive |
+|-------|--------------|
+| Background | `#ffffff` or a very slight tint from the brand hue (target brightness > 245). Example: navy-dominant brand → `#f8f9fb` (cool tint). |
+| Surface (cards/panels) | `#f1f5f9` or a slightly tinted off-white. |
+| Text (primary) | Use the darkest brand color, or derive a near-black from it (target brightness < 30). |
+| Text muted | `#64748b` |
+| Accent | Keep brand accent. If contrast ratio against the light background is below 3:1, darken slightly and note the adjustment. |
+| Border/divider | `rgba(0,0,0,0.08)` |
+
+**Present each derived palette before generating its logos:**
+> "**[Dark / Light] mode palette:**
+> - Background: [hex] — derived from [source color]
+> - Surface: [hex]
+> - Text: [hex]
+> - Text muted: [hex]
+> - Accent: [hex][, adjusted for contrast against [dark/light] background]
+>
+> Does this look right, or would you like to adjust any values?"
+
+Wait for confirmation. Update and proceed if the founder adjusts any colors.
+
+### Logo Variants per Mode
+
+For each mode, generate 3 SVG logo variants using the derived palette. Follow the same SVG structure as the main variants (same `viewBox`, same icon mark design, same font family) — only the fill colors change.
+
+**Primary logo (icon + wordmark, horizontal):**
+- Dark mode: icon fill = brand accent color, wordmark fill = `#f8fafc` (near-white)
+- Light mode: icon fill = brand accent color, wordmark fill = derived dark text color
+
+**Icon only:**
+- Dark mode: icon background fill = brand accent, initials/symbol fill = dark background color (inverted from main kit)
+- Light mode: icon background fill = brand accent, initials/symbol fill = `#ffffff` or light bg color
+
+**Wordmark only:**
+- Dark mode: text fill = `#f8fafc`
+- Light mode: text fill = derived dark text color
+
+Note: no monochrome variant for mode kits — the main kit's Variant 4 (monochrome dark) already handles single-color usage.
+
+### Output Files
+
+**If `<dual-output>` = false** — save mode files in `[mode]/` subfolders under `<brand-output-path>`:
+```
+<brand-output-path>dark/logo-primary-dark-<YYYY-MM-DD>.svg       ← only if "dark" in <mode-variants>
+<brand-output-path>dark/logo-icon-dark-<YYYY-MM-DD>.svg
+<brand-output-path>dark/logo-wordmark-dark-<YYYY-MM-DD>.svg
+<brand-output-path>light/logo-primary-light-<YYYY-MM-DD>.svg     ← only if "light" in <mode-variants>
+<brand-output-path>light/logo-icon-light-<YYYY-MM-DD>.svg
+<brand-output-path>light/logo-wordmark-light-<YYYY-MM-DD>.svg
+```
+
+**If `<dual-output>` = true** — nest mode subfolders inside each kit subfolder:
+```
+<brand-output-path>original/dark/logo-primary-dark-<YYYY-MM-DD>.svg
+<brand-output-path>original/dark/logo-icon-dark-<YYYY-MM-DD>.svg
+<brand-output-path>original/dark/logo-wordmark-dark-<YYYY-MM-DD>.svg
+<brand-output-path>original/light/logo-primary-light-<YYYY-MM-DD>.svg
+<brand-output-path>original/light/logo-icon-light-<YYYY-MM-DD>.svg
+<brand-output-path>original/light/logo-wordmark-light-<YYYY-MM-DD>.svg
+<brand-output-path>recommended/dark/logo-primary-dark-<YYYY-MM-DD>.svg
+... (same pattern for recommended)
+```
+
+### Mode Variants Section in Brand Guidelines HTML
+
+Add a **Mode Variants** section to the brand guidelines HTML document, immediately after the main color palette section. For each mode variant generated:
+
+```html
+<!-- Mode Variants -->
+<div class="section">
+  <div class="section-label">Mode Variants</div>
+  <h2>Dark &amp; Light Mode Assets</h2>
+  <p>Use the appropriate logo and color set based on the surface your brand appears on. Never place a dark-mode logo on a light background or vice versa.</p>
+
+  <!-- Repeat this block for each mode in <mode-variants> -->
+  <h3 style="margin-bottom:1rem">[Dark / Light] Mode</h3>
+  <p>For use when your brand appears on [dark / light] backgrounds — presentations, banners, UI components, or app shells with a [dark / light] theme.</p>
+
+  <!-- Mode palette swatches -->
+  <div class="color-grid" style="margin-bottom:1.5rem">
+    <div class="swatch">
+      <div class="swatch-color" style="background:[mode-bg-color]"></div>
+      <div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">[hex]</div><div class="swatch-use">[mode] background</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:[mode-surface-color]"></div>
+      <div class="swatch-info"><div class="swatch-name">Surface</div><div class="swatch-hex">[hex]</div><div class="swatch-use">cards, panels</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:[mode-text-color]"></div>
+      <div class="swatch-info"><div class="swatch-name">Text</div><div class="swatch-hex">[hex]</div><div class="swatch-use">primary text</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background:[mode-accent-color]"></div>
+      <div class="swatch-info"><div class="swatch-name">Accent</div><div class="swatch-hex">[hex]</div><div class="swatch-use">highlights, CTAs</div></div>
+    </div>
+  </div>
+
+  <!-- Logo previews on mode-appropriate background -->
+  <div class="logo-grid">
+    <div class="logo-tile" style="background:[mode-bg-color];border:1px solid rgba([mode-border-rgba])">
+      <!-- inline SVG of primary logo for this mode -->
+      <div class="logo-tile-label" style="color:[mode-muted-text]">Primary — [mode] background</div>
+    </div>
+    <div class="logo-tile" style="background:[mode-bg-color];border:1px solid rgba([mode-border-rgba])">
+      <!-- inline SVG of icon logo for this mode -->
+      <div class="logo-tile-label" style="color:[mode-muted-text]">Icon — [mode] background</div>
+    </div>
+    <div class="logo-tile" style="background:[mode-bg-color];border:1px solid rgba([mode-border-rgba])">
+      <!-- inline SVG of wordmark logo for this mode -->
+      <div class="logo-tile-label" style="color:[mode-muted-text]">Wordmark — [mode] background</div>
+    </div>
+  </div>
+
+  <!-- Asset paths -->
+  <p style="margin-top:1rem;font-size:0.8rem;color:#64748b">
+    Files: <code>[mode]/logo-primary-[mode]-[date].svg</code> · <code>[mode]/logo-icon-[mode]-[date].svg</code> · <code>[mode]/logo-wordmark-[mode]-[date].svg</code>
+  </p>
+  <hr style="margin:2rem 0">
+  <!-- End of mode block — repeat for next mode if both were generated -->
+</div>
+```
 
 ---
 
@@ -587,6 +761,26 @@ Where [output-folder] is:
 - Tone: [3–5 adjectives]
 - Feeling: [the feeling selected in Question 3]
 
+### Mode Variants
+- Brand theme detected: [dark / light / neutral]
+- Variants generated: [dark only / light only / both]
+- Dark mode folder: [output-folder]/dark/    ← only if dark variant generated
+- Light mode folder: [output-folder]/light/  ← only if light variant generated
+
+#### Dark mode palette  ← include only if dark variant was generated
+- Background: [hex]
+- Surface: [hex]
+- Text: [hex]
+- Text muted: [hex]
+- Accent: [hex]
+
+#### Light mode palette  ← include only if light variant was generated
+- Background: [hex]
+- Surface: [hex]
+- Text: [hex]
+- Text muted: [hex]
+- Accent: [hex]
+
 ### Guidelines
 - Full brand kit: [output-folder]/brand-guidelines-[date].html
 - Original (comparison): [output-folder for original]/brand-guidelines-[date].html  ← only if dual-output
@@ -640,3 +834,11 @@ For company-scoped brands, skip this step — the brand belongs to the company, 
 - Never include text elements in AI image prompts — inform the founder to add text overlays in Canva/Figma
 - Image prompts must be fully written out with real brand data — never leave `[placeholder]` tokens in prompt output
 - Save image prompts only if the founder requested them; apply the same `-original` / `-recommended` suffixes when `<dual-output>` = true
+- Always run Theme Mode Detection after colors are confirmed — never skip it
+- Never generate a mode variant that matches the current brand theme: dark-themed brand → light variant only; light-themed brand → dark variant only; neutral → both
+- Show each derived mode palette in chat and wait for founder confirmation before generating logos for that mode
+- Dark mode logos must use light text (`#f8fafc` or similar) — never use dark text on a dark background
+- Light mode logos must use dark text (derived from the brand's darkest color) — never use light text on a light background
+- Save mode variant SVGs in `[mode]/` subfolders — never mix them with the main brand kit files
+- When `<dual-output>` = true, nest mode subfolders inside each kit subfolder (`original/dark/`, `recommended/light/`, etc.)
+- Always record mode variant palettes and folder paths in `memory/brand.md` under the active brand scope section
