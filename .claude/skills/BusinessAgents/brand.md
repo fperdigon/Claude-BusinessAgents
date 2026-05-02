@@ -839,6 +839,7 @@ For company-scoped brands, skip this step — the brand belongs to the company, 
 - When `<dual-output>` = false: generate one kit, no suffix
 - Generated SVGs must be fully self-contained — no external font refs, no linked images
 - All SVG `viewBox` must be set — never use only fixed `width`/`height`
+- Icon SVGs with a background rect container **must** include a `<clipPath>` in `<defs>` matching the rect shape (same x, y, width, height, rx) and wrap all graphic elements in `<g clip-path="url(#...)">` — prevents the icon mark from bleeding outside the rounded container
 - Show all outputs in chat before saving — never skip saving
 - Company brand → save to `outputs/brand/` — never to an idea folder
 - Idea brand → save to `outputs/ideas/<working-slug>/brand/` — never to flat paths
