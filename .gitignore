@@ -9,12 +9,8 @@ __pycache__/
 # Private startup data — each founder fills these in via /BussinesAgents:founder
 memory/*.md
 
-# Idea-specific outputs — private research, validation, and simulation reports
-outputs/ideas/
-
-# Generated brand assets and marketing carousels — user content, not source
-outputs/brand/
-outputs/marketing/
+# All generated outputs — user content, not source
+outputs/
 
 # Local MCP server config — machine-specific paths, not portable
 .mcp.json
