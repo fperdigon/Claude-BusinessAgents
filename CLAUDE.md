@@ -1,6 +1,8 @@
 # BusinessAgents — System Overview
 
-A system of five AI agents that guide a founder from raw idea to validated business with professional documentation. Each agent has a focused job. They share memory files and pass outputs to each other so you never repeat yourself.
+A system of AI agents that guide a founder from raw idea to validated business with professional documentation. Each agent has a focused job. They share memory files and pass outputs to each other so you never repeat yourself.
+
+**Requires:** The `scrapling` MCP server is configured in `.mcp.json` and enabled in `.claude/settings.local.json`. The `/BusinessAgents:prospects` and `/BusinessAgents:brand` agents use it to scrape business directories and extract website branding.
 
 ---
 
@@ -97,7 +99,28 @@ A system of five AI agents that guide a founder from raw idea to validated busin
 
 ---
 
-### 6. `/BusinessAgents:docs` — Business Documentation Agent
+### 6. `/BusinessAgents:prospects` — Client Prospect Agent
+
+**Job:** Find real potential clients — companies matching the ICP in the founder's target city — by scraping public business directories. Delivers a ready-to-use lead list with name, phone, email, address, employee count, and decision-maker name.
+
+**Reads:** `memory/startup-context.md`, `memory/icp.md`
+
+**Uses:** Scrapling MCP server (`scrapling mcp`) to fetch Yellow Pages, Yelp, and Google Maps pages
+
+**Asks:** 4 questions — target city, industry focus (law firms / engineering / both), max company size, number of leads
+
+**Enrichment (optional):** Visits each company's website to find email address, employee count, and decision-maker name
+
+**Outputs:**
+- `outputs/ideas/<slug>/prospects-<YYYY-MM-DD>.md` — formatted lead list
+- `outputs/ideas/<slug>/prospects-<YYYY-MM-DD>.csv` — import-ready for any CRM or spreadsheet
+
+**Hands off to:** `/BusinessAgents:interview` — use the prospect list to find people to contact
+
+---
+
+### 7. `/BusinessAgents:docs` — Business Documentation Agent
+
 
 **Job:** Turn everything captured so far into polished business documents and presentations.
 
@@ -143,12 +166,18 @@ Missing information is marked `[PLACEHOLDER: description]` — never invented.
          ↓
 4. /BusinessAgents:validate       →  Test the top problem. Get a Go/No-go verdict.
          ↓ (Go)
-5. /BusinessAgents:interview      →  Talk to real users. Refine the ICP.
+5. /BusinessAgents:prospects      →  Find real companies to contact (scraped lead list)
          ↓
-6. /BusinessAgents:simulate_user  →  2nd run: refined — what actually changes, based on real data
+6. /BusinessAgents:interview      →  Talk to real users. Refine the ICP.
          ↓
-7. /BusinessAgents:docs           →  Generate documents and pitch materials
+7. /BusinessAgents:simulate_user  →  2nd run: refined — what actually changes, based on real data
+         ↓
+8. /BusinessAgents:docs           →  Generate documents and pitch materials
 ```
+
+**Optional helpers — run at any point:**
+- `/BusinessAgents:brand` — build a complete brand identity: extracts colors and fonts from your existing website (if you have one), evaluates the current branding, makes suggestions, and generates SVG logo variants + a brand guidelines HTML document. Saves your colors to `memory/brand.md` so marketing and docs agents use them automatically.
+- `/BusinessAgents:marketing` — create a LinkedIn carousel post from your idea. Use it whenever you want to build an audience, test messaging, or share your thinking publicly. It reads your memory and outputs automatically so you never need to re-explain your context. Run it once or many times — each carousel is saved separately.
 
 You can re-run any agent at any point:
 - Re-run `/BusinessAgents:founder` (Update mode) whenever your constraints or target customer changes.
@@ -165,22 +194,55 @@ You can re-run any agent at any point:
 
 ```
 memory/
-  startup-context.md     ← vision, mission, constraints, priorities
-  icp.md                 ← ideal customer profile
-  decisions-log.md       ← log of every memory change
+  startup-context.md     ← company: vision, mission, constraints, priorities
+  icp.md                 ← company-level ICP (broad market filter — who you serve across all products)
+  decisions-log.md       ← company-level decisions only
   ideas.md               ← registry of all product ideas with status and stage dates
+  brand.md               ← brand colors, typography, logo paths (written by /BusinessAgents:brand)
 
 outputs/
+  brand/                 ← company-level brand (applies to the whole business)
+    logo-primary-*.svg       ← single-kit: all brand files directly here
+    logo-icon-*.svg
+    logo-wordmark-*.svg
+    logo-mono-*.svg
+    brand-guidelines-*.html
+    ai-image-prompts-*.md
+    original/            ← dual-kit only: exact current branding preserved for comparison
+      logo-primary-*.svg
+      logo-icon-*.svg
+      logo-wordmark-*.svg
+      logo-mono-*.svg
+      brand-guidelines-*.html
+      ai-image-prompts-*.md
+    recommended/         ← dual-kit only: improved version (active brand)
+      logo-primary-*.svg
+      logo-icon-*.svg
+      logo-wordmark-*.svg
+      logo-mono-*.svg
+      brand-guidelines-*.html
+      ai-image-prompts-*.md
   ideas/
     <slug>/              ← one folder per product idea (slug = short lowercase name)
+      icp.md                              ← detailed ICP for THIS product (job title, company size, decision authority, etc.)
+      decisions-log.md                    ← decisions specific to this product idea
       opportunity-discovery-*.md          ← discovery report
       validation-*.md                     ← validation plan with Go/No-go verdict
       interview-script-*.md               ← tailored interview question guide
       interview-sheet-*.html              ← editable interview sheet (fill in browser, export to CSV)
       interview-coaching-*-*.md           ← per-session coaching log
       interview-insights-*.md             ← synthesis: assumptions audit + ICP updates
+      prospects-*.md                      ← scraped lead list (formatted)
+      prospects-*.csv                     ← scraped lead list (CRM import)
       simulation-<persona>-*.md           ← end user simulation report
       simulation-<persona>-onepager-*.md  ← plain-language user-facing summary
+      brand/                   ← idea/product-specific sub-brand (optional, same structure as outputs/brand/)
+        logo-primary-*.svg
+        ...
+        original/        ← dual-kit only
+        recommended/     ← dual-kit only
+      marketing/
+        carousel-*.html  ← LinkedIn carousel (browser preview + PDF export for upload)
       docs/
         *.md             ← business documents
         *.html           ← user impact journey map slides
