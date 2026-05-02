@@ -249,6 +249,20 @@ Structure: Icon mark on the left, full company name on the right.
 
 The icon mark from the primary logo, isolated. Square viewBox (e.g., `0 0 80 80`). Use this as a favicon, app icon, or social media profile picture.
 
+Always add a `<clipPath>` in `<defs>` matching the background rect shape, and wrap all graphic elements in `<g clip-path="url(#...)">`. This prevents the icon mark from bleeding outside the rounded container:
+
+```svg
+<defs>
+  <clipPath id="iconBounds">
+    <rect x="[x]" y="[y]" width="[w]" height="[h]" rx="[rx]"/>
+  </clipPath>
+</defs>
+<rect x="[x]" y="[y]" width="[w]" height="[h]" rx="[rx]" fill="[bg]"/>
+<g clip-path="url(#iconBounds)">
+  <!-- icon mark elements here -->
+</g>
+```
+
 ### Variant 3 — Wordmark only
 
 Company name only, no icon. Wide viewBox sized to text. Use this in contexts where the icon would be too small to read.
