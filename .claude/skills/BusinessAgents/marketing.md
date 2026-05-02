@@ -612,17 +612,18 @@ function copyCaption() {
 
 ---
 
-Save to: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD>/carousel-<platform-slug>-<topic-slug>-<YYYY-MM-DD>.html`
+Save to: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>/carousel-<platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>.html`
 
 Where:
 - `<platform-slug>` = destination platform in lowercase (e.g., `linkedin`, `instagram`, `facebook`)
-- `<topic-slug>` = topic in lowercase hyphenated form (e.g., `problem-awareness`, `before-after`, `tips-education`, `founder-story`)
+- `<topic-slug>` = the user's own carousel topic title, slugified to lowercase hyphenated form — NOT the template category name. E.g., if the user said "How law firms can use AI to analyze contracts", use `how-law-firms-can-use-ai-to-analyze-contracts`. If the user said "Our mission at Core-AI", use `our-mission-at-core-ai`. Never substitute a generic label like `tips-education` or `founder-story`.
+- `<YYYY-MM-DD-HH-MM-SS>` = current date and time with hyphens (colons cannot be used in file/folder names), e.g., `2026-05-02-14-35-22`
 
 Each carousel gets its own subfolder so captions, notes, or alternate versions can live alongside it.
 
 Example paths:
-- `outputs/marketing/linkedin-problem-awareness-2026-05-02/carousel-linkedin-problem-awareness-2026-05-02.html`
-- `outputs/ideas/private-ai-montreal-legal/marketing/linkedin-before-after-2026-05-02/carousel-linkedin-before-after-2026-05-02.html`
+- `outputs/marketing/linkedin-how-law-firms-can-use-ai-to-analyze-contracts-2026-05-02-14-35-22/carousel-linkedin-how-law-firms-can-use-ai-to-analyze-contracts-2026-05-02-14-35-22.html`
+- `outputs/ideas/private-ai-montreal-legal/marketing/linkedin-our-mission-at-core-ai-2026-05-02-09-10-04/carousel-linkedin-our-mission-at-core-ai-2026-05-02-09-10-04.html`
 
 Show the full HTML in the chat first, then save.
 
@@ -673,7 +674,7 @@ c.save()
 
 7. **Delete** the temporary `carousel-print-view.html` and all per-slide PNG files after the PDF is saved.
 
-8. Save the PDF as: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD>/carousel-<platform-slug>-<topic-slug>-<YYYY-MM-DD>.pdf`
+8. Save the PDF as: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>/carousel-<platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>.pdf`
 
 ### Tell the founder
 
@@ -706,6 +707,8 @@ After saving the output file:
 - HTML must be fully self-contained — zero external URLs in the final file
 - Apply brand colors via CSS `--bg`, `--accent`, `--text`, `--text-muted` custom properties — default to dark navy + blue if none provided
 - Save to `<carousel-output-path>` set in Q4: `outputs/marketing/` for company brand, `outputs/ideas/<working-slug>/marketing/` for product brand — never to the flat `outputs/` root
+- `<topic-slug>` in all file and folder names must be derived from the user's own topic title (slugified), never from the template category name — e.g., `how-law-firms-can-use-ai-to-analyze-contracts`, not `tips-education`
+- All file and folder names must include the full timestamp as `YYYY-MM-DD-HH-MM-SS` (hyphens only, no colons) — never date-only
 - Replace all `[TOTAL]` placeholders with the actual slide count
 - Always update `memory/ideas.md` after saving — record the marketing stage date
 - Always check `memory/brand.md` and `outputs/ideas/<working-slug>/brand/` for saved brand kits before Question 4 — only ask for manual hex codes if no saved brand is found
