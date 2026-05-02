@@ -249,7 +249,9 @@ Structure: Icon mark on the left, full company name on the right.
 
 The icon mark from the primary logo, isolated. Square viewBox (e.g., `0 0 80 80`). Use this as a favicon, app icon, or social media profile picture.
 
-Always add a `<clipPath>` in `<defs>` matching the background rect shape, and wrap all graphic elements in `<g clip-path="url(#...)">`. This prevents the icon mark from bleeding outside the rounded container:
+Always add a `<clipPath>` in `<defs>` matching the background rect shape, and wrap all graphic elements in `<g clip-path="url(#...)">`. This prevents the icon mark from bleeding outside the rounded container.
+
+**Critical:** never place `clip-path` and `transform` on the same `<g>`. SVG applies `clip-path` in the element's local (already-transformed) coordinate space, so the clip region moves with the transform and the overflow is not clipped. Always use two nested groups: the outer one carries `clip-path`, the inner one carries `transform`.
 
 ```svg
 <defs>
@@ -258,10 +260,14 @@ Always add a `<clipPath>` in `<defs>` matching the background rect shape, and wr
   </clipPath>
 </defs>
 <rect x="[x]" y="[y]" width="[w]" height="[h]" rx="[rx]" fill="[bg]"/>
-<g clip-path="url(#iconBounds)">
-  <!-- icon mark elements here -->
+<g clip-path="url(#iconBounds)">          <!-- clip applied in parent space -->
+  <g transform="[translate/scale if needed]">  <!-- transform on inner group -->
+    <!-- icon mark elements here -->
+  </g>
 </g>
 ```
+
+If no transform is needed, the inner `<g transform>` can be omitted — just place elements directly inside `<g clip-path>`.
 
 ### Variant 3 — Wordmark only
 
@@ -305,6 +311,200 @@ Primary logo with all colors replaced by a single dark color (`#1a1a1a` or the d
 ```
 
 Choose the icon style that best matches the brand feeling and product positioning from `memory/startup-context.md`.
+
+---
+
+## Supplementary UI Icons
+
+Run this section after the logo kit is saved. Recommend a curated set of free icon libraries tailored to the brand feeling and industry, let the founder choose, then download and save a matched set of icons.
+
+### Step 0 — Recommend icon libraries based on brand profile
+
+Read the brand feeling (selected in Question 3) and company context from `memory/startup-context.md`. Select **3–5 libraries** from the catalog below that best match the brand style and industry. Never auto-select — always present options and let the founder choose.
+
+**Free icon library catalog (all free for commercial use, no attribution required):**
+
+| Library | Style | Icon count | Best for | Browse URL | License |
+|---------|-------|-----------|----------|------------|---------|
+| **Heroicons** | Clean outline, 24px | 300+ | Minimal tech/SaaS, AI | heroicons.com | MIT |
+| **Lucide** | Rounded outline, consistent stroke | 1300+ | Friendly tech, B2B services | lucide.dev | ISC |
+| **Phosphor** | 6 styles: thin / light / regular / bold / fill / duotone | 9000+ | Any feeling — extremely versatile | phosphoricons.com | MIT |
+| **Tabler Icons** | Precise stroke outline | 5000+ | Technical, professional, engineering | tabler.io/icons | MIT |
+| **Feather Icons** | Ultra-minimal line icons | 286 | Clean modern brands, developers | feathericons.com | MIT |
+| **Bootstrap Icons** | Outline + fill, broad coverage | 2000+ | General B2B, any industry | icons.getbootstrap.com | MIT |
+| **Remix Icon** | Line + fill, expressive | 2800+ | Bold, editorial, service brands | remixicon.com | Apache 2.0 |
+
+**Selection logic by brand feeling:**
+
+| Feeling | Recommend |
+|---------|-----------|
+| Professional & Trustworthy | Heroicons, Lucide, Feather |
+| Modern & Tech-forward | Heroicons, Tabler, Phosphor |
+| Warm & Approachable | Lucide, Remix Icon, Bootstrap Icons |
+| Bold & Confident | Phosphor (bold/fill style), Remix Icon, Tabler |
+
+**Selection logic by industry:**
+
+| Industry | Recommend |
+|----------|-----------|
+| AI / tech / SaaS | Heroicons, Tabler, Phosphor |
+| Legal / compliance | Heroicons, Lucide, Tabler |
+| Finance / accounting | Heroicons, Feather, Lucide |
+| Healthcare / wellness | Bootstrap Icons, Remix Icon |
+| Retail / consumer | Bootstrap Icons, Remix Icon, Phosphor |
+| Consulting / services | Lucide, Remix Icon, Bootstrap Icons |
+
+Select 3 libraries (more if clearly relevant). For each, write one sentence explaining why it fits this specific brand. Then present:
+
+> "Based on your **[brand feeling]** positioning and **[industry focus]**, here are the icon sets I recommend — all free for commercial use:
+>
+> 1. **[Library Name]** — [one sentence: style description + why it fits this brand]
+>    Browse: **[URL]** · License: [MIT / Apache 2.0 / ISC]
+>
+> 2. **[Library Name]** — [one sentence]
+>    Browse: **[URL]** · License: [license]
+>
+> 3. **[Library Name]** — [one sentence]
+>    Browse: **[URL]** · License: [license]
+>
+> Which one would you like to use? Browse each URL to see the available icons — then reply with the number."
+
+Wait for the founder's response. Store as `<icon-library>` (library name).
+
+---
+
+### Step 1 — Select icons based on startup context
+
+Read `memory/startup-context.md` and `memory/icp.md`. Use the master lookup table below to identify **8–12 icon concepts** most relevant to what the company does, who it serves, and what problems it solves. Pick the best match per category — do not include every row.
+
+**Master icon concept table** (concept names are library-agnostic — use them to find the matching icon in the chosen library):
+
+| Category | When to include | Concept names (browse chosen library for exact names) |
+|----------|----------------|------------------------------------------------------|
+| AI / machine learning | Company uses or sells AI | cpu/chip, lightning/bolt |
+| Privacy / security | Data handling, legal, compliance | shield-check, lock/padlock |
+| Documents / contracts | Law firms, document workflows | document-text, clipboard |
+| Automation / workflows | Process automation, efficiency | cog/gear/settings, arrows-cycle |
+| People / teams | HR, services, consulting | users/group, person |
+| Analytics / growth | Data, reporting, performance | chart-bar, trending-up |
+| Communication | Client services, consulting | chat/message-bubble, envelope/mail |
+| Time / scheduling | Productivity, time-saving | clock, calendar |
+| Ideas / innovation | Strategy, consulting, R&D | light-bulb, rocket |
+| Buildings / offices | Local businesses, real estate | building/office, home |
+| Search / discovery | Research, due diligence | magnifying-glass/search |
+| Web / global | SaaS, international reach | globe |
+| Learning / expertise | Training, consulting, education | academic-cap/graduation |
+| Server / infrastructure | IT, hosting, local AI | server, database/stack |
+| Finance / billing | Accounting, legal billing | banknotes/money, credit-card |
+
+**Heroicons reference names** (if Heroicons was chosen): `cpu-chip`, `bolt`, `shield-check`, `lock-closed`, `document-text`, `clipboard-document`, `cog-8-tooth`, `arrow-path`, `users`, `user-group`, `chart-bar`, `arrow-trending-up`, `chat-bubble-left-right`, `envelope`, `clock`, `calendar-days`, `light-bulb`, `rocket-launch`, `building-office-2`, `magnifying-glass`, `globe-alt`, `academic-cap`, `server-stack`, `circle-stack`, `banknotes`, `credit-card`
+
+For other libraries, browse the chosen library's URL to find icons matching the concepts above.
+
+---
+
+### Step 2 — Fetch URL patterns per library
+
+Use the correct raw SVG fetch URL for the chosen `<icon-library>`:
+
+| Library | Fetch URL pattern |
+|---------|------------------|
+| Heroicons | `https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/<name>.svg` |
+| Lucide | `https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/<name>.svg` |
+| Phosphor | `https://raw.githubusercontent.com/phosphor-icons/core/main/assets/regular/<name>.svg` |
+| Tabler Icons | `https://raw.githubusercontent.com/tabler/tabler-icons/master/icons/outline/<name>.svg` |
+| Feather Icons | `https://raw.githubusercontent.com/feathericons/feather/master/icons/<name>.svg` |
+| Bootstrap Icons | `https://raw.githubusercontent.com/twbs/icons/main/icons/<name>.svg` |
+| Remix Icon | `https://raw.githubusercontent.com/Remix-Design/RemixIcon/master/icons/<Category>/<name>-line.svg` (category folders vary — browse remixicon.com to find the exact path) |
+
+Fetch each selected icon live using the URL pattern for the chosen library. If a fetch returns a 404, try a common name variant (e.g., `lock` vs `lock-closed`, `gear` vs `cog`) or inform the founder that the icon name was not found and suggest browsing the library URL for the exact name.
+
+**Clean each fetched SVG before saving** — remove attributes that would lock color or accessibility role to a fixed value:
+
+| Library | Attributes to remove |
+|---------|---------------------|
+| Heroicons | `aria-hidden="true"`, `data-slot="icon"` |
+| Lucide | `class="..."` (if present), any `data-*` attributes |
+| Phosphor | `class="..."` (if present) |
+| Tabler | Usually clean — no stripping needed |
+| Feather | Usually clean — no stripping needed |
+| Bootstrap | `class="bi bi-..."` |
+| Remix Icon | `class="..."` (if present) |
+
+Always keep: `xmlns`, `viewBox`, `fill`, `stroke-width`, `stroke="currentColor"` (if present). The icon must inherit CSS color via `currentColor`.
+
+---
+
+### Step 3 — Save icon files
+
+**If `<dual-output>` = false:** save to `<brand-output-path>icons/<icon-name>.svg`
+
+**If `<dual-output>` = true:** save to both:
+- `<brand-output-path>recommended/icons/<icon-name>.svg`
+- `<brand-output-path>original/icons/<icon-name>.svg` (same files — icons are brand-neutral)
+
+---
+
+### Step 4 — Show the icon set in chat
+
+After saving all icons, display them inline in chat as a grid preview. For each icon show the SVG at 32px and its filename below. Then tell the founder:
+
+> "I've selected [N] icons suited to your positioning and saved them to `[icons folder]`. All are from **[Library Name]** ([license] — free for commercial use, no attribution needed).
+>
+> **How to use them:**
+> - In HTML/slides: inline the SVG code directly, set `color: [accent]` on the element
+> - In Figma/Illustrator: open the `.svg` file directly
+> - For more icons: browse **[library browse URL]**"
+
+---
+
+### Step 5 — Add Icon Library section to Brand Guidelines HTML
+
+Add a section to the brand guidelines HTML (after Typography, before Brand Voice):
+
+```html
+<div class="section">
+  <div class="section-label">Icon Library</div>
+  <h2>UI Icons</h2>
+  <p>These icons are pre-selected for your brand. All come from <strong>[Library Name]</strong> ([license] — free for commercial use, no attribution required). Use them in presentations, slides, carousels, and documents.</p>
+  <div class="icon-grid">
+    <!-- one tile per icon -->
+    <div class="icon-tile">
+      <div class="icon-preview">
+        <!-- inline SVG at 32x32, color: var(--accent) -->
+      </div>
+      <div class="icon-name">[icon-name]</div>
+    </div>
+  </div>
+  <p style="margin-top:1.5rem;font-size:0.8rem;color:#64748b">
+    Files saved to: <code>[icons-folder]</code><br>
+    Browse more: <strong>[library-url]</strong>
+  </p>
+</div>
+```
+
+Add to CSS:
+```css
+.icon-grid { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 1rem; }
+.icon-tile { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 72px; }
+.icon-preview { width: 40px; height: 40px; color: var(--accent); display: flex; align-items: center; justify-content: center; }
+.icon-preview svg { width: 32px; height: 32px; }
+.icon-name { font-size: 0.65rem; color: #64748b; text-align: center; font-family: monospace; word-break: break-all; }
+```
+
+---
+
+### Step 6 — Update memory/brand.md
+
+Add to the active scope's section in `memory/brand.md`:
+```markdown
+### Icon Library
+- Source: [Library Name] ([license]) — [browse URL]
+- Fetch URL pattern: [url-pattern-for-chosen-library]
+- Style: [e.g., outline, 24px viewBox, stroke="currentColor"]
+- Icons folder: [icons-folder]
+- Selected icons: [comma-separated list of icon names saved]
+```
 
 ---
 
@@ -839,7 +1039,8 @@ For company-scoped brands, skip this step — the brand belongs to the company, 
 - When `<dual-output>` = false: generate one kit, no suffix
 - Generated SVGs must be fully self-contained — no external font refs, no linked images
 - All SVG `viewBox` must be set — never use only fixed `width`/`height`
-- Icon SVGs with a background rect container **must** include a `<clipPath>` in `<defs>` matching the rect shape (same x, y, width, height, rx) and wrap all graphic elements in `<g clip-path="url(#...)">` — prevents the icon mark from bleeding outside the rounded container
+- Icon SVGs with a background rect container **must** include a `<clipPath>` in `<defs>` matching the rect shape (same x, y, width, height, rx) and wrap all graphic elements in an outer `<g clip-path="url(#...)">` — prevents the icon mark from bleeding outside the rounded container
+- **Never put `clip-path` and `transform` on the same `<g>`** — SVG evaluates `clip-path` in the element's local transformed space, so the clip shifts with the transform and overflow is not clipped. Always use two nested groups: outer `<g clip-path>` (no transform), inner `<g transform>` (no clip-path)
 - Show all outputs in chat before saving — never skip saving
 - Company brand → save to `outputs/brand/` — never to an idea folder
 - Idea brand → save to `outputs/ideas/<working-slug>/brand/` — never to flat paths
@@ -857,3 +1058,12 @@ For company-scoped brands, skip this step — the brand belongs to the company, 
 - Save mode variant SVGs in `[mode]/` subfolders — never mix them with the main brand kit files
 - When `<dual-output>` = true, nest mode subfolders inside each kit subfolder (`original/dark/`, `recommended/light/`, etc.)
 - Always record mode variant palettes and folder paths in `memory/brand.md` under the active brand scope section
+- Always run the Supplementary UI Icons section after saving the logo kit — recommend libraries, let the founder choose, then select icons, fetch them live, save them, and add the Icon Library section to the brand guidelines HTML
+- Always present 3–5 library options first (Step 0) and wait for the founder to pick one — never silently default to Heroicons or any single library
+- Library recommendations must be based on brand feeling + industry — never use a one-size-fits-all list
+- Select 8–12 icons from the master concept table based on what the company does and who it serves — never use a generic fixed list
+- Fetch every icon live using the correct URL pattern for the chosen library (see Step 2 table) — never reconstruct SVG paths from memory
+- Strip library-specific metadata attributes from every fetched SVG before saving (see Step 2 per-library table); always keep `stroke="currentColor"` so the icon inherits CSS color
+- If a fetch returns 404, try a name variant or inform the founder — never silently skip the icon
+- Save icon files to `<brand-output-path>icons/` (single kit) or `recommended/icons/` and `original/icons/` (dual kit)
+- Always update `memory/brand.md` with the chosen library name, browse URL, fetch URL pattern, icons folder path, and the list of saved icon names

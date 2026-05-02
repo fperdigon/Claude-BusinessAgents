@@ -245,6 +245,49 @@ Tips must be specific to the ICP's daily work. Pull pain points and workarounds 
 
 Pull the founder's background from `memory/startup-context.md`. Mark missing personal details as `[PLACEHOLDER: add personal detail here — e.g., your specific experience with this problem]`.
 
+## Inline SVG Icons
+
+Every carousel must include inline SVG icons. Use **Heroicons** (MIT license — free for personal and commercial use, no attribution required). Fetch icons on demand from:
+
+```
+https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/<icon-name>.svg
+```
+
+Strip `aria-hidden` and `data-slot` attributes from the fetched SVG before inlining. Set `stroke="currentColor"` so the icon inherits the CSS `color` property, and apply sizing via a wrapper `<span class="icon">` styled at 28×28px for tip icons and 48×48px for hook/CTA icons.
+
+**Icon selection by slide type:**
+
+| Slide type | Recommended icon(s) |
+|------------|-------------------|
+| Automation / repetitive tasks | `bolt`, `arrow-trending-up` |
+| Privacy / data security | `shield-check`, `lock-closed` |
+| AI complexity / tech | `cpu-chip`, `command-line` |
+| Documents / reports | `document-text` |
+| People / teams / adoption | `users` |
+| Time savings | `clock` |
+| Ideas / insight | `light-bulb` |
+| Server / local AI | `server-stack` |
+| Hook slide | `cpu-chip` (large, accent-colored, centered above headline) |
+| CTA slide | `arrow-top-right-on-square` or `globe-alt` |
+
+Choose the icon that best matches each slide's core message. Place it:
+- **Hook slide:** centered above the headline, 48×48px, accent color
+- **Content slides:** inline left of the headline (or above it), 28×28px, accent color
+- **CTA slide:** inline left of the CTA action text, 36×36px, accent color
+
+CSS to add inside `<style>`:
+```css
+.icon { display: inline-flex; align-items: center; flex-shrink: 0; }
+.icon svg { width: 28px; height: 28px; color: var(--accent); }
+.icon-lg svg { width: 48px; height: 48px; }
+.icon-md svg { width: 36px; height: 36px; }
+.slide-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem; }
+```
+
+Always fetch the SVG path data fresh — never guess or reconstruct paths from memory. If a fetch fails, fall back to a simple Unicode character (⚡ 🔒 📄 👥 ⏱ 💡) inline in the headline text.
+
+---
+
 ## HTML Carousel Format
 
 Generate a single self-contained HTML file. Requirements:
@@ -257,18 +300,19 @@ Generate a single self-contained HTML file. Requirements:
 - Print-to-PDF: `@page { size: 700px 700px; margin: 0; }` — each card is a full page for LinkedIn upload
 - Export instructions shown below the deck in browser view
 - System font stack only — no Google Fonts, no external resources
+- Inline SVG icons from Heroicons on every slide — see **Inline SVG Icons** section above
 
 ### Slide layout (each card)
 
 Three zones per card:
 - **Top bar**: slide number ("01", "02" …) on the left + brand/company name on the right (small, subtle)
-- **Body**: headline + supporting content (bullets, stat, or paragraph) — center zone, vertically centered
+- **Body**: headline + supporting content (bullets, stat, or paragraph) — center zone, vertically centered. Headline row includes the matching Heroicon inline-left.
 - **Bottom bar**: a subtle accent-colored rule line; on the last slide only, add the company tagline or contact info
 
 ### Content density per slide
-- **Hook slide (Slide 1):** Headline only — 5–9 words, very large font (`hook-headline` class), + "Swipe → to find out" hint in muted color
-- **Content slides:** 1 headline (6–10 words) + 2–4 bullet points OR 1 big stat + 1-sentence explanation
-- **CTA slide (last):** Action verb headline + 1 sentence + contact/follow info
+- **Hook slide (Slide 1):** Large Heroicon centered above headline (48px, accent color) + headline 5–9 words + "Swipe → to find out" hint in muted color
+- **Content slides:** Icon + headline (6–10 words) in a flex row + 2–4 bullet points OR 1 big stat + 1-sentence explanation
+- **CTA slide (last):** Icon + action verb headline + 1 sentence + contact/follow info
 
 Use this base HTML template and fill in all slide content:
 
@@ -455,6 +499,119 @@ Use this base HTML template and fill in all slide content:
 
 Replace all `[TOTAL]` placeholders with the actual total slide count once all slides are generated.
 
+### Post Caption
+
+Generate a suggested LinkedIn post caption and embed it in the HTML file below the export instructions block. The caption is shown in the browser preview only (hidden in print/PDF via `@media print`).
+
+### Document Title
+
+Generate a **LinkedIn document title** (shown when uploading the PDF — LinkedIn uses it for search indexing). Display it prominently above the caption tabs so the founder can copy it before uploading.
+
+Rules:
+- **Maximum 58 characters** (LinkedIn's limit) — always verify the character count before finalising
+- 6–10 words, title case
+- Include the ICP's role or industry + the core benefit or topic
+- No generic words like "Carousel", "Post", or "Slides"
+- Example: "5 Things Law & Engineering Firms Must Know About AI" (51 chars)
+
+Add this above the caption tabs in the HTML:
+```html
+<div class="doc-title-row">
+  <span class="doc-title-label">Document title (paste into LinkedIn when uploading)</span>
+  <div class="doc-title-value" id="docTitle">[Generated title]</div>
+  <button class="copy-btn" style="margin-top:0.5rem" onclick="copyTitle()">Copy title</button>
+</div>
+```
+
+Add to CSS:
+```css
+.doc-title-row { margin-bottom: 1.1rem; }
+.doc-title-label { font-size: 0.78rem; color: #64748b; display: block; margin-bottom: 0.35rem; }
+.doc-title-value { color: #f8fafc; font-size: 1rem; font-weight: 600; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 0.65rem 1rem; }
+```
+
+Add to JS:
+```js
+function copyTitle() {
+  navigator.clipboard.writeText(document.getElementById('docTitle').innerText).then(() => {
+    const btns = document.querySelectorAll('.copy-btn');
+    btns[0].textContent = 'Copied!';
+    setTimeout(() => btns[0].textContent = 'Copy title', 1800);
+  });
+}
+```
+
+---
+
+Always generate **two caption versions** — Short and Long — and embed both in the HTML with a tab switcher. The founder picks which to use on the day they post.
+
+**Short caption** (recommended for most posts — higher save and click rate):
+- Hook line — 1 punchy sentence mirroring the carousel hook
+- 1–2 lines expanding the value or creating urgency
+- 1 CTA line (visit / follow / DM)
+- 4–5 hashtags
+
+**Long caption** (better for thought leadership and search indexing):
+- Hook line
+- 4–6 bullet points (one per carousel tip), each starting with →
+- 1 closing statement
+- CTA line
+- 5–6 hashtags
+
+Tone must match the carousel tone chosen in Question 3.
+
+Add this block to the HTML immediately after the `</div>` closing the `.instructions` block:
+
+```html
+<div class="caption-box">
+  <h3>Suggested post caption</h3>
+  <p class="caption-hint">Pick a version, copy it into LinkedIn when you upload the PDF, and edit as needed.</p>
+  <div class="caption-tabs">
+    <button class="caption-tab active" onclick="switchCaption('short', this)">Short</button>
+    <button class="caption-tab" onclick="switchCaption('long', this)">Long</button>
+  </div>
+  <div class="caption-text" id="captionText">[Short caption text — shown by default]</div>
+  <button class="copy-btn" onclick="copyCaption()">Copy caption</button>
+</div>
+```
+
+Add these styles inside `<style>`:
+```css
+.caption-box { margin-top: 1.5rem; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 1.25rem 1.5rem; max-width: 700px; width: 100%; }
+.caption-box h3 { color: #f8fafc; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+.caption-hint { color: #64748b; font-size: 0.8rem; margin-bottom: 0.9rem; }
+.caption-tabs { display: flex; gap: 0.5rem; margin-bottom: 0.9rem; }
+.caption-tab { background: #0f172a; border: 1px solid #334155; color: #94a3b8; border-radius: 6px; padding: 0.35rem 0.85rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+.caption-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.caption-text { color: #cbd5e1; font-size: 0.9rem; line-height: 1.75; white-space: pre-wrap; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 1rem; margin-bottom: 0.9rem; }
+.copy-btn { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 0.5rem 1.1rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+.copy-btn:hover { opacity: 0.88; }
+@media print { .caption-box { display: none !important; } }
+```
+
+Add these functions inside `<script>`:
+```js
+const captions = {
+  short: `[Short caption text]`,
+  long: `[Long caption text]`
+};
+function switchCaption(key, btn) {
+  document.getElementById('captionText').textContent = captions[key];
+  document.querySelectorAll('.caption-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+function copyCaption() {
+  const el = document.getElementById('captionText');
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy caption', 1800);
+  });
+}
+```
+
+---
+
 Save to: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD>/carousel-<platform-slug>-<topic-slug>-<YYYY-MM-DD>.html`
 
 Where:
@@ -467,9 +624,64 @@ Example paths:
 - `outputs/marketing/linkedin-problem-awareness-2026-05-02/carousel-linkedin-problem-awareness-2026-05-02.html`
 - `outputs/ideas/private-ai-montreal-legal/marketing/linkedin-before-after-2026-05-02/carousel-linkedin-before-after-2026-05-02.html`
 
-Show the full HTML in the chat first, then save. Tell the founder:
+Show the full HTML in the chat first, then save.
 
-> "Your carousel is saved to `[full path].html`. Open it in any browser to preview — use the arrow buttons or keyboard arrows to flip through slides. Follow the export instructions at the bottom of the page to generate the PDF you'll upload to LinkedIn."
+---
+
+## PDF Export
+
+After saving the HTML file, automatically generate a PDF version using Python. This requires a Scrapling browser session (already configured in `.mcp.json`).
+
+### Steps
+
+1. Create a temporary **print-view HTML** — identical content to the carousel HTML but with all cards stacked vertically (no JS navigation, no `.nav`, no `.instructions`, no `.caption-box`) and `body` set to `flex-direction: column; align-items: center; gap: 0`. Save it as `carousel-print-view.html` in the same subfolder as the main HTML.
+
+2. **Open a Scrapling browser session:**
+```
+mcp__scrapling__open_session(session_type="dynamic", session_id="carousel-export", headless=true)
+```
+
+3. **Screenshot the full print-view page** at full height:
+```
+mcp__scrapling__screenshot(
+  url="file:///[absolute path to carousel-print-view.html]",
+  session_id="carousel-export",
+  full_page=true,
+  image_type="png",
+  wait=500
+)
+```
+
+4. **Close the session:**
+```
+mcp__scrapling__close_session(session_id="carousel-export")
+```
+
+5. **Detect card boundaries and slice into per-slide images** using Python + Pillow. The screenshot will be wider than the card because the browser adds side margins. Detect the card's left/right pixel boundary by scanning a horizontal row near the middle of the first slide for pixels that differ from the body background color (`#080810`). Each slide height = total screenshot height ÷ number of slides.
+
+6. **Build the PDF** using ReportLab — one 700×700 pt page per slide, images drawn at full resolution (no downscaling):
+
+```python
+from reportlab.pdfgen import canvas as rl_canvas
+PAGE = 700
+c = rl_canvas.Canvas(pdf_path, pagesize=(PAGE, PAGE))
+for slide_path in slide_paths:
+    c.drawImage(slide_path, 0, 0, PAGE, PAGE, preserveAspectRatio=True, anchor='c')
+    c.showPage()
+c.save()
+```
+
+7. **Delete** the temporary `carousel-print-view.html` and all per-slide PNG files after the PDF is saved.
+
+8. Save the PDF as: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD>/carousel-<platform-slug>-<topic-slug>-<YYYY-MM-DD>.pdf`
+
+### Tell the founder
+
+> "Your carousel is saved in `[subfolder path]`:
+> - `[filename].html` — open in any browser to preview and copy the suggested caption
+> - `[filename].pdf` — ready to upload directly to LinkedIn
+>
+> On LinkedIn: New post → document icon → upload the PDF → paste the caption → publish."
 
 ## Registry Update
 
@@ -501,3 +713,16 @@ After saving the output file:
 - After loading brand colors, always run the Color Suitability Check silently — surface a recommendation only when the justification is specific and tied to the chosen topic/tone
 - Never recommend color changes for style preference alone — the reason must be tied to emotional fit, readability, or tone reinforcement
 - Present color changes as a binary choice (keep brand vs. recommendation) — never apply changes without explicit user confirmation
+- Always include inline SVG icons (Heroicons, MIT license) on every slide — never generate a carousel with text only
+- Fetch Heroicon SVG paths live from `raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/<name>.svg` — never reconstruct paths from memory
+- Strip `aria-hidden` and `data-slot` attributes from fetched SVGs before inlining; set `stroke="currentColor"` so icons inherit CSS color
+- If a Heroicon fetch fails, fall back to a Unicode character inline in the headline — never leave a broken `<img>` or empty element
+- Always generate a LinkedIn document title and embed it above the caption tabs with its own copy button — never skip it
+- Document title must be ≤58 characters (LinkedIn's limit), include the ICP's industry or role, and avoid generic words like "Carousel" or "Slides" — always count characters before writing it into the HTML
+- Always generate both a Short and Long caption and embed them with the tab switcher — never provide only one version
+- Short caption defaults to visible; Long is available via tab switch
+- Caption tone must match the carousel tone chosen in Question 3 — never use a generic template
+- Always generate the PDF automatically after saving the HTML — never ask the founder to export it manually
+- PDF generation uses: Scrapling screenshot → Pillow crop (detect card bounds by scanning for body bg color) → ReportLab 700×700pt pages
+- Always delete the temporary print-view HTML and per-slide PNGs after the PDF is built
+- Never downscale slide images when building the PDF — draw at native resolution for maximum quality
