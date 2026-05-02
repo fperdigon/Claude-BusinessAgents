@@ -202,7 +202,8 @@ memory/
 
 outputs/
   marketing/             ← company-level carousels (when company brand is used)
-    carousel-*.html
+    <topic-slug>-<date>/
+      carousel-*.html
   brand/                 ← company-level brand (applies to the whole business)
     logo-primary-*.svg       ← single-kit: all brand files directly here
     logo-icon-*.svg
@@ -244,7 +245,8 @@ outputs/
         original/        ← dual-kit only
         recommended/     ← dual-kit only
       marketing/
-        carousel-*.html  ← LinkedIn carousel (browser preview + PDF export for upload)
+        <topic-slug>-<date>/
+          carousel-*.html  ← LinkedIn carousel (browser preview + PDF export for upload)
       docs/
         *.md             ← business documents
         *.html           ← user impact journey map slides

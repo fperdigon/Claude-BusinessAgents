@@ -421,9 +421,9 @@ Use this base HTML template and fill in all slide content:
 
 Replace all `[TOTAL]` placeholders with the actual total slide count once all slides are generated.
 
-Save to: `<carousel-output-path>carousel-<topic-slug>-<YYYY-MM-DD>.html`
+Save to: `<carousel-output-path><topic-slug>-<YYYY-MM-DD>/carousel-<topic-slug>-<YYYY-MM-DD>.html`
 
-Where `<topic-slug>` is a lowercase hyphenated version of the topic name (e.g., `problem-awareness`, `before-after`, `tips-education`, `founder-story`).
+Where `<topic-slug>` is a lowercase hyphenated version of the topic name (e.g., `problem-awareness`, `before-after`, `tips-education`, `founder-story`). Each carousel gets its own subfolder named `<topic-slug>-<YYYY-MM-DD>/` so future related files (captions, notes) can live alongside it.
 
 Show the full HTML in the chat first, then save. Tell the founder:
 
