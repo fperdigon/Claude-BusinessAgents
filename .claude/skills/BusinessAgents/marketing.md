@@ -89,14 +89,18 @@ Present options based on what was found in step 4:
 >
 > You can also run `/BusinessAgents:brand` any time to build a proper kit."
 
-**After the user selects a saved brand (options 1 or 2 above):** Load the colors from the selected brand. Extract: background color, accent color, text color, and text-muted color. Then set the operative ICP based on the selection:
+**After the user selects a saved brand (options 1 or 2 above):** Load the colors from the selected brand. Extract: background color, accent color, text color, and text-muted color. Then set both the operative ICP and the output path based on the selection:
 
-- **Company brand selected** → use `memory/icp.md` as the operative ICP (broad audience — all potential customers)
-- **Product brand selected** → use `outputs/ideas/<working-slug>/icp.md` as the operative ICP (specific audience for this idea)
+- **Company brand selected** → operative ICP = `memory/icp.md` · output path = `outputs/marketing/`
+- **Product brand selected** → operative ICP = `outputs/ideas/<working-slug>/icp.md` · output path = `outputs/ideas/<working-slug>/marketing/`
 
-Confirm briefly inline: "Loaded: bg `[hex]`, accent `[hex]`, text `[hex]`. Using **[company / product-idea]** ICP for audience language."
+Store these as `<operative-icp-path>` and `<carousel-output-path>` for this session.
 
-**If manual colors are entered:** ask "Should the carousel speak to your **general audience** (company brand) or specifically to customers of **this idea**?" and set the operative ICP accordingly.
+Confirm briefly inline: "Loaded: bg `[hex]`, accent `[hex]`, text `[hex]`. Using **[company / product-idea]** brand, ICP, and save folder."
+
+**If manual colors are entered:** ask "Should the carousel speak to your **general audience** (company-level) or specifically to customers of **this idea**?" Set accordingly:
+- General → `<carousel-output-path>` = `outputs/marketing/`, `<operative-icp-path>` = `memory/icp.md`
+- Idea-specific → `<carousel-output-path>` = `outputs/ideas/<working-slug>/marketing/`, `<operative-icp-path>` = `outputs/ideas/<working-slug>/icp.md`
 
 **If manual entry is chosen:**
 - Ask: "What is your **primary color** hex code? (This will be the card background.)"
@@ -417,21 +421,25 @@ Use this base HTML template and fill in all slide content:
 
 Replace all `[TOTAL]` placeholders with the actual total slide count once all slides are generated.
 
-Save to: `outputs/ideas/<working-slug>/marketing/carousel-<topic-slug>-<YYYY-MM-DD>.html`
+Save to: `<carousel-output-path>carousel-<topic-slug>-<YYYY-MM-DD>.html`
 
 Where `<topic-slug>` is a lowercase hyphenated version of the topic name (e.g., `problem-awareness`, `before-after`, `tips-education`, `founder-story`).
 
 Show the full HTML in the chat first, then save. Tell the founder:
 
-> "Your carousel is saved to `outputs/ideas/<working-slug>/marketing/carousel-[topic]-[date].html`. Open it in any browser to preview — use the arrow buttons or keyboard arrows to flip through slides. Follow the export instructions at the bottom of the page to generate the PDF you'll upload to LinkedIn."
+> "Your carousel is saved to `[full path].html`. Open it in any browser to preview — use the arrow buttons or keyboard arrows to flip through slides. Follow the export instructions at the bottom of the page to generate the PDF you'll upload to LinkedIn."
 
 ## Registry Update
 
-After saving the output file, update `memory/ideas.md`:
+After saving the output file:
+
+**If product brand was used** (saved to `outputs/ideas/<working-slug>/marketing/`): update `memory/ideas.md`:
 1. Find the entry for `<working-slug>`.
 2. Set `**Status:**` to `marketed` only if the current status is not already `documented` (never downgrade a later status).
 3. Add a `Marketing:   [today's date]` line under the Stages section (only if it's not already there).
 4. Update the `Last updated:` line at the top of the file to today's date.
+
+**If company brand was used** (saved to `outputs/marketing/`): no ideas registry update needed — this is company-level content, not tied to a specific idea.
 
 ## Hard Rules
 
@@ -443,7 +451,7 @@ After saving the output file, update `memory/ideas.md`:
 - Show the full HTML in the chat first, then save the file — never skip the file save step
 - HTML must be fully self-contained — zero external URLs in the final file
 - Apply brand colors via CSS `--bg`, `--accent`, `--text`, `--text-muted` custom properties — default to dark navy + blue if none provided
-- Save to `outputs/ideas/<working-slug>/marketing/` — never to flat `outputs/` paths
+- Save to `<carousel-output-path>` set in Q4: `outputs/marketing/` for company brand, `outputs/ideas/<working-slug>/marketing/` for product brand — never to the flat `outputs/` root
 - Replace all `[TOTAL]` placeholders with the actual slide count
 - Always update `memory/ideas.md` after saving — record the marketing stage date
 - Always check `memory/brand.md` and `outputs/ideas/<working-slug>/brand/` for saved brand kits before Question 4 — only ask for manual hex codes if no saved brand is found

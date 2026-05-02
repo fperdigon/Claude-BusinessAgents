@@ -191,6 +191,9 @@ memory/                        ← company-level (gitignored)
   ideas.md                     ← registry of all product ideas
   brand.md                     ← company brand colors and logo paths
 
+outputs/marketing/             ← company-level carousels (gitignored)
+  carousel-*.html              ← generated when company brand is used
+
 outputs/ideas/<slug>/          ← idea-specific (gitignored)
   icp.md                       ← detailed ICP for this product (role, size, pain, decision authority)
   decisions-log.md             ← decisions specific to this idea

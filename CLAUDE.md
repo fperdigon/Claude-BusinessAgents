@@ -201,6 +201,8 @@ memory/
   brand.md               ← brand colors, typography, logo paths (written by /BusinessAgents:brand)
 
 outputs/
+  marketing/             ← company-level carousels (when company brand is used)
+    carousel-*.html
   brand/                 ← company-level brand (applies to the whole business)
     logo-primary-*.svg       ← single-kit: all brand files directly here
     logo-icon-*.svg
