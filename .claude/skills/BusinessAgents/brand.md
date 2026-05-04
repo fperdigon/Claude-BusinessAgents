@@ -1060,6 +1060,44 @@ Each concept must be specific to what this company actually does — derived fro
 
 Do **not** show the concept list to the founder. Proceed silently to Step 2.
 
+### Step 2 — Background preview round (interactive browser)
+
+Generate all 10 SVG backgrounds as card previews sized 700×700. Each SVG:
+- Uses `viewBox="0 0 700 700"` and `preserveAspectRatio="xMidYMid slice"`
+- Has opacity baked in at generation time: set the overall SVG `opacity` attribute to a value between `0.18` and `0.28` based on visual complexity (busier patterns use lower opacity)
+- Uses only the brand's confirmed accent color and primary/background color — no other colors
+- Shows the visual concept described in Step 1 (e.g., dots+connections, PCB traces, concentric rings+lock)
+
+**Start the visual companion server (Option A first, Option B fallback):**
+
+Option A — locate the superpowers script dynamically:
+```bash
+find ~/.claude/plugins/cache -name "start-server.sh" -path "*/brainstorming/scripts/*" | head -1
+```
+If a path is returned, run:
+```bash
+<found-path> --project-dir <absolute-path-to-project-root>
+```
+The server will print a URL (e.g., `http://localhost:NNNNN`). Open `.superpowers/brainstorm/<session-id>/content/` as the content directory.
+
+Option B (fallback if Option A script not found) — create a temp preview folder and serve it:
+```bash
+mkdir -p /tmp/vt-preview
+python3 -m http.server 0 --directory /tmp/vt-preview
+```
+Tell the founder the URL. In Option B mode, collect all feedback as terminal text — there are no click events.
+
+**Generate the preview HTML file** — write a single HTML file to the content directory named `bg-preview.html` containing all 10 SVG backgrounds displayed as 700×700 card mockups with the brand colors applied, slide counter and brand name in the top bar, and click-to-select interaction (each card toggles a blue border + "✓ Approved" badge when clicked).
+
+Show the founder in terminal:
+> "I've opened 10 background previews in your browser at [URL]. Click to approve the ones you want to keep — you can keep fewer than 10. Type 'done' in the terminal when finished, or describe any you'd like changed."
+
+Wait for the founder's response in the terminal. For any background the founder asks to change: regenerate that specific SVG with adjusted visual treatment and update the preview. Iterate until the founder types 'done'.
+
+**Collect the final approved set** — in Option A, read the click-event state from `.superpowers/brainstorm/<session-id>/state/events` to know which cards were approved. In Option B, parse the founder's terminal description.
+
+Store the approved SVG code for each approved background — you will write them to disk in Step 4.
+
 ---
 
 ## Hard Rules
