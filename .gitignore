@@ -14,3 +14,6 @@ outputs/
 
 # Local MCP server config — machine-specific paths, not portable
 .mcp.json
+
+# Git worktrees
+.worktrees/
