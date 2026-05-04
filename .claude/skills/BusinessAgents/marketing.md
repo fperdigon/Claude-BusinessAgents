@@ -597,7 +597,7 @@ Use this base HTML template and fill in all slide content:
   <ol>
     <li>Open <strong>File → Print</strong> (or Ctrl+P / Cmd+P) in your browser</li>
     <li>Set destination to <strong>Save as PDF</strong></li>
-    <li>Under "More settings", set paper size to <strong>Custom</strong> and enter <strong>700 × 700</strong> (or select the closest square option)</li>
+    <li>Under "More settings", set paper size to <strong>Custom</strong> and enter <strong>[format-w] × [format-h]</strong> (the agent fills in the actual dimensions)</li>
     <li>Disable headers and footers</li>
     <li>Save the PDF — each slide becomes one page</li>
     <li>On LinkedIn, start a new post → click the <strong>document icon</strong> → upload the PDF</li>
@@ -796,14 +796,15 @@ mcp__scrapling__close_session(session_id="carousel-export")
 
 5. **Detect card boundaries and slice into per-slide images** using Python + Pillow. The screenshot will be wider than the card because the browser adds side margins. Detect the card's left/right pixel boundary by scanning a horizontal row near the middle of the first slide for pixels that differ from the body background color (`#080810`). Each slide height = total screenshot height ÷ number of slides.
 
-6. **Build the PDF** using ReportLab — one 700×700 pt page per slide, images drawn at full resolution (no downscaling):
+6. **Build the PDF** using ReportLab — one `[format-w]×[format-h]` pt page per slide, images drawn at full resolution (no downscaling):
 
 ```python
 from reportlab.pdfgen import canvas as rl_canvas
-PAGE = 700
-c = rl_canvas.Canvas(pdf_path, pagesize=(PAGE, PAGE))
+PAGE_W = [format-w]   # fill in from <format-w>
+PAGE_H = [format-h]   # fill in from <format-h>
+c = rl_canvas.Canvas(pdf_path, pagesize=(PAGE_W, PAGE_H))
 for slide_path in slide_paths:
-    c.drawImage(slide_path, 0, 0, PAGE, PAGE, preserveAspectRatio=True, anchor='c')
+    c.drawImage(slide_path, 0, 0, PAGE_W, PAGE_H, preserveAspectRatio=True, anchor='c')
     c.showPage()
 c.save()
 ```
@@ -862,6 +863,6 @@ After saving the output file:
 - Short caption defaults to visible; Long is available via tab switch
 - Caption tone must match the carousel tone chosen in Question 3 — never use a generic template
 - Always generate the PDF automatically after saving the HTML — never ask the founder to export it manually
-- PDF generation uses: Scrapling screenshot → Pillow crop (detect card bounds by scanning for body bg color) → ReportLab 700×700pt pages
+- PDF generation uses: Scrapling screenshot → Pillow crop (detect card bounds by scanning for body bg color) → ReportLab `[format-w]×[format-h]`pt pages (dimensions set from `<format-w>` and `<format-h>`)
 - Always delete the temporary print-view HTML and per-slide PNGs after the PDF is built
 - Never downscale slide images when building the PDF — draw at native resolution for maximum quality
