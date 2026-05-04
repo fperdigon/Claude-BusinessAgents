@@ -1170,12 +1170,20 @@ Write `<visual-theme-folder>/visual-theme.md` with this exact structure, populat
 [one row per approved infographic layout]
 ```
 
+**Write `<visual-theme-folder>/preview.html`** — a self-contained HTML file that shows the full kit at a glance. The file must work when opened directly in any browser at any future time (no server needed). It must:
+
+- Show every approved background paired with a representative slide using a realistic headline and short bullets — backgrounds displayed on plain-text slides (no infographic, with scrim)
+- Show every approved infographic on a clean navy card (no background SVG, with scrim) with a realistic headline
+- Use the brand's actual colors (`--bg`, `--accent`, `--text`) and the baked-in SVG opacities from the saved files
+- Label each card: background category tag + filename, or infographic layout key + filename
+- Be fully self-contained — all SVGs inlined, no external URLs, no server required
+
 **Close the visual companion server** after all files are written:
 - Option A: the superpowers server will auto-stop when the session ends, or tell the founder they can close the browser tab
 - Option B: `Ctrl+C` the Python server process
 
 Tell the founder:
-> "Visual Theme Kit saved to `[visual-theme-folder]`. The marketing agent will use it automatically from your next carousel session."
+> "Visual Theme Kit saved to `[visual-theme-folder]`. Open `preview.html` in that folder any time to see your full kit. The marketing agent will use it automatically from your next carousel session."
 
 ---
 

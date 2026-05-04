@@ -371,25 +371,27 @@ When a slide gets a non-plain layout key:
 2. Read the HTML partial file from `<visual-theme-folder>/<filename>`
 3. The file is an HTML partial — drop its full content into the `.card-body` div, replacing the default headline + bullets structure for that slide
 4. Populate all template slots in the partial with the actual slide content derived from memory and outputs
-5. If `<has-visual-theme>` = false: skip steps 1–3 and use plain text layout for all slides
+5. **Suppress the background SVG on this slide** — on any card that has an infographic, omit the `<svg class="card-bg">` tag entirely. Keep the `<div class="card-scrim"></div>` so the card still has its base navy colour. The infographic is the visual; the SVG pattern would fight it.
+6. If `<has-visual-theme>` = false: skip steps 1–4 and use plain text layout for all slides
 
 **Visual density rules — read before populating any infographic:**
 
 A slide has three fixed elements (kicker, headline, bottom bar) plus the infographic. The infographic must not crowd them.
 
-- **Keep the headline short** — when a slide uses an infographic, cap the headline at 6 words. The infographic carries the detail; the headline frames it. A long headline + a full infographic = congestion.
-- **Cap data points** — enforce these maximums regardless of how much data is available: stats grid ≤ 4 stats, progress bars ≤ 4 bars, process steps ≤ 4 steps, before/after ≤ 3 items per column, comparison table ≤ 5 rows, icon grid = exactly 6 cells, timeline ≤ 4 events, hub & spoke ≤ 6 nodes, funnel ≤ 5 stages. If you have more data, pick the most impactful subset — do not squeeze in extras.
-- **Labels stay short** — every label, stat description, or step label must be ≤ 4 words. No full sentences inside an infographic. If the real text is longer, rewrite it to fit.
+- **Background off on infographic slides** — infographic + background SVG together is too much. Plain slides get the background; infographic slides get a clean navy card. The scrim stays for the base colour.
+- **Keep the headline short** — when a slide uses an infographic, cap the headline at 6 words. The infographic carries the detail; the headline frames it.
+- **Cap data points** — enforce these maximums regardless of how much data is available: stats grid ≤ 4 stats, progress bars ≤ 4 bars, process steps ≤ 4 steps, before/after ≤ 3 items per column, comparison table ≤ 5 rows, icon grid = exactly 6 cells, timeline ≤ 4 events, hub & spoke ≤ 6 nodes, funnel ≤ 5 stages. Pick the most impactful subset — do not squeeze in extras.
+- **Labels stay short** — every label, stat description, or step label must be ≤ 4 words. No full sentences inside an infographic.
 - **One number per stat box** — a stat box shows one number and one short descriptor. Never a sentence.
-- **No kicker on infographic slides** — omit the `.kicker` element when the `.card-body` is occupied by an infographic that already has its own section label. The headline alone is sufficient framing.
-- **Breathing room test** — after populating, mentally scan the card: if more than 60% of the card body is filled with infographic content, fall back to plain text for that slide.
+- **No kicker on infographic slides** — omit the `.kicker` element when the `.card-body` is occupied by an infographic that already has its own section label.
+- **Breathing room test** — if more than 60% of the card body would be filled with infographic content, fall back to plain text for that slide.
 
 **Plain text layout fallback conditions** — always use plain regardless of trigger rule:
 - Content is primarily narrative with no structured data
 - Fewer data points than the layout minimum (e.g., fewer than 3 steps for `how_it_works`)
 - `<has-visual-theme>` = false
 - The slide content doesn't fit the layout meaningfully
-- The headline would need to exceed 6 words AND the infographic is data-heavy — plain text lets both breathe
+- The headline would need to exceed 6 words AND the infographic is data-heavy
 
 ---
 
@@ -981,5 +983,5 @@ After saving the output file:
 - Always fall back to plain text + bullets when content doesn't fit a layout meaningfully
 - Quote/testimonial layout requires a real quote — never fabricate one
 - If `visual-theme.md` does not exist for the active brand: use the inline default neural-network SVG as background and plain text layouts for all slides
-- Infographic visual density: headline ≤ 6 words when an infographic is present; cap data points at layout maximums (stats grid ≤ 4, progress bars ≤ 4, steps ≤ 4, before/after ≤ 3 items per column, comparison ≤ 5 rows, timeline ≤ 4 events, hub & spoke ≤ 6 nodes, funnel ≤ 5 stages); all labels ≤ 4 words; omit the kicker when the infographic has its own section label; if more than 60% of the card body would be filled, fall back to plain text
+- Infographic visual density: suppress the background SVG (keep the scrim) on any slide that has an infographic — never show both at once; headline ≤ 6 words; cap data points at layout maximums (stats grid ≤ 4, progress bars ≤ 4, steps ≤ 4, before/after ≤ 3 items per column, comparison ≤ 5 rows, timeline ≤ 4 events, hub & spoke ≤ 6 nodes, funnel ≤ 5 stages); all labels ≤ 4 words; omit the kicker when the infographic has its own section label; if >60% card body filled, fall back to plain text
 - Use `<format-slug>` as the filename component (replaces the old `<platform-slug>` naming)
