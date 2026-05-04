@@ -1130,16 +1130,15 @@ Store the approved HTML snippet code for each approved infographic — you will 
 
 ### Step 4 — Save assets and write visual-theme.md
 
-**Determine the output folder:**
+**Determine the output folder** (applies to both company-scoped and idea-scoped brands — `<brand-output-path>` is already set to the correct base path for the active brand scope):
 - If `<dual-output>` = true → `<brand-output-path>recommended/visual-theme/`
 - If `<dual-output>` = false → `<brand-output-path>visual-theme/`
-- For idea-scoped brands → `outputs/ideas/<working-slug>/brand/recommended/visual-theme/`
 
 Write each approved SVG background to `<visual-theme-folder>/bg-<concept-slug>.svg` where `<concept-slug>` is a lowercase hyphenated version of the concept name (e.g., "Private data vault" → `bg-private-vault.svg`).
 
 Write each approved infographic partial to `<visual-theme-folder>/<infographic-filename>` using the filename from the layout table in Step 3 (e.g., `infographic-process-steps.html`).
 
-Write `<visual-theme-folder>/visual-theme.md` with this exact structure, populated with only the approved items:
+Write `<visual-theme-folder>/visual-theme.md` with this exact structure, populated with only the approved items. Include all 8 formats in the `## Formats` section unless the founder explicitly deselected some during this session — in that case list only the approved ones:
 
 ```markdown
 # Visual Theme Kit
@@ -1227,6 +1226,6 @@ Tell the founder:
 - Quote card must always use style D (contained box + small SVG quote icon) — never the large standalone quotation mark
 - Start visual companion server (Option A) first; fall back to Python http.server (Option B) if superpowers scripts not found
 - Close the visual companion server after saving assets
-- Write all assets to `visual-theme/` inside the active brand's recommended folder
+- Write all assets to `visual-theme/` — inside `recommended/visual-theme/` when `<dual-output>` = true, directly under `<brand-output-path>visual-theme/` when false
 - SVG backgrounds must have opacity baked in (0.18–0.28) — never rely on the marketing skill to set opacity
 - Infographic snippets must be HTML partials (no `<html>/<head>/<body>` wrapper) — must work dropped into a `.card-body` element
