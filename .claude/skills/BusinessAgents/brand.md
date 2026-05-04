@@ -1026,6 +1026,42 @@ For company-scoped brands, skip this step — the brand belongs to the company, 
 
 ---
 
+## Visual Theme Kit (optional phase)
+
+Run this phase at the end of the brand skill flow, after the Brand Memory Update and Registry Update steps are complete. Ask:
+
+> "Would you like me to generate a Visual Theme Kit for your carousels and slides? It creates 10 background patterns and 10 infographic layouts personalised to your business — the marketing agent will use them automatically. (Takes about 5 minutes)"
+
+If the founder says **no**: skip this entire section. The marketing skill will fall back to built-in defaults.
+
+If the founder says **yes**, run the four steps below.
+
+### Step 1 — Concept derivation (silent)
+
+Read `memory/startup-context.md` and the active brand's industry, niche, core advantage, and technology. Derive 10 visual concepts specific to this company. For each concept define:
+- A **name** (e.g. "Private data vault")
+- A **visual idea** (what the SVG will show — described in one sentence)
+- A **mapping category** chosen from this fixed list:
+
+| Category key | Use when the concept relates to… |
+|---|---|
+| `ai_technology` | AI models, neural networks, machine learning, automation |
+| `infrastructure` | Circuit boards, PCBs, chips, traces |
+| `data_analysis` | Charts, graphs, data visualisation |
+| `privacy_security` | Locks, vaults, shields, data protection |
+| `hardware` | Servers, racks, GPUs, physical compute |
+| `legal_workflow` | Documents, contracts, legal processing |
+| `engineering` | Blueprints, technical grids, CAD, specs |
+| `network_isolation` | Firewalls, local networks, isolated nodes |
+| `workflow_change` | Before/after flows, transformation diagrams |
+| `local_presence` | City grids, local client maps, regional presence |
+
+Each concept must be specific to what this company actually does — derived from the industry, niche, core advantage, and technology in `startup-context.md`. Do not use generic tech patterns.
+
+Do **not** show the concept list to the founder. Proceed silently to Step 2.
+
+---
+
 ## Hard Rules
 
 - Read all memory files before asking any questions
