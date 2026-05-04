@@ -641,18 +641,19 @@ function copyCaption() {
 
 ---
 
-Save to: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>/carousel-<platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>.html`
+Save to: `<carousel-output-path><format-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>/carousel-<format-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>.html`
 
 Where:
-- `<platform-slug>` = destination platform in lowercase (e.g., `linkedin`, `instagram`, `facebook`)
+- `<format-slug>` = the format chosen in Question 1 (e.g., `linkedin-carousel`, `instagram-portrait`, `stories`, `presentation`)
 - `<topic-slug>` = the user's own carousel topic title, slugified to lowercase hyphenated form — NOT the template category name. E.g., if the user said "How law firms can use AI to analyze contracts", use `how-law-firms-can-use-ai-to-analyze-contracts`. If the user said "Our mission and values", use `our-mission-and-values`. Never substitute a generic label like `tips-education` or `founder-story`.
 - `<YYYY-MM-DD-HH-MM-SS>` = current date and time with hyphens (colons cannot be used in file/folder names), e.g., `2026-05-02-14-35-22`
 
 Each carousel gets its own subfolder so captions, notes, or alternate versions can live alongside it.
 
 Example paths:
-- `outputs/marketing/linkedin-how-law-firms-can-use-ai-to-analyze-contracts-2026-05-02-14-35-22/carousel-linkedin-how-law-firms-can-use-ai-to-analyze-contracts-2026-05-02-14-35-22.html`
-- `outputs/ideas/my-product-slug/marketing/linkedin-our-mission-and-values-2026-05-02-09-10-04/carousel-linkedin-our-mission-and-values-2026-05-02-09-10-04.html`
+- `outputs/marketing/linkedin-carousel-how-law-firms-can-use-ai-2026-05-02-14-35-22/carousel-linkedin-carousel-how-law-firms-can-use-ai-2026-05-02-14-35-22.html`
+- `outputs/ideas/my-product-slug/marketing/instagram-portrait-our-mission-and-values-2026-05-02-09-10-04/carousel-instagram-portrait-our-mission-and-values-2026-05-02-09-10-04.html`
+- `outputs/marketing/presentation-why-firms-need-ai-2026-05-02-10-00-00/carousel-presentation-why-firms-need-ai-2026-05-02-10-00-00.html`
 
 Show the full HTML in the chat first, then save.
 
@@ -703,7 +704,7 @@ c.save()
 
 7. **Delete** the temporary `carousel-print-view.html` and all per-slide PNG files after the PDF is saved.
 
-8. Save the PDF as: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>/carousel-<platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>.pdf`
+8. Save the PDF as: `<carousel-output-path><format-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>/carousel-<format-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>.pdf`
 
 ### Tell the founder
 
