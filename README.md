@@ -23,8 +23,8 @@ Each agent has one focused job. They share memory files and pass outputs to each
 
 | Agent | What you get |
 |-------|-------------|
-| `/BusinessAgents:brand` | SVG logo variants, color palette, brand guidelines HTML |
-| `/BusinessAgents:marketing` | LinkedIn carousel post, ready to export to PDF and upload |
+| `/BusinessAgents:brand` | SVG logo variants, color palette, brand guidelines HTML, Visual Theme Kit (10 backgrounds + 10 infographic layouts) |
+| `/BusinessAgents:marketing` | Carousel post in 8 formats (LinkedIn, Instagram, Stories, Pinterest, presentation, and more), with brand backgrounds and infographics injected per slide |
 
 ---
 
@@ -159,23 +159,29 @@ Generates polished business documents from everything captured so far. Choose fr
 
 Extracts your existing colors and fonts from your website (if you have one), evaluates the branding, makes suggestions, and generates a full brand kit: SVG logo variants, brand guidelines HTML, and AI image prompts for 8 platforms. Supports company-level brands and idea-specific sub-brands. When suggestions are accepted, generates both an Original kit (current branding preserved) and a Recommended kit (improvements applied) in separate subfolders for easy comparison.
 
+Also generates a **Visual Theme Kit**: 10 branded SVG backgrounds (neural network, circuit board, private vault, server rack, legal scan, blueprint, and more) and 10 infographic layout partials (stats grid, before/after, process steps, timeline, icon grid, comparison table, funnel, progress bars, quote box, hub-and-spoke). The kit is saved to `outputs/brand/recommended/visual-theme/` with a `preview.html` you can open in any browser to review all assets at a glance. The marketing agent reads this kit automatically to inject the right background and infographic into each slide.
+
 **Requires:** Scrapling MCP server (for website extraction)
 
 **Outputs (company brand):**
 - `outputs/brand/original/` — current branding preserved
 - `outputs/brand/recommended/` — improved version
+- `outputs/brand/recommended/visual-theme/` — backgrounds, infographics, preview
 
 **Outputs (idea sub-brand):**
 - `outputs/ideas/<slug>/brand/original/`
 - `outputs/ideas/<slug>/brand/recommended/`
+- `outputs/ideas/<slug>/brand/recommended/visual-theme/`
 
 ---
 
-### `/BusinessAgents:marketing` — LinkedIn Carousel Agent
+### `/BusinessAgents:marketing` — Carousel Agent
 
-Creates a professional LinkedIn carousel post from your idea. Choose a topic (problem awareness, before/after journey, tips, or founder story), tone, and slide count. Automatically loads your saved brand kit and checks whether the colors suit the chosen tone — suggesting adjustments with justification if warranted. Brand selection drives ICP selection: company brand uses your broad audience profile; product brand uses the idea-specific ICP.
+Creates a professional carousel post from your idea in 8 formats: LinkedIn square (1080×1080), Instagram square, Instagram portrait (1080×1350), Stories (1080×1920), Pinterest (1000×1500), presentation (1920×1080), link preview (1200×628), and A4/letter (794×1123).
 
-**Output:** `outputs/ideas/<slug>/marketing/carousel-<topic>-<date>.html` — open in browser to preview, print to PDF to upload to LinkedIn
+Choose a topic (problem awareness, before/after journey, tips, or founder story), tone, format, and slide count. Automatically loads your saved brand kit and Visual Theme Kit. Each carousel gets a branded background SVG matched to its topic — and per-slide infographic layouts (stats grid, before/after, progress bars, etc.) injected where content warrants them. On infographic slides the background is suppressed so the layout is the visual, never both at once. Brand selection drives ICP selection: company brand uses your broad audience profile; product brand uses the idea-specific ICP.
+
+**Output:** `outputs/marketing/<format>-<topic>-<date>/carousel-*.html` (company brand) or `outputs/ideas/<slug>/marketing/<format>-<topic>-<date>/carousel-*.html` (idea brand) — open in browser to preview, print to PDF to upload
 
 ---
 
@@ -192,7 +198,8 @@ memory/                        ← company-level (gitignored)
   brand.md                     ← company brand colors and logo paths
 
 outputs/marketing/             ← company-level carousels (gitignored)
-  carousel-*.html              ← generated when company brand is used
+  <format>-<topic>-<date>/
+    carousel-*.html            ← generated when company brand is used
 
 outputs/ideas/<slug>/          ← idea-specific (gitignored)
   icp.md                       ← detailed ICP for this product (role, size, pain, decision authority)
@@ -207,14 +214,17 @@ outputs/ideas/<slug>/          ← idea-specific (gitignored)
   brand/                       ← idea sub-brand (optional)
     original/
     recommended/
+      visual-theme/
   marketing/
-    carousel-*.html
+    <format>-<topic>-<date>/
+      carousel-*.html
   docs/
   slides/
 
 outputs/brand/                 ← company brand assets (gitignored)
   original/                    ← current branding preserved
   recommended/                 ← improved version (active)
+    visual-theme/              ← 10 SVG backgrounds + 10 infographic partials + preview.html
 ```
 
 The company ICP (`memory/icp.md`) is broad — "small-to-mid law firms and engineering companies." Each idea's ICP (`outputs/ideas/<slug>/icp.md`) is specific — "managing partner at a 2–15 lawyer Montreal boutique law firm." Downstream agents use whichever level is appropriate.
