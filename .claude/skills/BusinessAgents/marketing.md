@@ -410,12 +410,12 @@ Always fetch the SVG path data fresh — never guess or reconstruct paths from m
 
 Generate a single self-contained HTML file. Requirements:
 - Fully self-contained — all CSS and JavaScript inline, no external URLs
-- Square cards — 700×700px display size in browser
+- Card dimensions sized to the chosen format: `<format-w>` × `<format-h>` pixels (set via `--card-w` and `--card-h` CSS custom properties)
 - Brand colors applied via CSS custom properties (`--bg`, `--accent`, `--text`, `--text-muted`)
 - Each slide is a `<div class="card">` element
 - Navigation: left/right arrow keys, on-screen arrow buttons, clickable dot indicators
 - Only the active card is visible at a time
-- Print-to-PDF: `@page { size: 700px 700px; margin: 0; }` — each card is a full page for LinkedIn upload
+- Print-to-PDF: `@page { size: var(--card-w) var(--card-h); margin: 0; }` — each card is a full page at the exact format dimensions
 - Export instructions shown below the deck in browser view
 - System font stack only — no Google Fonts, no external resources
 - Inline SVG icons from Heroicons on every slide — see **Inline SVG Icons** section above
@@ -447,12 +447,15 @@ Use this base HTML template and fill in all slide content:
     --accent: [accent color or #3b82f6];
     --text: [#f8fafc if dark bg, #0f172a if light bg];
     --text-muted: [rgba(248,250,252,0.65) if dark bg, rgba(15,23,42,0.55) if light bg];
-    --card-size: 700px;
+    --card-w: [format-w]px;
+    --card-h: [format-h]px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #080810; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem 1rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
-  .deck { position: relative; width: var(--card-size); height: var(--card-size); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6); flex-shrink: 0; }
-  .card { position: absolute; inset: 0; background: var(--bg); color: var(--text); display: none; flex-direction: column; padding: 48px; }
+  .deck { position: relative; width: var(--card-w); height: var(--card-h); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6); flex-shrink: 0; }
+  .card { position: absolute; inset: 0; background: var(--bg); color: var(--text); display: none; flex-direction: column; padding: 48px; overflow: hidden; }
+  .card-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .card-top, .card-body, .card-bottom { position: relative; z-index: 1; }
   .card.active { display: flex; }
   .card-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(128,128,128,0.15); margin-bottom: 8px; }
   .slide-num { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; color: var(--accent); }
@@ -484,10 +487,10 @@ Use this base HTML template and fill in all slide content:
   .instructions li { color: #94a3b8; font-size: 0.85rem; line-height: 1.65; padding: 0; }
   .instructions li::before { display: none; }
   @media print {
-    @page { size: 700px 700px; margin: 0; }
+    @page { size: var(--card-w) var(--card-h); margin: 0; }
     body { background: var(--bg); padding: 0; display: block; }
-    .deck { border-radius: 0; box-shadow: none; overflow: visible; height: auto; width: 700px; position: static; }
-    .card { position: relative; display: flex !important; page-break-after: always; break-after: page; height: 700px; }
+    .deck { border-radius: 0; box-shadow: none; overflow: visible; height: auto; width: var(--card-w); position: static; }
+    .card { position: relative; display: flex !important; page-break-after: always; break-after: page; height: var(--card-h); }
     .nav, .instructions { display: none !important; }
   }
 </style>
@@ -495,8 +498,22 @@ Use this base HTML template and fill in all slide content:
 <body>
 <div class="deck">
 
+  <!--
+    BACKGROUND INJECTION: Insert the following as the FIRST child inside every .card element
+    (immediately before .card-top). Use the exact SVG code stored in <bg-svg>:
+
+    <svg class="card-bg" viewBox="0 0 [format-w] [format-h]" xmlns="http://www.w3.org/2000/svg"
+         opacity="[the opacity value from the bg-svg file, or 0.22 for the default]"
+         preserveAspectRatio="xMidYMid slice">
+      [inner SVG elements from <bg-svg> — strip the outer <svg> wrapper and keep only the children]
+    </svg>
+
+    Inject the SAME background into every .card element in the carousel — one background per carousel.
+  -->
+
   <!-- Slide 01 — Hook -->
   <div class="card active">
+    <svg class="card-bg" viewBox="0 0 [format-w] [format-h]" xmlns="http://www.w3.org/2000/svg" opacity="[opacity]" preserveAspectRatio="xMidYMid slice">[bg-svg inner elements]</svg>
     <div class="card-top">
       <span class="slide-num">01 / [TOTAL]</span>
       <span class="brand-name">[Company Name]</span>
