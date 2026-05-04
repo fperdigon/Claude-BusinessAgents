@@ -17,3 +17,6 @@ outputs/
 
 # Git worktrees
 .worktrees/
+
+# Superpowers plugin runtime state
+.superpowers/
