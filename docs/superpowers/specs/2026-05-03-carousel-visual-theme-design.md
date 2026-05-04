@@ -24,12 +24,12 @@ Two skill updates. One data contract between them.
 Brand skill (optional phase)               Marketing skill
 ──────────────────────────────────         ─────────────────────────────────
 Reads startup-context.md             →     Asks founder: which platform/format?
-Derives 10 company-specific concepts        Reads visual-theme.json
+Derives 10 company-specific concepts        Reads visual-theme.md
 Generates 10 SVG background patterns        Picks 1 background per carousel
 Generates 10 infographic snippets           (topic + company context → category → SVG)
 Shows each set in browser for approval      Picks best infographic per slide
 Founder approves / iterates                 (content type → layout key → snippet)
-Saves approved assets + visual-theme.json   Sizes HTML canvas to format dimensions
+Saves approved assets + visual-theme.md   Sizes HTML canvas to format dimensions
                                             Falls back to defaults if no kit
 ```
 
@@ -53,7 +53,7 @@ If yes, the phase runs in four steps:
 Read `startup-context.md` and the active brand's industry, niche, core advantage, and technology. Derive 10 visual concepts specific to this company. Each concept has:
 - A **name** (e.g. "Private data vault")
 - A **visual idea** (what the SVG will show)
-- A **mapping category** (used by `visual-theme.json` to match topic keywords)
+- A **mapping category** (used by `visual-theme.md` to match topic keywords)
 
 Example derivation for a private on-premise AI company serving engineering and law firms:
 
@@ -71,7 +71,7 @@ Example derivation for a private on-premise AI company serving engineering and l
 | 10 | Local client network | City grid + client location pins + routes | `local_presence` |
 
 #### Step 2 — Background preview round (interactive browser)
-Generate all 10 SVG backgrounds as 700×700 card previews. Show them in the browser using the visual companion server. The founder clicks to approve or deselect, and types feedback in the terminal for anything to regenerate. Iterate on rejected ones until the founder is satisfied. The founder may keep fewer than 10 — only approved backgrounds are saved and mapped in `visual-theme.json`. Each SVG has its opacity (0.18–0.28) baked in at generation time so the marketing skill injects it as-is without further style overrides.
+Generate all 10 SVG backgrounds as 700×700 card previews. Show them in the browser using the visual companion server. The founder clicks to approve or deselect, and types feedback in the terminal for anything to regenerate. Iterate on rejected ones until the founder is satisfied. The founder may keep fewer than 10 — only approved backgrounds are saved and mapped in `visual-theme.md`. Each SVG has its opacity (0.18–0.28) baked in at generation time so the marketing skill injects it as-is without further style overrides.
 
 **Browser server:** Start using Option A (superpowers visual companion). Locate the script dynamically:
 ```bash
@@ -100,7 +100,7 @@ Write all approved files to the brand kit folder:
 
 ```
 outputs/brand/recommended/visual-theme/
-  visual-theme.json
+  visual-theme.md
   bg-neural-network.svg
   bg-circuit-board.svg
   bg-data-viz.svg
@@ -153,53 +153,58 @@ Eight formats are supported across four groups. The marketing skill presents thi
 
 ---
 
-## visual-theme.json Structure
+## visual-theme.md Structure
 
-The `formats` block lists every format slug enabled for this brand. The marketing skill uses this list when prompting the founder to choose a platform — if a brand only approved a subset, only those appear. `icon_library.recommended` contains the icons the brand skill chose for this specific company.
+Markdown is used (not JSON) to stay consistent with all other shared memory files in this system (`brand.md`, `startup-context.md`, `icp.md`). Claude reads it directly with no parsing needed. The brand skill can also add inline notes explaining concept choices.
 
-```json
-{
-  "formats": [
-    "linkedin-carousel",
-    "instagram-square",
-    "instagram-portrait",
-    "stories",
-    "pinterest",
-    "presentation",
-    "link-preview",
-    "a4-letter"
-  ],
-  "icon_library": {
-    "source": "heroicons",
-    "fetch_url": "https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/<name>.svg",
-    "recommended": ["<icon-1>", "<icon-2>", "..."]
-  },
-  "backgrounds": {
-    "ai_technology":     "bg-neural-network.svg",
-    "infrastructure":    "bg-circuit-board.svg",
-    "data_analysis":     "bg-data-viz.svg",
-    "privacy_security":  "bg-private-vault.svg",
-    "hardware":          "bg-server-rack.svg",
-    "legal_workflow":    "bg-legal-scan.svg",
-    "engineering":       "bg-blueprint-ai.svg",
-    "network_isolation": "bg-private-network.svg",
-    "workflow_change":   "bg-workflow-transform.svg",
-    "local_presence":    "bg-local-grid.svg",
-    "default":           "bg-neural-network.svg"
-  },
-  "infographics": {
-    "how_it_works":  "infographic-process-steps.html",
-    "comparison":    "infographic-before-after.html",
-    "results":       "infographic-stats-grid.html",
-    "journey":       "infographic-timeline.html",
-    "capabilities":  "infographic-icon-grid.html",
-    "versus":        "infographic-comparison-table.html",
-    "pipeline":      "infographic-funnel.html",
-    "improvements":  "infographic-progress-bars.html",
-    "testimonial":   "infographic-quote-box.html",
-    "use_cases":     "infographic-hub-spoke.html"
-  }
-}
+The `Formats` section lists every format slug enabled for this brand — if the founder approved a subset, only those appear and the marketing skill shows only those. The `Icon Library` recommended list is populated per-brand by the brand skill.
+
+```markdown
+# Visual Theme Kit
+
+## Formats
+- linkedin-carousel (1080 × 1080)
+- instagram-square (1080 × 1080)
+- instagram-portrait (1080 × 1350)
+- stories (1080 × 1920)
+- pinterest (1000 × 1500)
+- presentation (1920 × 1080)
+- link-preview (1200 × 628)
+- a4-letter (794 × 1123)
+
+## Icon Library
+- Source: heroicons
+- Fetch URL: https://raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/<name>.svg
+- Recommended: <icon-1>, <icon-2>, ...
+
+## Backgrounds
+| Category | File |
+|---|---|
+| ai_technology | bg-neural-network.svg |
+| infrastructure | bg-circuit-board.svg |
+| data_analysis | bg-data-viz.svg |
+| privacy_security | bg-private-vault.svg |
+| hardware | bg-server-rack.svg |
+| legal_workflow | bg-legal-scan.svg |
+| engineering | bg-blueprint-ai.svg |
+| network_isolation | bg-private-network.svg |
+| workflow_change | bg-workflow-transform.svg |
+| local_presence | bg-local-grid.svg |
+| default | bg-neural-network.svg |
+
+## Infographics
+| Layout key | File |
+|---|---|
+| how_it_works | infographic-process-steps.html |
+| comparison | infographic-before-after.html |
+| results | infographic-stats-grid.html |
+| journey | infographic-timeline.html |
+| capabilities | infographic-icon-grid.html |
+| versus | infographic-comparison-table.html |
+| pipeline | infographic-funnel.html |
+| improvements | infographic-progress-bars.html |
+| testimonial | infographic-quote-box.html |
+| use_cases | infographic-hub-spoke.html |
 ```
 
 ---
@@ -212,7 +217,7 @@ After confirming which brand/idea to use and loading brand colors, ask the found
 
 > "Which platform are you creating this for?"
 
-Present the formats from `visual-theme.json → formats` as a numbered list. If `visual-theme.json` doesn't exist, show all 8 formats. Once selected:
+Present the formats from `visual-theme.md → formats` as a numbered list. If `visual-theme.md` doesn't exist, show all 8 formats. Once selected:
 - Store the format slug (e.g., `linkedin-carousel`) and its dimensions (width × height)
 - Size all `.card` elements to those exact pixel dimensions in the generated HTML
 - Apply infographic layout adaptations for `stories` (9:16) and `presentation` (16:9) as described in the Platform Formats section
@@ -223,7 +228,7 @@ The chosen format slug becomes part of the output filename (`<platform-slug>-<to
 
 ### Background selection (runs once per carousel, after format is set)
 
-1. Load `visual-theme.json` from the active brand's `visual-theme/` folder.
+1. Load `visual-theme.md` from the active brand's `visual-theme/` folder.
    - If the folder doesn't exist: use built-in default (neural network nodes SVG, inline in the skill).
 2. Read company context from `memory/startup-context.md` and extract:
    - **Company name** and any product names mentioned
@@ -337,7 +342,7 @@ If the content for a slide is primarily narrative, too short, or lacks structure
 - Ask the founder which platform/format before asking for a topic — format determines card dimensions
 - Size `.card` elements to the exact pixel dimensions of the chosen format slug
 - Apply infographic layout adaptations for `stories` (9:16) and `presentation` (16:9) as described in Platform Formats
-- Load `visual-theme.json` silently after format is confirmed — before generating any HTML
+- Load `visual-theme.md` silently after format is confirmed — before generating any HTML
 - Always read `memory/startup-context.md` to extract company name, city/region, industry, niche, and technology — extend keyword categories with these terms before background matching
 - One background style per carousel — never mix backgrounds across slides
 - Background SVG opacity is baked into the file during brand skill generation — marketing skill injects it as-is, never overrides opacity
