@@ -1128,6 +1128,56 @@ Generate all 10 infographic layout types as 700×700 card previews, populated wi
 
 Store the approved HTML snippet code for each approved infographic — you will write them to disk in Step 4.
 
+### Step 4 — Save assets and write visual-theme.md
+
+**Determine the output folder:**
+- If `<dual-output>` = true → `<brand-output-path>recommended/visual-theme/`
+- If `<dual-output>` = false → `<brand-output-path>visual-theme/`
+- For idea-scoped brands → `outputs/ideas/<working-slug>/brand/recommended/visual-theme/`
+
+Write each approved SVG background to `<visual-theme-folder>/bg-<concept-slug>.svg` where `<concept-slug>` is a lowercase hyphenated version of the concept name (e.g., "Private data vault" → `bg-private-vault.svg`).
+
+Write each approved infographic partial to `<visual-theme-folder>/<infographic-filename>` using the filename from the layout table in Step 3 (e.g., `infographic-process-steps.html`).
+
+Write `<visual-theme-folder>/visual-theme.md` with this exact structure, populated with only the approved items:
+
+```markdown
+# Visual Theme Kit
+
+## Formats
+- linkedin-carousel (1080 × 1080)
+- instagram-square (1080 × 1080)
+- instagram-portrait (1080 × 1350)
+- stories (1080 × 1920)
+- pinterest (1000 × 1500)
+- presentation (1920 × 1080)
+- link-preview (1200 × 628)
+- a4-letter (794 × 1123)
+
+## Icon Library
+- Source: [library name from memory/brand.md]
+- Fetch URL: [Fetch URL pattern from memory/brand.md]
+- Recommended: [comma-separated list of icon names saved in the brand kit]
+
+## Backgrounds
+| Category | File |
+|---|---|
+[one row per approved background — e.g.: | ai_technology | bg-neural-network.svg |]
+| default | [filename of the first approved background] |
+
+## Infographics
+| Layout key | File |
+|---|---|
+[one row per approved infographic layout]
+```
+
+**Close the visual companion server** after all files are written:
+- Option A: the superpowers server will auto-stop when the session ends, or tell the founder they can close the browser tab
+- Option B: `Ctrl+C` the Python server process
+
+Tell the founder:
+> "Visual Theme Kit saved to `[visual-theme-folder]`. The marketing agent will use it automatically from your next carousel session."
+
 ---
 
 ## Hard Rules
@@ -1171,3 +1221,12 @@ Store the approved HTML snippet code for each approved infographic — you will 
 - If a fetch returns 404, try a name variant or inform the founder — never silently skip the icon
 - Save icon files to `<brand-output-path>icons/` (single kit) or `recommended/icons/` and `original/icons/` (dual kit)
 - Always update `memory/brand.md` with the chosen library name, browse URL, fetch URL pattern, icons folder path, and the list of saved icon names
+- Never save any background or infographic without founder approval from the interactive preview round
+- Feature icon grid preview must always use live-fetched SVG icons from the brand's icon library — never emoji
+- Progress bar metrics must always be stated positively — invert the statement if needed
+- Quote card must always use style D (contained box + small SVG quote icon) — never the large standalone quotation mark
+- Start visual companion server (Option A) first; fall back to Python http.server (Option B) if superpowers scripts not found
+- Close the visual companion server after saving assets
+- Write all assets to `visual-theme/` inside the active brand's recommended folder
+- SVG backgrounds must have opacity baked in (0.18–0.28) — never rely on the marketing skill to set opacity
+- Infographic snippets must be HTML partials (no `<html>/<head>/<body>` wrapper) — must work dropped into a `.card-body` element
