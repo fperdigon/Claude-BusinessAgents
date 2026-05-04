@@ -616,14 +616,14 @@ Save to: `<carousel-output-path><platform-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-S
 
 Where:
 - `<platform-slug>` = destination platform in lowercase (e.g., `linkedin`, `instagram`, `facebook`)
-- `<topic-slug>` = the user's own carousel topic title, slugified to lowercase hyphenated form — NOT the template category name. E.g., if the user said "How law firms can use AI to analyze contracts", use `how-law-firms-can-use-ai-to-analyze-contracts`. If the user said "Our mission at Core-AI", use `our-mission-at-core-ai`. Never substitute a generic label like `tips-education` or `founder-story`.
+- `<topic-slug>` = the user's own carousel topic title, slugified to lowercase hyphenated form — NOT the template category name. E.g., if the user said "How law firms can use AI to analyze contracts", use `how-law-firms-can-use-ai-to-analyze-contracts`. If the user said "Our mission and values", use `our-mission-and-values`. Never substitute a generic label like `tips-education` or `founder-story`.
 - `<YYYY-MM-DD-HH-MM-SS>` = current date and time with hyphens (colons cannot be used in file/folder names), e.g., `2026-05-02-14-35-22`
 
 Each carousel gets its own subfolder so captions, notes, or alternate versions can live alongside it.
 
 Example paths:
 - `outputs/marketing/linkedin-how-law-firms-can-use-ai-to-analyze-contracts-2026-05-02-14-35-22/carousel-linkedin-how-law-firms-can-use-ai-to-analyze-contracts-2026-05-02-14-35-22.html`
-- `outputs/ideas/private-ai-montreal-legal/marketing/linkedin-our-mission-at-core-ai-2026-05-02-09-10-04/carousel-linkedin-our-mission-at-core-ai-2026-05-02-09-10-04.html`
+- `outputs/ideas/my-product-slug/marketing/linkedin-our-mission-and-values-2026-05-02-09-10-04/carousel-linkedin-our-mission-and-values-2026-05-02-09-10-04.html`
 
 Show the full HTML in the chat first, then save.
 
