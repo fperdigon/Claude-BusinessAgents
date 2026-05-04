@@ -373,11 +373,23 @@ When a slide gets a non-plain layout key:
 4. Populate all template slots in the partial with the actual slide content derived from memory and outputs
 5. If `<has-visual-theme>` = false: skip steps 1–3 and use plain text layout for all slides
 
+**Visual density rules — read before populating any infographic:**
+
+A slide has three fixed elements (kicker, headline, bottom bar) plus the infographic. The infographic must not crowd them.
+
+- **Keep the headline short** — when a slide uses an infographic, cap the headline at 6 words. The infographic carries the detail; the headline frames it. A long headline + a full infographic = congestion.
+- **Cap data points** — enforce these maximums regardless of how much data is available: stats grid ≤ 4 stats, progress bars ≤ 4 bars, process steps ≤ 4 steps, before/after ≤ 3 items per column, comparison table ≤ 5 rows, icon grid = exactly 6 cells, timeline ≤ 4 events, hub & spoke ≤ 6 nodes, funnel ≤ 5 stages. If you have more data, pick the most impactful subset — do not squeeze in extras.
+- **Labels stay short** — every label, stat description, or step label must be ≤ 4 words. No full sentences inside an infographic. If the real text is longer, rewrite it to fit.
+- **One number per stat box** — a stat box shows one number and one short descriptor. Never a sentence.
+- **No kicker on infographic slides** — omit the `.kicker` element when the `.card-body` is occupied by an infographic that already has its own section label. The headline alone is sufficient framing.
+- **Breathing room test** — after populating, mentally scan the card: if more than 60% of the card body is filled with infographic content, fall back to plain text for that slide.
+
 **Plain text layout fallback conditions** — always use plain regardless of trigger rule:
 - Content is primarily narrative with no structured data
 - Fewer data points than the layout minimum (e.g., fewer than 3 steps for `how_it_works`)
 - `<has-visual-theme>` = false
 - The slide content doesn't fit the layout meaningfully
+- The headline would need to exceed 6 words AND the infographic is data-heavy — plain text lets both breathe
 
 ---
 
@@ -541,7 +553,8 @@ Use this base HTML template and fill in all slide content:
   .deck { position: relative; width: var(--card-w); height: var(--card-h); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6); flex-shrink: 0; }
   .card { position: absolute; inset: 0; background: var(--bg); color: var(--text); display: none; flex-direction: column; padding: 48px; overflow: hidden; }
   .card-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-  .card-top, .card-body, .card-bottom { position: relative; z-index: 1; }
+  .card-scrim { position: absolute; inset: 0; background: rgba(13,31,60,0.72); pointer-events: none; z-index: 1; }
+  .card-top, .card-body, .card-bottom { position: relative; z-index: 2; }
   .card.active { display: flex; }
   .card-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(128,128,128,0.15); margin-bottom: 8px; }
   .slide-num { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; color: var(--accent); }
@@ -594,12 +607,16 @@ Use this base HTML template and fill in all slide content:
       [inner SVG elements from <bg-svg> — strip the outer <svg> wrapper and keep only the children]
     </svg>
 
-    Inject the SAME background into every .card element in the carousel — one background per carousel.
+    After the <svg class="card-bg"> tag, always add this scrim div:
+    <div class="card-scrim"></div>
+
+    Inject the SAME background + scrim into every .card element in the carousel — one background per carousel.
   -->
 
   <!-- Slide 01 — Hook -->
   <div class="card active">
     <svg class="card-bg" viewBox="0 0 [format-w] [format-h]" xmlns="http://www.w3.org/2000/svg" opacity="[opacity]" preserveAspectRatio="xMidYMid slice">[bg-svg inner elements]</svg>
+    <div class="card-scrim"></div>
     <div class="card-top">
       <span class="slide-num">01 / [TOTAL]</span>
       <span class="brand-name">[Company Name]</span>
@@ -960,7 +977,9 @@ After saving the output file:
 - One background SVG per carousel — inject the same `<bg-svg>` into every card, never mix backgrounds across slides
 - Background SVG opacity is baked into the file by the brand skill — inject as-is, never add or override opacity in CSS
 - Infographic layout selection is per-slide, not per-carousel — evaluate each slide independently
+- Always inject a `.card-scrim` div immediately after the `.card-bg` SVG on every card — never omit the scrim
 - Always fall back to plain text + bullets when content doesn't fit a layout meaningfully
 - Quote/testimonial layout requires a real quote — never fabricate one
 - If `visual-theme.md` does not exist for the active brand: use the inline default neural-network SVG as background and plain text layouts for all slides
+- Infographic visual density: headline ≤ 6 words when an infographic is present; cap data points at layout maximums (stats grid ≤ 4, progress bars ≤ 4, steps ≤ 4, before/after ≤ 3 items per column, comparison ≤ 5 rows, timeline ≤ 4 events, hub & spoke ≤ 6 nodes, funnel ≤ 5 stages); all labels ≤ 4 words; omit the kicker when the infographic has its own section label; if more than 60% of the card body would be filled, fall back to plain text
 - Use `<format-slug>` as the filename component (replaces the old `<platform-slug>` naming)
