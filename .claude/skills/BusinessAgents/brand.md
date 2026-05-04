@@ -1100,7 +1100,7 @@ Store the approved SVG code for each approved background — you will write them
 
 ### Step 3 — Infographic preview round (interactive browser)
 
-Generate all 10 infographic layout types as 700×700 card previews, populated with real content from `startup-context.md` and any available output files in `outputs/`. Use the same visual companion server started in Step 2 (still running). Display an `infographic-preview.html` page with all 10 previews side-by-side.
+Generate all 10 infographic layout types as 700×700 card previews, populated with real content from `startup-context.md` and any available output files in `outputs/`. Use the same visual companion server started in Step 2 (still running). If the server is no longer running, restart it using the same Option A / Option B procedure from Step 2 before continuing. Display an `infographic-preview.html` page with all 10 previews side-by-side.
 
 **10 layout types to generate:**
 
@@ -1118,7 +1118,7 @@ Generate all 10 infographic layout types as 700×700 card previews, populated wi
 | use_cases | infographic-hub-spoke.html | Central hub with 4–6 spokes |
 
 **Hard rules for infographic generation:**
-- Feature icon grid (`capabilities`): always use live-fetched SVG icons from the brand's defined icon library (fetch from the icon source URL in `memory/brand.md`). Never use emoji or Unicode symbols as placeholders.
+- Feature icon grid (`capabilities`): always use live-fetched SVG icons from the brand's defined icon library (fetch from the `Fetch URL pattern:` field in `memory/brand.md`). Never use emoji or Unicode symbols as placeholders.
 - Progress bars (`improvements`): all metric labels must state what **increases** — positive framing only. Never show "−X%" — invert the statement instead (e.g., "Review time reclaimed: 97%" not "Time reduced: −97%").
 - Quote / testimonial (`testimonial`): use style D — a contained quote box with a small inline SVG quote mark icon, the quote text inside a subtle framed box. Never use a large standalone `"` character.
 
