@@ -293,6 +293,92 @@ If `<has-visual-theme>` = false:
 
 One background per carousel — all cards use the same `<bg-svg>`.
 
+### Slide layout selection (evaluated per slide, during content generation)
+
+After deciding what content goes on each slide, evaluate whether it qualifies for an infographic layout. Plain text + bullets is always the fallback.
+
+**Infographic layout adaptation by format ratio:**
+- `<format-ratio>` = `portrait` and format = `stories` (1080×1920): prefer vertically-stacked layouts — `how_it_works`, `results`, `testimonial`. Avoid `versus` and `use_cases` which need horizontal space. Use icon grid 2 columns × 3 rows instead of 3×2.
+- `<format-ratio>` = `landscape` (`presentation`, `link-preview`): prefer horizontally-arranged layouts — `comparison`, `versus`, `use_cases`, `capabilities` 3×2. `results` and `pipeline` adapt well. `how_it_works` should be arranged horizontally.
+- All other ratios: use layouts as-is.
+
+**Layout trigger rules by template:**
+
+*Template 1 — Problem Awareness:*
+
+| Slide | Trigger condition | Layout key |
+|---|---|---|
+| Hook | always | plain |
+| "The real cost" | 2+ metrics available | `results` |
+| "The real cost" | improvement % available | `improvements` |
+| "The real cost" | neither | plain |
+| "Why it keeps happening" | always | plain |
+| "Old way vs right way" | always | `comparison` |
+| "What changes when you fix it" | 3+ distinct outcomes | `use_cases` |
+| "What changes when you fix it" | fewer outcomes | plain |
+| Deeper evidence (slides 6–8) | pipeline or funnel data | `pipeline` |
+| Deeper evidence (slides 6–8) | feature comparison | `versus` |
+| Deeper evidence (slides 6–8) | neither | plain |
+| CTA | always | plain |
+
+*Template 2 — Before/After Journey:*
+
+| Slide | Trigger condition | Layout key |
+|---|---|---|
+| Hook | always | plain |
+| Setup | always | plain |
+| Before journey phases | always | plain |
+| Turning point | always | `comparison` |
+| After journey phases | always | plain |
+| Summary benefits | time/error/quality metrics present | `results` or `improvements` |
+| Summary benefits | no metrics | plain |
+| CTA | always | plain |
+
+*Template 3 — Tips & Education:*
+
+| Slide | Trigger condition | Layout key |
+|---|---|---|
+| Hook | always | plain |
+| Tip slide | tip describes 3–5 ordered steps | `how_it_works` |
+| Tip slide | tip compares two approaches | `versus` |
+| Tip slide | tip contains 3+ statistics | `results` |
+| Tip slide | tip lists 5–6 distinct capabilities | `capabilities` |
+| Tip slide | tip has one central idea + 4–6 branches | `use_cases` |
+| Tip slide | none of the above | plain |
+| "Most important" tip | always | plain |
+| CTA | always | plain |
+
+*Template 4 — Your Story:*
+
+| Slide | Trigger condition | Layout key |
+|---|---|---|
+| Hook | always | plain |
+| Context | always | plain |
+| Breaking point | always | plain |
+| Journey sequence | 3+ dated or ordered events | `journey` |
+| "What changed" | always | `comparison` |
+| Lessons for reader | 4–6 distinct lessons | `capabilities` |
+| Lessons for reader | fewer than 4 | plain |
+| CTA | always | plain |
+
+**Quote / testimonial layout (`testimonial`):**
+Only used when an actual quote exists in interview reports (`outputs/ideas/<working-slug>/interview-insights-*.md`) or the founder provides one explicitly during the session. Never fabricated. When triggered, replaces a content slide. Always uses style D (contained box + small SVG quote icon).
+
+**How to inject an infographic layout into a slide:**
+
+When a slide gets a non-plain layout key:
+1. Look up the layout key in `<infographic-map>` → get the filename (e.g., `infographic-stats-grid.html`)
+2. Read the HTML partial file from `<visual-theme-folder>/<filename>`
+3. The file is an HTML partial — drop its full content into the `.card-body` div, replacing the default headline + bullets structure for that slide
+4. Populate all template slots in the partial with the actual slide content derived from memory and outputs
+5. If `<has-visual-theme>` = false: skip steps 1–3 and use plain text layout for all slides
+
+**Plain text layout fallback conditions** — always use plain regardless of trigger rule:
+- Content is primarily narrative with no structured data
+- Fewer data points than the layout minimum (e.g., fewer than 3 steps for `how_it_works`)
+- `<has-visual-theme>` = false
+- The slide content doesn't fit the layout meaningfully
+
 ---
 
 **Question 6 — Call to Action:**
