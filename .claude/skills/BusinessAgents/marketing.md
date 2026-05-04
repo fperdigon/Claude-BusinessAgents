@@ -30,17 +30,46 @@ Store which brands are found and the scope. Do NOT decide which ICP or output pa
 
 ## Questions
 
-**Question 1 — Platform / Destination:**
+**Question 1 — Format:**
 
-*(Different platforms have different formats. Knowing the destination lets me label the export instructions correctly and keep your files organized by platform.)*
+*(Different platforms have different dimensions. I'll size the carousel cards exactly right for where you're posting.)*
 
-"Where will you publish this carousel?
-1. **LinkedIn** — PDF upload via the document post format (default)
-2. **Instagram** — image sequence or PDF via a carousel post
-3. **Facebook** — document post or image sequence
-4. **Other** — tell me the platform name"
+Before presenting this question, silently attempt to read `<brand-output-path>visual-theme/visual-theme.md`. If the file exists, extract the `## Formats` list and show only those formats. If it does not exist, present all 8 formats below.
 
-Store the answer as `<platform-slug>` in lowercase (e.g., `linkedin`, `instagram`, `facebook`, `twitter`). Default to `linkedin` if the founder skips or is unsure.
+"Which platform and format is this for?
+
+**Square (1:1)**
+1. LinkedIn Carousel — 1080 × 1080 · PDF upload / document post
+2. Instagram Feed Square — 1080 × 1080 · feed post, carousel
+
+**Portrait**
+3. Instagram Portrait — 1080 × 1350 · feed post (4:5, max portrait fill)
+4. Stories — 1080 × 1920 · Instagram / LinkedIn / Facebook full-screen
+5. Pinterest — 1000 × 1500 · standard pin (2:3)
+
+**Landscape**
+6. Presentation Slide — 1920 × 1080 · Google Slides / Keynote / PowerPoint
+7. Link Preview — 1200 × 628 · LinkedIn / Twitter / Facebook shared-link thumbnail
+
+**Document**
+8. A4 / Letter — 794 × 1123 · PDF one-pager / print leave-behind"
+
+Wait for the founder's choice. Store:
+- `<format-slug>` — the slug for the chosen format:
+  1 → `linkedin-carousel`, 2 → `instagram-square`, 3 → `instagram-portrait`,
+  4 → `stories`, 5 → `pinterest`, 6 → `presentation`, 7 → `link-preview`, 8 → `a4-letter`
+- `<format-w>` and `<format-h>` — the pixel dimensions:
+  `linkedin-carousel` → 1080×1080, `instagram-square` → 1080×1080,
+  `instagram-portrait` → 1080×1350, `stories` → 1080×1920,
+  `pinterest` → 1000×1500, `presentation` → 1920×1080,
+  `link-preview` → 1200×628, `a4-letter` → 794×1123
+- `<format-ratio>` — the aspect ratio group:
+  `linkedin-carousel` and `instagram-square` → `square`;
+  `instagram-portrait`, `stories`, `pinterest` → `portrait`;
+  `presentation` and `link-preview` → `landscape`;
+  `a4-letter` → `document`
+
+Use `<format-slug>` as the filename component throughout (replaces the old `<platform-slug>`). For format 1, the platform label shown in the top-right brand bar is "LinkedIn". For format 2, "Instagram". For formats 3–8, use the platform name from the list above.
 
 ---
 
