@@ -952,3 +952,15 @@ After saving the output file:
 - PDF generation uses: Scrapling screenshot → Pillow crop (detect card bounds by scanning for body bg color) → ReportLab `[format-w]×[format-h]`pt pages (dimensions set from `<format-w>` and `<format-h>`)
 - Always delete the temporary print-view HTML and per-slide PNGs after the PDF is built
 - Never downscale slide images when building the PDF — draw at native resolution for maximum quality
+- Ask which platform/format (Question 1) before asking for a topic — `<format-slug>` and dimensions must be set before any HTML is generated
+- Size `.card` elements using `--card-w` and `--card-h` CSS variables set to the exact pixel dimensions of the chosen format — never hardcode 700px
+- Apply format-ratio infographic adaptations: `stories` → vertically stacked; `presentation`/`link-preview` → horizontally arranged
+- Load `visual-theme.md` silently after brand colors are confirmed — before generating any HTML
+- Always read `memory/startup-context.md` to extract company name, city/region, industry, niche, and technology — extend background keyword categories with these terms before matching
+- One background SVG per carousel — inject the same `<bg-svg>` into every card, never mix backgrounds across slides
+- Background SVG opacity is baked into the file by the brand skill — inject as-is, never add or override opacity in CSS
+- Infographic layout selection is per-slide, not per-carousel — evaluate each slide independently
+- Always fall back to plain text + bullets when content doesn't fit a layout meaningfully
+- Quote/testimonial layout requires a real quote — never fabricate one
+- If `visual-theme.md` does not exist for the active brand: use the inline default neural-network SVG as background and plain text layouts for all slides
+- Use `<format-slug>` as the filename component (replaces the old `<platform-slug>` naming)
