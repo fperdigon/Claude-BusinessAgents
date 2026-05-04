@@ -1098,6 +1098,36 @@ Wait for the founder's response in the terminal. For any background the founder 
 
 Store the approved SVG code for each approved background — you will write them to disk in Step 4.
 
+### Step 3 — Infographic preview round (interactive browser)
+
+Generate all 10 infographic layout types as 700×700 card previews, populated with real content from `startup-context.md` and any available output files in `outputs/`. Use the same visual companion server started in Step 2 (still running). Display an `infographic-preview.html` page with all 10 previews side-by-side.
+
+**10 layout types to generate:**
+
+| Layout key | File | Description |
+|---|---|---|
+| how_it_works | infographic-process-steps.html | Numbered step sequence (3–5 steps) |
+| comparison | infographic-before-after.html | Two-column before/after split |
+| results | infographic-stats-grid.html | Grid of 4–6 metric tiles |
+| journey | infographic-timeline.html | Horizontal or vertical timeline with milestones |
+| capabilities | infographic-icon-grid.html | Icon + label grid (3×2 or 2×3) |
+| versus | infographic-comparison-table.html | Feature comparison table (Our solution vs. Alternative) |
+| pipeline | infographic-funnel.html | Funnel or pipeline stages with labels |
+| improvements | infographic-progress-bars.html | Labelled horizontal progress bars |
+| testimonial | infographic-quote-box.html | Contained quote box with SVG quote icon |
+| use_cases | infographic-hub-spoke.html | Central hub with 4–6 spokes |
+
+**Hard rules for infographic generation:**
+- Feature icon grid (`capabilities`): always use live-fetched SVG icons from the brand's defined icon library (fetch from the icon source URL in `memory/brand.md`). Never use emoji or Unicode symbols as placeholders.
+- Progress bars (`improvements`): all metric labels must state what **increases** — positive framing only. Never show "−X%" — invert the statement instead (e.g., "Review time reclaimed: 97%" not "Time reduced: −97%").
+- Quote / testimonial (`testimonial`): use style D — a contained quote box with a small inline SVG quote mark icon, the quote text inside a subtle framed box. Never use a large standalone `"` character.
+
+**Each infographic is saved as an HTML partial snippet** — content + inline `<style>` only, no `<html>`, `<head>`, or `<body>` wrapper. The snippet must be droppable directly into a `.card-body` div by the marketing skill without any modifications.
+
+**Approval loop:** After displaying the preview page, ask the founder which layouts to keep and which to redo. Iterate on rejected layouts until the founder approves. The founder may keep fewer than 10 — only approved layout files will be saved in Step 4.
+
+Store the approved HTML snippet code for each approved infographic — you will write them to disk in Step 4.
+
 ---
 
 ## Hard Rules
