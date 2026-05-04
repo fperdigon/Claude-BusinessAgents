@@ -152,18 +152,20 @@ Present options based on the scope and what was found in step 4:
 >
 > You can also run `/BusinessAgents:brand` any time to build a proper kit."
 
-**After the user selects a saved brand (options 1 or 2 above):** Load the colors from the selected brand. Extract: background color, accent color, text color, and text-muted color. Then set both the operative ICP and the output path based on the selection:
+**After the user selects a saved brand (options 1 or 2 above):** Load the colors from the selected brand. Extract: background color, accent color, text color, and text-muted color. Then set the operative ICP, output path, and brand output path based on the selection:
 
-- **Company brand selected** → operative ICP = `memory/icp.md` · output path = `outputs/marketing/`
-- **Product brand selected** → operative ICP = `outputs/ideas/<working-slug>/icp.md` · output path = `outputs/ideas/<working-slug>/marketing/`
+- **Company brand selected** → operative ICP = `memory/icp.md` · output path = `outputs/marketing/` · brand output path = `outputs/brand/recommended/`
+- **Product brand selected** → operative ICP = `outputs/ideas/<working-slug>/icp.md` · output path = `outputs/ideas/<working-slug>/marketing/` · brand output path = `outputs/ideas/<working-slug>/brand/recommended/`
 
-Store these as `<operative-icp-path>` and `<carousel-output-path>` for this session.
+Store these as `<operative-icp-path>`, `<carousel-output-path>`, and `<brand-output-path>` for this session.
 
 Confirm briefly inline: "Loaded: bg `[hex]`, accent `[hex]`, text `[hex]`. Using **[company / product-idea]** brand, ICP, and save folder."
 
 **If manual colors are entered:** ask "Should the carousel speak to your **general audience** (company-level) or specifically to customers of **this idea**?" Set accordingly:
-- General → `<carousel-output-path>` = `outputs/marketing/`, `<operative-icp-path>` = `memory/icp.md`
-- Idea-specific → `<carousel-output-path>` = `outputs/ideas/<working-slug>/marketing/`, `<operative-icp-path>` = `outputs/ideas/<working-slug>/icp.md`
+- General → `<carousel-output-path>` = `outputs/marketing/`, `<operative-icp-path>` = `memory/icp.md`, `<brand-output-path>` = nil
+- Idea-specific → `<carousel-output-path>` = `outputs/ideas/<working-slug>/marketing/`, `<operative-icp-path>` = `outputs/ideas/<working-slug>/icp.md`, `<brand-output-path>` = nil
+
+When `<brand-output-path>` = nil: skip the visual-theme.md read and set `<has-visual-theme>` = false directly.
 
 **If manual entry is chosen:**
 - Ask: "What is your **primary color** hex code? (This will be the card background.)"
