@@ -146,13 +146,13 @@ If `decision_maker` is non-empty: set `email_contact_name = decision_maker`. Don
 Use the homepage content already fetched during enrichment (do not re-fetch).
 Look for a nav link whose anchor text contains any of:
 `about`, `team`, `our team`, `attorneys`, `lawyers`, `people`, `équipe`, `avocats`, `notre équipe`
-→ Fetch that URL.
+→ Fetch that URL. If the fetch succeeds, go to Step 4.
 
 **Step 3 — Fixed-list fallback**
 If Step 2 finds no matching nav link, or the fetched page returns an error:
 Prepend the company base URL to each path and `bulk_get` in parallel:
 `/about` `/team` `/our-team` `/attorneys` `/lawyers` `/equipe` `/notre-equipe` `/people`
-Use the first path that returns content.
+Use the first path that returns a non-error page with visible text (not a redirect back to the homepage).
 If none return content → go to Step 6.
 
 **Step 4 — Extract person names**
@@ -161,6 +161,7 @@ Prioritise names appearing near professional titles: Partner, Avocat, Avocate, L
 If no names can be extracted → go to Step 6.
 
 **Step 5 — Semantic email match (moderate)**
+If the prospect has no email address, skip to Step 6.
 a. Strip the local part of the email (everything before `@`).
 b. Skip matching if the local part is a generic word: `info`, `contact`, `reception`, `accueil`, `office`, `admin`, `attorney`, `avocats`, `administration`, `mail`, `questioncondo`.
 c. Test the local part against each extracted name in this order:
