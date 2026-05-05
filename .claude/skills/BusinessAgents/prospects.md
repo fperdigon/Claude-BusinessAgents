@@ -133,6 +133,53 @@ If yes, use `bulk_get` with all company website URLs, `output_format: "markdown"
 
 If enrichment is declined, leave email, employees, and decision_maker blank — do not guess.
 
+### Deep Email Search (after initial enrichment)
+
+After visiting homepages, identify every company that still has a website but no email. For each one, run a second pass targeting contact and team pages.
+
+**Step 1 — Bulk-fetch contact pages**
+
+Use `bulk_get` with `output_format: "markdown"` to fetch multiple URL patterns per company in parallel. Try all of these paths (prepend the company's base URL):
+
+```
+/contact
+/contact-us
+/nous-joindre
+/contactez-nous
+/coordonnees
+/coordonnees.html
+/joindre
+/about
+/equipe
+/notre-equipe
+```
+
+Stop as soon as a path returns a non-error page with an email address. If none yield an email, mark the company as "contact form only."
+
+**Step 2 — Decode Cloudflare email obfuscation**
+
+Many Quebec law firm websites use Cloudflare's email obfuscation. In the page Markdown you will see patterns like:
+
+```
+[[email protected]](/cdn-cgi/l/email-protection#d1bcbbff...)
+```
+
+The hex string after `#` encodes the real email. Decode it with:
+
+```python
+def decode_cf_email(hex_str):
+    key = int(hex_str[:2], 16)
+    return ''.join(chr(int(hex_str[i:i+2], 16) ^ key) for i in range(2, len(hex_str), 2))
+```
+
+Apply this to every `/cdn-cgi/l/email-protection#` occurrence found on any fetched page.
+
+**Step 3 — Record outcome**
+
+- If an email is found: update the prospect's `email` field.
+- If only a contact form is found: leave `email` blank — never invent one.
+- Note in the chat summary how many additional emails were recovered.
+
 Whether or not enrichment was performed, run the **Contact Name Resolution** section below for each prospect to determine the `email_contact_name` field.
 
 ## Contact Name Resolution
