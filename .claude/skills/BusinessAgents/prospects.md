@@ -135,6 +135,44 @@ If enrichment is declined, leave email, employees, and decision_maker blank — 
 
 Whether or not enrichment was performed, run the **Contact Name Resolution** section below for each prospect to determine the `email_contact_name` field.
 
+## Contact Name Resolution
+
+Run this for each prospect after enrichment completes.
+
+**Step 1 — decision_maker shortcut**
+If `decision_maker` is non-empty: set `email_contact_name = decision_maker`. Done — skip the remaining steps for this prospect.
+
+**Step 2 — Find About/Team page via homepage nav (primary)**
+Use the homepage content already fetched during enrichment (do not re-fetch).
+Look for a nav link whose anchor text contains any of:
+`about`, `team`, `our team`, `attorneys`, `lawyers`, `people`, `équipe`, `avocats`, `notre équipe`
+→ Fetch that URL.
+
+**Step 3 — Fixed-list fallback**
+If Step 2 finds no matching nav link, or the fetched page returns an error:
+Prepend the company base URL to each path and `bulk_get` in parallel:
+`/about` `/team` `/our-team` `/attorneys` `/lawyers` `/equipe` `/notre-equipe` `/people`
+Use the first path that returns content.
+If none return content → go to Step 6.
+
+**Step 4 — Extract person names**
+From the fetched page, extract all full person names.
+Prioritise names appearing near professional titles: Partner, Avocat, Avocate, Lawyer, Associate, Notaire, Counsel, Director, Associé, Associée.
+If no names can be extracted → go to Step 6.
+
+**Step 5 — Semantic email match (moderate)**
+a. Strip the local part of the email (everything before `@`).
+b. Skip matching if the local part is a generic word: `info`, `contact`, `reception`, `accueil`, `office`, `admin`, `attorney`, `avocats`, `administration`, `mail`, `questioncondo`.
+c. Test the local part against each extracted name in this order:
+   - **Dot-separated exact:** `mehdi.tenouri` → matches "Mehdi Tenouri"
+   - **Initial + last name:** `ms` → first character = first-name initial, remaining characters = start of last name → "Michel Savonitto"
+   - **Last name only:** `fallali` → matches last name of any extracted name (case-insensitive, accent-insensitive)
+d. Use the first confident match found.
+e. Set `email_contact_name` = the full name as written on the page (not derived from the email string).
+
+**Step 6 — Fallback**
+`email_contact_name` = company name.
+
 ## Filtering by Size
 
 After extraction, apply the size filter:
