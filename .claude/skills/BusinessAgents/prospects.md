@@ -219,9 +219,9 @@ Sources: [yellowpages.ca / yelp.ca / google_maps]
 
 ## Prospects
 
-| # | Company | Phone | Email | Address | Website | Employees | Decision Maker |
-|---|---------|-------|-------|---------|---------|-----------|----------------|
-| 1 | ...     | ...   | ...   | ...     | ...     | ...       | ...            |
+| # | Company | Phone | Email | Address | Website | Employees | Decision Maker | Email Contact Name |
+|---|---------|-------|-------|---------|---------|-----------|----------------|--------------------|
+| 1 | ...     | ...   | ...   | ...     | ...     | ...       | ...            | ...                |
 
 ## Next Step
 Run `/BusinessAgents:interview` — use this list to find people to reach out to.
@@ -232,7 +232,7 @@ Pick 5–10 and contact them for a 15-minute call.
 
 Save to: `outputs/ideas/<working-slug>/prospects-<YYYY-MM-DD>.csv`
 
-Headers: `name,phone,email,address,website,employees,source,decision_maker`
+Headers: `name,phone,email,address,website,employees,source,decision_maker,email_contact_name`
 
 One row per company. Leave any unknown field blank — never invent data.
 
