@@ -191,7 +191,7 @@ Found **[N] qualified leads** from [sources used].
 Emails found: [X out of N]
 
 **Top 5:**
-1. [Name] — [Phone] — [Email or "no email found"] — [Employees or "unknown"]
+1. [Name] — [Phone] — [Email or "no email found"] — [Employees or "unknown"] — [Email Contact Name or company name]
 2. ...
 
 Saved to:
