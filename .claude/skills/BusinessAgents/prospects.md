@@ -133,6 +133,8 @@ If yes, use `bulk_get` with all company website URLs, `output_format: "markdown"
 
 If enrichment is declined, leave email, employees, and decision_maker blank — do not guess.
 
+After collecting enrichment data for all prospects, run the **Contact Name Resolution** step below for each prospect.
+
 ## Filtering by Size
 
 After extraction, apply the size filter:
