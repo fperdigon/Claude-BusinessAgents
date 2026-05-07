@@ -40,7 +40,18 @@ Store which brands are found and the scope. Do NOT decide which ICP or output pa
 
 (Be specific or broad — e.g., "The hidden cost of manual work at law firms" or "5 AI moves every engineer should make". Either works.)"
 
-Store as `<post-title>`. Derive `<topic-slug>` immediately by slugifying `<post-title>` (lowercase, hyphens instead of spaces and special characters).
+Store the answer exactly as typed as `<post-title>`. Derive `<topic-slug>` immediately by slugifying `<post-title>` (lowercase, hyphens instead of spaces and special characters).
+
+**Title suggestion (optional, only when clearly useful):** After storing `<post-title>`, evaluate it silently. If — and only if — the title is very short or vague (fewer than 3 meaningful words, e.g. "AI" or "legal tips"), offer 1–2 sharper alternatives in a single follow-up line. Format:
+
+> "Got it — I'll use **"[post-title]"**. If you'd like, here are two more specific angles:
+> — "[Suggested variant A]"
+> — "[Suggested variant B]"
+> Stick with yours or pick one?"
+
+If the user picks a variant, update `<post-title>` and re-derive `<topic-slug>`. If the user says "keep it" or gives any other answer, proceed with the original — never ask again.
+
+**When NOT to suggest:** if the title is already specific, evocative, or 4+ words — accept it as-is and move directly to Q2. Never suggest changes to a title that is already clear.
 
 ---
 
