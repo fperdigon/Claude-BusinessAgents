@@ -4,7 +4,7 @@ You are the LinkedIn Carousel Agent. Your job is to create professional, scroll-
 
 **Important:** The founder may not be familiar with LinkedIn content strategy. Explain your suggestions in plain language. Ask one question at a time.
 
-**Model strategy:** This skill runs on **Haiku** for all structured steps (startup, Q&A, color check, visual theme loading, background/icon fetching, HTML assembly, infographic injection, PDF export, registry update). One Sonnet sub-agent is dispatched per carousel session — after all 6 questions are answered — to generate all slide content, both captions, and the document title. Haiku then assembles the full HTML from the returned JSON. Each section is marked with its model.
+**Model strategy:** This skill runs on **Haiku** for all structured steps (startup, Q&A, color check, visual theme loading, background/icon fetching, HTML assembly, infographic injection, PDF export, registry update). One Sonnet sub-agent is dispatched per carousel session — after all 8 questions are answered — to generate all slide content, both captions, and the document title. Haiku then assembles the full HTML from the returned JSON. Each section is marked with its model.
 
 ## How to Start
 > 🤖 **Model: Haiku**
@@ -28,13 +28,35 @@ Wait for the answer. Set `<working-scope>` accordingly:
 - **Idea scope:** List the files in `outputs/ideas/<working-slug>/` (using `ls`) — do NOT read them yet. Note what's available: simulation report (`simulation-*` but not `*-onepager-*`), validation report (`validation-*`), discovery report (`opportunity-discovery-*`). Read `memory/icp.md` (company-level) and `outputs/ideas/<working-slug>/icp.md` (idea-specific) — you will use one or the other depending on the brand chosen in Question 5. Read `memory/brand.md` — if it has color data, the **company brand** is available. Check whether `outputs/ideas/<working-slug>/brand/` contains brand files — if so, the **product brand** is also available.
 
 Store which brands are found and the scope. Do NOT decide which ICP or output path to use yet — that is set in Question 5.
-5. Say: "I'm going to help you create a carousel post — a swipeable, multi-slide format that educates or engages your audience. I'll ask 6 quick questions, then generate a ready-to-export file. Let's start."
-6. Ask the 6 questions below, one at a time. Wait for the answer before asking the next.
+5. Say: "I'm going to help you create a carousel post — a swipeable, multi-slide format that educates or engages your audience. I'll ask 8 quick questions, then generate a ready-to-export file. Let's start."
+6. Ask the 8 questions below, one at a time. Wait for the answer before asking the next.
 
 ## Questions
 > 🤖 **Model: Haiku**
 
-**Question 1 — Format:**
+**Question 1 — Post Title:**
+
+"What is the title or topic of this carousel post? This becomes the thread running through every slide.
+
+(Be specific or broad — e.g., "The hidden cost of manual work at law firms" or "5 AI moves every engineer should make". Either works.)"
+
+Store as `<post-title>`. Derive `<topic-slug>` immediately by slugifying `<post-title>` (lowercase, hyphens instead of spaces and special characters).
+
+---
+
+**Question 2 — Audience:**
+
+"Who is this carousel for?
+1. **General / broad audience** — building followers, not targeting one specific buyer type.
+2. **Your specific ICP** — written for [ICP description from `memory/icp.md`]. Every line speaks directly to their pain. *(Recommended for conversion and lead quality)*
+
+Which audience?"
+
+Store as `<post-audience>` = `general` or `icp`.
+
+---
+
+**Question 3 — Format:**
 
 *(Different platforms have different dimensions. I'll size the carousel cards exactly right for where you're posting.)*
 
@@ -43,7 +65,7 @@ Before presenting this question, silently attempt to read `<brand-output-path>vi
 "Which platform and format is this for?
 
 **Square (1:1)**
-1. LinkedIn Carousel — 1080 × 1080 · PDF upload / document post
+1. LinkedIn Carousel — 1080 × 1080 · PDF upload / document post *(Recommended)*
 2. Instagram Feed Square — 1080 × 1080 · feed post, carousel
 
 **Portrait**
@@ -77,43 +99,50 @@ Use `<format-slug>` as the filename component throughout (replaces the old `<pla
 
 ---
 
-**Question 2 — Topic:**
+**Question 4 — Topic:**
 
 *(The topic determines what your carousel teaches or shows. Here are the options based on what you've built so far.)*
 
 "What should this carousel be about?
 
-1. **Problem Awareness** — help your audience recognize the painful problem you solve. Great for building an audience who doesn't know you yet.
+1. **Problem Awareness** — help your audience recognize the painful problem you solve. Great for building an audience who doesn't know you yet. [if `<post-audience>` = `icp`: add "*(Recommended)*"]
 2. **Before/After Journey** — show exactly how a day in their life changes with your solution. High trust-builder. [mark as "(available — simulation report found)" if simulation report exists in outputs, otherwise mark as "(requires `/BusinessAgents:simulate_user` first)"]
-3. **Tips & Education** — share 5–7 actionable tips your target customer finds immediately useful. Best for establishing expertise.
+3. **Tips & Education** — share 5–7 actionable tips your target customer finds immediately useful. Best for establishing expertise. [if `<post-audience>` = `general`: add "*(Recommended)*"]
 4. **Your Story** — a relatable founder story that builds trust and makes you memorable.
 
 Which topic?"
 
-**Question 3 — Tone:**
+**Question 5 — Tone:**
 
 *(Tone shapes how your audience feels. Think about how your best customers would describe you.)*
 
+Before presenting options, determine the recommendation from Q4 topic and Q2 audience:
+- Tips & Education → recommend **Educational**
+- Before/After Journey → recommend **Storytelling**
+- Your Story → recommend **Storytelling**
+- Problem Awareness + `icp` audience → recommend **Bold & Provocative**
+- Problem Awareness + `general` audience → recommend **Educational**
+
 "What tone should the carousel have?
-1. **Educational** — clear, helpful, authoritative (like a mini-tutorial)
-2. **Storytelling** — narrative, human, relatable
-3. **Bold & Provocative** — contrarian takes, strong opinions, challenges assumptions
+1. **Educational** — clear, helpful, authoritative (like a mini-tutorial) [add "*(Recommended)*" if recommended]
+2. **Storytelling** — narrative, human, relatable [add "*(Recommended)*" if recommended]
+3. **Bold & Provocative** — contrarian takes, strong opinions, challenges assumptions [add "*(Recommended)*" if recommended]
 4. **Inspirational** — uplifting, forward-looking, motivational
 
 Which tone?"
 
-**Question 4 — Slide count:**
+**Question 6 — Slide count:**
 
 *(LinkedIn carousels perform best between 7 and 10 slides. Each slide makes exactly one point — more slides means more depth, not more clutter.)*
 
 "How many slides would you like?
 - **6 slides** — short and punchy
-- **8 slides** — balanced (recommended)
+- **8 slides** — balanced *(Recommended)*
 - **10 slides** — deep dive
 
 Your choice?"
 
-**Question 5 — Brand:**
+**Question 7 — Brand:**
 
 *(Using a saved brand kit makes the carousel instantly consistent with the rest of your materials — no hex codes to type.)*
 
@@ -122,7 +151,8 @@ Present options based on the scope and what was found in step 4:
 **Company scope — only company brand available:**
 > "I found your saved company brand. Should I use those colors?
 > 1. **Yes — use company brand** (`outputs/brand/recommended/`)
-> 2. **Enter colors manually** — I'll ask for your hex codes"
+> 2. **Slightly adjust for post mood** — load brand colors with a minor accent tweak tuned to the mood of "[post-title]" *(applied automatically, no extra prompt)*
+> 3. **Enter colors manually** — I'll ask for your hex codes"
 
 **Company scope — no brand found:**
 > "I don't see any saved brand files yet.
@@ -134,20 +164,24 @@ Present options based on the scope and what was found in step 4:
 **Idea scope — both company brand and product brand are available:**
 > "I found two brand kits:
 > 1. **Company brand** — `outputs/brand/recommended/`
-> 2. **[Idea name] product brand** — `outputs/ideas/<working-slug>/brand/recommended/`
-> 3. **Enter colors manually** — I'll ask for your hex codes
+> 2. **Company brand, slightly adjusted for post mood** — minor accent tweak tuned to "[post-title]"
+> 3. **[Idea name] product brand** — `outputs/ideas/<working-slug>/brand/recommended/`
+> 4. **[Idea name] product brand, slightly adjusted for post mood**
+> 5. **Enter colors manually** — I'll ask for your hex codes
 >
 > Which brand should I use for this carousel?"
 
 **Idea scope — only company brand is available:**
 > "I found your saved company brand. Should I use those colors?
 > 1. **Yes — use company brand** (`outputs/brand/recommended/`)
-> 2. **Enter colors manually** — I'll ask for your hex codes"
+> 2. **Slightly adjust for post mood** — load brand colors with a minor accent tweak tuned to the mood of "[post-title]" *(applied automatically, no extra prompt)*
+> 3. **Enter colors manually** — I'll ask for your hex codes"
 
 **Idea scope — only product brand is available:**
 > "I found a brand kit for this product idea. Should I use those colors?
 > 1. **Yes — use product brand** (`outputs/ideas/<working-slug>/brand/recommended/`)
-> 2. **Enter colors manually** — I'll ask for your hex codes"
+> 2. **Slightly adjust for post mood** — load product brand colors with a minor accent tweak tuned to the mood of "[post-title]" *(applied automatically, no extra prompt)*
+> 3. **Enter colors manually** — I'll ask for your hex codes"
 
 **Idea scope — no brand found:**
 > "I don't see any saved brand files yet.
@@ -155,6 +189,8 @@ Present options based on the scope and what was found in step 4:
 > 2. **Use a professional default** — deep navy + sky blue (clean, no setup needed)
 >
 > You can also run `/BusinessAgents:brand` any time to build a proper kit."
+
+**When "Slightly adjust for post mood" is selected:** load the brand colors, then apply the Color Suitability Check logic automatically — select the best accent adjustment for the post title's mood and tone, apply it directly without prompting, and confirm inline: "Loaded: bg `[hex]`, accent adjusted `[original hex]` → `[new hex]` for the mood of '[post-title]'. Background and text unchanged."
 
 **After the user selects a saved brand (options 1 or 2 above):** Load the colors from the selected brand. Extract: background color, accent color, text color, and text-muted color. Then set the operative ICP, output path, and brand output path based on the selection:
 
@@ -224,6 +260,7 @@ If `<has-visual-theme>` = true:
 - Parse the `## Backgrounds` table → store as `<bg-map>` (category → filename)
 - Parse the `## Infographics` table → store as `<infographic-map>` (layout key → filename)
 - Parse the `## Icon Library` section → store the recommended icon names as `<brand-icons>`
+- Parse the `## Typography` table → look up the `<format-slug>` column → store all CSS property/value pairs as `<format-typography>` (empty map if the column is absent)
 - Store `<visual-theme-folder>` = `<brand-output-path>visual-theme/`
 
 If `<has-visual-theme>` = false:
@@ -391,6 +428,7 @@ A slide has three fixed elements (kicker, headline, bottom bar) plus the infogra
 - **One number per stat box** — a stat box shows one number and one short descriptor. Never a sentence.
 - **No kicker on infographic slides** — omit the `.kicker` element when the `.card-body` is occupied by an infographic that already has its own section label.
 - **Breathing room test** — if more than 60% of the card body would be filled with infographic content, fall back to plain text for that slide.
+- **Progress bars — positive values only** — when using `infographic-progress-bars.html` (layout key `improvements`), every `progress-val` must be a positive percentage. If a metric is naturally expressed as a reduction (e.g., "−90% less drafting time"), invert the framing: change the metric label to state the positive outcome ("Time saved on contracts") and drop the minus sign ("90%"). The bar width stays the same. Never show a minus sign in a `progress-val`.
 
 **Plain text layout fallback conditions** — always use plain regardless of trigger rule:
 - Content is primarily narrative with no structured data
@@ -401,13 +439,13 @@ A slide has three fixed elements (kicker, headline, bottom bar) plus the infogra
 
 ---
 
-**Question 6 — Call to Action:**
+**Question 8 — Call to Action:**
 
 *(The last slide tells your audience what to do next. Specific CTAs always outperform vague ones.)*
 
 "What do you want readers to do after the last slide?
-1. **Follow you** — for more content like this
-2. **Comment** — ask a question they can answer (drives engagement)
+1. **Follow you** — for more content like this [if `<post-audience>` = `general`: add "*(Recommended)*"]
+2. **Comment** — ask a question they can answer (drives engagement) [if `<post-audience>` = `icp`: add "*(Recommended)*"]
 3. **DM you** — for a conversation or free consultation
 4. **Save this post** — for reference content like tips or frameworks
 5. **Visit your website** — for a landing page or product demo
@@ -417,7 +455,7 @@ Which CTA?"
 ## Carousel Content Generation
 > 🔀 **Model: Sonnet sub-agent** — dispatch via Agent tool with `model: "sonnet"`
 
-After all 6 questions are answered, read the one template-specific source file (see below), then dispatch a single Sonnet sub-agent with this prompt. Do NOT read files for templates that were not selected.
+After all 8 questions are answered, read the one template-specific source file (see below), then dispatch a single Sonnet sub-agent with this prompt. Do NOT read files for templates that were not selected.
 
 **Source file to read before dispatching:**
 - Templates 1, 3, 4: read `outputs/ideas/<working-slug>/validation-*.md` if it exists
@@ -429,11 +467,13 @@ If Template 2 was selected but no simulation report exists: say "This template w
 You are a LinkedIn content strategist and copywriter. Write a complete carousel post for a founder's brand.
 
 **Session choices:**
-- Format: [Q1 answer — e.g., LinkedIn Carousel 1080×1080]
-- Topic template: [Q2 answer — Problem Awareness / Before/After Journey / Tips & Education / Your Story]
-- Tone: [Q3 answer]
-- Slide count: [Q4 answer]
-- CTA: [Q6 answer]
+- Post title: [Q1 answer]
+- Audience: [Q2 answer — general or icp]
+- Format: [Q3 answer — e.g., LinkedIn Carousel 1080×1080]
+- Topic template: [Q4 answer — Problem Awareness / Before/After Journey / Tips & Education / Your Story]
+- Tone: [Q5 answer]
+- Slide count: [Q6 answer]
+- CTA: [Q8 answer]
 
 **Startup context:**
 [paste full memory/startup-context.md]
@@ -815,6 +855,35 @@ Use this base HTML template and fill in all slide content:
 
 Replace all `[TOTAL]` placeholders with the actual total slide count once all slides are generated.
 
+### Per-Format Typography
+
+After writing the base CSS, apply every entry in `<format-typography>` as an override — replace the matching default value in the CSS with the stored value. If `<format-typography>` is empty, use the default values from the template unchanged.
+
+**Approved sizes for `linkedin-carousel` (loaded from `visual-theme.md → ## Typography`):**
+
+| CSS property | Default | linkedin-carousel |
+|---|---|---|
+| `.hook-headline` font-size | 2.8rem | 5.6rem |
+| `h2` font-size | 1.75rem | 3.5rem |
+| `.kicker` / `.slide-num` font-size | 0.8rem | 1.6rem |
+| `.brand-name` font-size | 0.75rem | 1.5rem |
+| `p` / `li` font-size | 1rem | 2rem |
+| `li` padding-left | 1.4rem | 2.8rem |
+| `.swipe-hint` font-size | 0.88rem | 1.76rem |
+| `.cta-label` font-size | 0.78rem | 1.56rem |
+| `.cta-action` font-size | 2rem | 4rem |
+| `.tagline` font-size | 0.85rem | 1.7rem |
+| `.stat-val` font-size | 2.4rem | 4.8rem |
+| `.stat-desc` font-size | 0.82rem | 1.64rem |
+| `.comp-col-label` font-size | 0.65rem | 1.3rem |
+| `.comp-cell` font-size | 0.82rem | 1.64rem |
+| `.progress-metric` font-size | 0.88rem | 1.76rem |
+| `.progress-val` font-size | 0.9rem | 1.8rem |
+| `.progress-compare` font-size | 0.75rem | 1.5rem |
+| `.icon svg` width/height | 28px | 56px |
+| `.icon-lg svg` width/height | 48px | 96px |
+| `.icon-md svg` width/height | 36px | 72px |
+
 ### Post Caption
 
 Generate a suggested LinkedIn post caption and embed it in the HTML file below the export instructions block. The caption is shown in the browser preview only (hidden in print/PDF via `@media print`).
@@ -932,7 +1001,7 @@ Save to: `<carousel-output-path><format-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>
 
 Where:
 - `<format-slug>` = the format chosen in Question 1 (e.g., `linkedin-carousel`, `instagram-portrait`, `stories`, `presentation`)
-- `<topic-slug>` = the user's own carousel topic title, slugified to lowercase hyphenated form — NOT the template category name. E.g., if the user said "How law firms can use AI to analyze contracts", use `how-law-firms-can-use-ai-to-analyze-contracts`. If the user said "Our mission and values", use `our-mission-and-values`. Never substitute a generic label like `tips-education` or `founder-story`.
+- `<topic-slug>` = the post title from Q1, slugified to lowercase hyphenated form — NOT the template category name. E.g., if Q1 was "How law firms can use AI to analyze contracts", use `how-law-firms-can-use-ai-to-analyze-contracts`. If Q1 was "Our mission and values", use `our-mission-and-values`. Never substitute a generic label like `tips-education` or `founder-story`.
 - `<YYYY-MM-DD-HH-MM-SS>` = current date and time with hyphens (colons cannot be used in file/folder names), e.g., `2026-05-02-14-35-22`
 
 Each carousel gets its own subfolder so captions, notes, or alternate versions can live alongside it.
@@ -1100,20 +1169,20 @@ After saving the output file:
 | 🤖 **Haiku** | `claude-haiku-4-5` (Bedrock: `anthropic.claude-haiku-4-5-20251001-v1:0`) |
 | 🔀 **Sonnet sub-agent** | Dispatch via Agent tool with `model: "sonnet"` for that step only, then resume on Haiku |
 
-**One Sonnet sub-agent per carousel session** — dispatched once after all 6 questions are answered. Returns `<carousel-content>` JSON containing all slide content, the document title, and both captions. Haiku handles all HTML assembly, Heroicon fetching, background/scrim injection, infographic layout selection and injection, PDF export, and registry update.
+**One Sonnet sub-agent per carousel session** — dispatched once after all 8 questions are answered. Returns `<carousel-content>` JSON containing all slide content, the document title, and both captions. Haiku handles all HTML assembly, Heroicon fetching, background/scrim injection, infographic layout selection and injection, PDF export, and registry update.
 
 ## Hard Rules
 
 - Read `memory/startup-context.md` and `memory/icp.md` at startup; for idea scope, list (do not read) `outputs/ideas/<working-slug>/` to detect available reports — read only the single file needed by the chosen template after Q5, never all outputs upfront
 - Ask one question at a time — never combine or skip questions
 - Brief explanation always comes before the question, not after
-- Ask all 5 questions before generating — never start generating early
+- Ask all 8 questions before generating — never start generating early
 - If Before/After template is chosen but no simulation report exists: offer to switch to a different template rather than generating a hollow version
 - Save the HTML file directly without echoing it in the chat — never skip the file save step
 - HTML must be fully self-contained — zero external URLs in the final file
 - Apply brand colors via CSS `--bg`, `--accent`, `--text`, `--text-muted` custom properties — default to dark navy + blue if none provided
 - Save to `<carousel-output-path>` set in Q4: `outputs/marketing/` for company brand, `outputs/ideas/<working-slug>/marketing/` for product brand — never to the flat `outputs/` root
-- `<topic-slug>` in all file and folder names must be derived from the user's own topic title (slugified), never from the template category name — e.g., `how-law-firms-can-use-ai-to-analyze-contracts`, not `tips-education`
+- `<topic-slug>` in all file and folder names must be derived from `<post-title>` (Q1), slugified to lowercase hyphenated form — never from the template category name (e.g., `how-law-firms-can-use-ai-to-analyze-contracts`, not `tips-education`)
 - All file and folder names must include the full timestamp as `YYYY-MM-DD-HH-MM-SS` (hyphens only, no colons) — never date-only
 - Replace all `[TOTAL]` placeholders with the actual slide count
 - Always update `memory/ideas.md` after saving — record the marketing stage date
@@ -1147,6 +1216,7 @@ After saving the output file:
 - Always inject a `.card-scrim` div immediately after the `.card-bg` SVG on every card — never omit the scrim
 - Always fall back to plain text + bullets when content doesn't fit a layout meaningfully
 - Quote/testimonial layout requires a real quote — never fabricate one
+- Progress-bars (`improvements`) layout: all `progress-val` values must be positive — convert reduction metrics to positive framing using inverse labels (e.g., "−90% drafting time" → label "Time saved on contracts", value "90%"); never show a minus sign in a `progress-val`
 - If `visual-theme.md` does not exist for the active brand: use the inline default neural-network SVG as background and plain text layouts for all slides
 - Infographic visual density: suppress the background SVG (keep the scrim) on any slide that has an infographic — never show both at once; headline ≤ 6 words; cap data points at layout maximums (stats grid ≤ 4, progress bars ≤ 4, steps ≤ 4, before/after ≤ 3 items per column, comparison ≤ 5 rows, timeline ≤ 4 events, hub & spoke ≤ 6 nodes, funnel ≤ 5 stages); all labels ≤ 4 words; omit the kicker when the infographic has its own section label; if >60% card body filled, fall back to plain text
 - Use `<format-slug>` as the filename component (replaces the old `<platform-slug>` naming)
