@@ -515,6 +515,7 @@ You are a LinkedIn content strategist and copywriter. Write a complete carousel 
 **Template structure:**
 
 Template 1 — Problem Awareness:
+*(All slides must address the specific problem framed in `<post-title>` — not a generic industry pain.)*
 - Slide 1 (Hook): shocking statement or bold question; lead with a striking number or claim that makes the reader think "wait, that's me"
 - Slide 2: "The real cost" — quantify the pain in time, money, or stress specific to the ICP
 - Slide 3: "Why it keeps happening" — root cause, not just symptoms
@@ -524,6 +525,7 @@ Template 1 — Problem Awareness:
 - Last slide: CTA
 
 Template 2 — Before/After Journey (use simulation report):
+*(The journey must illustrate the transformation implied by `<post-title>` — not a generic before/after for the company.)*
 - Slide 1 (Hook): "Here's how [ICP job title] handles [painful task] today. (Keep swiping →)"
 - Slide 2: Setup — who this is for and what the situation is
 - Slides 3–(N/2): the before journey — one painful phase per slide, from simulation before table
@@ -532,6 +534,7 @@ Template 2 — Before/After Journey (use simulation report):
 - Last slide: summary benefits (time saved, steps eliminated, from benefit calculation) + CTA
 
 Template 3 — Tips & Education:
+*(Every tip must be directly relevant to the specific angle in `<post-title>` — no generic advice about the company's domain.)*
 - Slide 1 (Hook): "[N] things every [ICP job title] should know about [topic]"
 - Slides 2 through N-2: one tip per slide — short headline (5–8 words) + 2–3 bullets + one concrete example for the ICP's industry
 - Slide N-1: "The most important one" — most surprising or actionable point
@@ -539,6 +542,7 @@ Template 3 — Tips & Education:
 (Tips must be specific to the ICP's daily work — no generic advice)
 
 Template 4 — Your Story:
+*(The story must center on the specific insight or struggle stated in `<post-title>` — not the founder's general origin story.)*
 - Slide 1 (Hook): "I used to [painful situation] every [time period]." — first person, immediate
 - Slide 2: context — who you are, why this problem affected you
 - Slide 3: the breaking point
