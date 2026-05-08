@@ -1,0 +1,53 @@
+/* ── linkedin-mobile typography & sizing (1080 × 1350) ── */
+/* Two headline tiers + body tier + labels tier. Min font: 2.5rem (40px). */
+
+/* Headline tier: 80–90 px */
+.hook-headline { font-size: 5.625rem; font-weight: 800; line-height: 1.1;  color: var(--text); margin-bottom: 1.5rem; }
+h2             { font-size: 5rem;     font-weight: 700; line-height: 1.12; color: var(--text); margin-bottom: 1.25rem; }
+.cta-action    { font-size: 5rem;     font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 1rem; }
+
+/* Body tier: 60 px */
+p              { font-size: 3.75rem; line-height: 1.55; color: var(--text-muted); margin-bottom: 0.6rem; }
+ul             { list-style: none; padding: 0; margin-top: 0.5rem; }
+li             { font-size: 3.75rem; line-height: 1.55; color: var(--text-muted); padding: 0.5rem 0 0.5rem 3.5rem; position: relative; }
+li::before     { content: "→"; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
+.swipe-hint    { font-size: 3.375rem; color: var(--text-muted); margin-top: 1.5rem; }
+.big-stat      { font-size: 6.5rem;   font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
+
+/* Labels tier: 44–48 px */
+.slide-num     { font-size: 3rem;    font-weight: 700; letter-spacing: 0.12em; color: var(--accent); }
+.brand-name    { font-size: 2.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.kicker        { font-size: 3rem;    font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.9rem; }
+.cta-label     { font-size: 2.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.75rem; }
+.tagline       { font-size: 2.75rem; color: var(--text-muted); }
+.accent-bar    { height: 3px; background: var(--accent); border-radius: 2px; width: 40px; }
+
+/* Icons */
+.icon          { display: inline-flex; align-items: center; flex-shrink: 0; }
+.icon svg      { width: 72px;  height: 72px;  color: var(--accent); }
+.icon-lg svg   { width: 120px; height: 120px; }
+.icon-md svg   { width: 96px;  height: 96px;  }
+.slide-header  { display: flex; align-items: center; gap: 24px; margin-bottom: 1.5rem; }
+.hook-icon     { display: flex; justify-content: center; margin-bottom: 2rem; }
+
+/* Infographic — process steps (linkedin-mobile) */
+.steps         { display: flex; align-items: flex-start; gap: 0; margin-top: 48px; }
+.step          { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.step-circle   { width: 100px; height: 100px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; color: var(--bg); margin-bottom: 20px; flex-shrink: 0; }
+.step-circle.purple { background: linear-gradient(135deg, #9d2cff, var(--accent)); color: #fff; }
+.step-label    { font-size: 3rem; color: rgba(248,250,252,0.85); text-align: center; line-height: 1.3; }
+.step-arrow    { flex: 0 0 48px; margin-top: 36px; color: var(--accent); font-size: 2.5rem; font-weight: 700; }
+
+/* Infographic — comparison table (linkedin-mobile, max 3 rows) */
+.comp-table    { flex: 1; display: flex; flex-direction: column; gap: 0; margin-top: 40px; }
+.comp-header   { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.comp-col-label { font-size: 3rem; font-weight: 700; text-align: center; padding: 14px; border-radius: 6px; }
+.comp-col-label.old { background: rgba(255,255,255,0.05); color: rgba(248,250,252,0.4); }
+.comp-col-label.new { background: rgba(34,211,238,0.15); color: var(--accent); }
+.comp-row      { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.comp-cell     { font-size: 3rem; padding: 24px 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+/* IMPORTANT: never set font-size on .comp-feature — it inherits from .comp-cell */
+.comp-feature  { background: rgba(255,255,255,0.04); color: rgba(248,250,252,0.85); justify-content: flex-start; }
+.comp-cell.no  { background: rgba(239,68,68,0.08);  color: #ef4444; font-weight: 700; }
+.comp-cell.yes { background: rgba(34,197,94,0.1);   color: #22c55e; font-weight: 700; }
+/* ── end linkedin-mobile typography & sizing ── */
