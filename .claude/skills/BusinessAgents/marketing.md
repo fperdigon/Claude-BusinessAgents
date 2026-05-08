@@ -553,7 +553,7 @@ Template 4 — Your Story:
 Write all slide content AND both captions AND the document title.
 
 Rules:
-- Post title is the thesis — every slide headline and every bullet must directly relate to the angle stated in the post title above; never drift to the company domain generally
+- The CAROUSEL THESIS above is the post title's specific angle — every slide headline and every bullet must directly relate to it; never drift to the company domain generally
 - Every fact must come from the source material — no invented stats
 - Tone must match the chosen tone throughout
 - Hook slide headline: 5–9 words, scroll-stopping
