@@ -1,0 +1,19 @@
+<style>
+.doc-title-row { margin-bottom: 1.1rem; }
+.doc-title-label { font-size: 0.78rem; color: #64748b; display: block; margin-bottom: 0.35rem; }
+.doc-title-value { color: #f8fafc; font-size: 1rem; font-weight: 600; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 0.65rem 1rem; }
+</style>
+<div class="doc-title-row">
+  <span class="doc-title-label">Document title (paste into LinkedIn when uploading)</span>
+  <div class="doc-title-value" id="docTitle">{{generated-title}}</div>
+  <button class="copy-btn" style="margin-top:0.5rem" onclick="copyTitle()">Copy title</button>
+</div>
+<script>
+function copyTitle() {
+  navigator.clipboard.writeText(document.getElementById('docTitle').innerText).then(() => {
+    const btns = document.querySelectorAll('.copy-btn');
+    btns[0].textContent = 'Copied!';
+    setTimeout(() => btns[0].textContent = 'Copy title', 1800);
+  });
+}
+</script>
