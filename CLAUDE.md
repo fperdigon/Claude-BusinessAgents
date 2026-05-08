@@ -122,9 +122,9 @@ A system of AI agents that guide a founder from raw idea to validated business w
 ### 7. `/BusinessAgents:docs` — Business Documentation Agent
 
 
-**Job:** Turn everything captured so far into polished business documents and presentations.
+**Job:** Turn everything captured so far into polished business documents and presentations. Supports two scopes — **company** (about the whole business) and **idea** (about one product) — and asks which one at the start of every session.
 
-**Reads:** All memory files + all files in `outputs/` before generating anything.
+**Reads:** All memory files + (if idea scope) all files in `outputs/ideas/<slug>/`.
 
 **Documents it can generate:**
 - Vision & mission statement
@@ -132,26 +132,30 @@ A system of AI agents that guide a founder from raw idea to validated business w
 - Business Model Canvas / Lean Canvas
 - SWOT analysis
 - Go-to-market strategy
-- MVP feature specification
+- MVP feature specification *(idea scope only)*
 - Customer journey map
 - Financial projections template
 - Competitive landscape summary
 - Market size breakdown (TAM/SAM/SOM)
 - Investor one-pager
 - Full business plan
-- **User Impact Journey Map** — before/after visual slides built from a simulation report (requires `/BusinessAgents:simulate_user` first)
+- **User Impact Journey Map** *(idea scope only)* — before/after visual slides built from a simulation report (requires `/BusinessAgents:simulate_user` first)
 
-**Slides (HTML, open in any browser):**
+**Slides (HTML, open in any browser):** Every HTML output includes a top-right dark/light toggle button so the same file can be presented in either mode. Session-only — every page load starts in dark.
 - Pitch deck for investors
 - Demo day presentation
 - Co-founder recruitment deck
 - Internal planning presentation
 
 **Outputs:**
-- `outputs/docs/<document-name>-<YYYY-MM-DD>.md` — documents
-- `outputs/slides/<presentation-name>-<YYYY-MM-DD>.html` — slides (self-contained, no internet required)
+- Company scope:
+  - `outputs/docs/<document-name>-<YYYY-MM-DD>.md` — documents
+  - `outputs/slides/<presentation-name>-<YYYY-MM-DD>.html` — slides
+- Idea scope:
+  - `outputs/ideas/<slug>/docs/<document-name>-<YYYY-MM-DD>.md` — documents
+  - `outputs/ideas/<slug>/slides/<presentation-name>-<YYYY-MM-DD>.html` — slides
 
-Missing information is marked `[PLACEHOLDER: description]` — never invented.
+All HTML files are self-contained (no internet required). Missing information is marked `[PLACEHOLDER: description]` — never invented.
 
 ---
 
@@ -201,6 +205,10 @@ memory/
   brand.md               ← brand colors, typography, logo paths (written by /BusinessAgents:brand)
 
 outputs/
+  docs/                  ← company-level business documents (when scope = company)
+    *.md                 ← vision/mission, SWOT, business plan, etc. for the whole company
+  slides/                ← company-level slide decks (when scope = company)
+    *.html               ← pitch decks, planning presentations about the company itself
   marketing/             ← company-level carousels (when company brand is used)
     <platform>-<topic-slug>-<date>/
       carousel-*.html
