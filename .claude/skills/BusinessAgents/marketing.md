@@ -602,7 +602,7 @@ Wait for the sub-agent to return the JSON. Store it as `<carousel-content>`. The
 
 Before assembling any HTML, check each slide in `<carousel-content>.slides` for topic drift:
 
-For each slide, evaluate: does the `headline` field directly address the specific angle in `<post-title>`? A headline **drifts** if it could apply to any carousel about the company's domain generally — nothing unique to the post title's argument.
+For each slide where `content_type` is not `"cta"`, evaluate: does the `headline` field directly address the specific angle in `<post-title>`? A headline **drifts** if it could apply to any carousel about the company's domain generally — nothing unique to the post title's argument. Skip CTA slides — their `cta_action` field is not a content headline and must not be evaluated for drift.
 
 Collect drifted slide objects into `<drifted-slides>` (a JSON array).
 
