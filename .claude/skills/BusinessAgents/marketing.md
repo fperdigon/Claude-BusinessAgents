@@ -480,6 +480,15 @@ After all 8 questions are answered, read the one template-specific source file (
 If Template 2 was selected but no simulation report exists: say "This template works best with a simulation report. Please run `/BusinessAgents:simulate_user` first, then come back. In the meantime, would you like to pick a different template?" Wait for the founder's choice before continuing.
 
 ```
+## CAROUSEL THESIS — your primary directive
+**Post title (every slide must serve this exact angle):**
+> [Q1 answer]
+
+This is the argument, angle, and hook of the entire carousel. Every slide must directly advance, illustrate, or support this specific statement.
+The startup context and ICP below are facts-only sources — they do not set the direction or topic. Use them to find evidence that supports the thesis above.
+
+---
+
 You are a LinkedIn content strategist and copywriter. Write a complete carousel post for a founder's brand.
 
 **Session choices:**
@@ -544,6 +553,7 @@ Template 4 — Your Story:
 Write all slide content AND both captions AND the document title.
 
 Rules:
+- Post title is the thesis — every slide headline and every bullet must directly relate to the angle stated in the post title above; never drift to the company domain generally
 - Every fact must come from the source material — no invented stats
 - Tone must match the chosen tone throughout
 - Hook slide headline: 5–9 words, scroll-stopping
