@@ -71,7 +71,7 @@ Store as `<post-audience>` = `general` or `icp`.
 
 *(Different platforms have different dimensions. I'll size the carousel cards exactly right for where you're posting.)*
 
-Before presenting this question, silently attempt to read `<brand-output-path>visual-theme/visual-theme.md`. If the file exists, extract the `## Formats` list and show only those formats. If it does not exist, present all 8 formats below.
+Before presenting this question, silently attempt to read `<brand-output-path>visual-theme/visual-theme.md`. If the file exists, extract the `## Formats` list and show only those formats. **Always include format 9 (`linkedin-mobile`) regardless** — its typography is hardcoded in this skill and is not read from `visual-theme.md`. If `visual-theme.md` does not exist, present all 9 formats below.
 
 "Which platform and format is this for?
 
@@ -89,24 +89,29 @@ Before presenting this question, silently attempt to read `<brand-output-path>vi
 7. Link Preview — 1200 × 628 · LinkedIn / Twitter / Facebook shared-link thumbnail
 
 **Document**
-8. A4 / Letter — 794 × 1123 · PDF one-pager / print leave-behind"
+8. A4 / Letter — 794 × 1123 · PDF one-pager / print leave-behind
+
+**Mobile-Optimized**
+9. LinkedIn Mobile — 1080 × 1350 · mobile-first LinkedIn carousel (4:5) — very large fonts, 3 bullets max per slide"
 
 Wait for the founder's choice. Store:
 - `<format-slug>` — the slug for the chosen format:
   1 → `linkedin-carousel`, 2 → `instagram-square`, 3 → `instagram-portrait`,
-  4 → `stories`, 5 → `pinterest`, 6 → `presentation`, 7 → `link-preview`, 8 → `a4-letter`
+  4 → `stories`, 5 → `pinterest`, 6 → `presentation`, 7 → `link-preview`, 8 → `a4-letter`,
+  9 → `linkedin-mobile`
 - `<format-w>` and `<format-h>` — the pixel dimensions:
   `linkedin-carousel` → 1080×1080, `instagram-square` → 1080×1080,
   `instagram-portrait` → 1080×1350, `stories` → 1080×1920,
   `pinterest` → 1000×1500, `presentation` → 1920×1080,
-  `link-preview` → 1200×628, `a4-letter` → 794×1123
+  `link-preview` → 1200×628, `a4-letter` → 794×1123,
+  `linkedin-mobile` → 1080×1350
 - `<format-ratio>` — the aspect ratio group:
   `linkedin-carousel` and `instagram-square` → `square`;
-  `instagram-portrait`, `stories`, `pinterest` → `portrait`;
+  `instagram-portrait`, `stories`, `pinterest`, `linkedin-mobile` → `portrait`;
   `presentation` and `link-preview` → `landscape`;
   `a4-letter` → `document`
 
-Use `<format-slug>` as the filename component throughout (replaces the old `<platform-slug>`). For format 1, the platform label shown in the top-right brand bar is "LinkedIn". For format 2, "Instagram". For formats 3–8, use the platform name from the list above.
+Use `<format-slug>` as the filename component throughout (replaces the old `<platform-slug>`). For format 1, the platform label shown in the top-right brand bar is "LinkedIn". For format 2, "Instagram". For formats 3–8, use the platform name from the list above. For format 9 (`linkedin-mobile`), the platform label is "LinkedIn".
 
 ---
 
@@ -543,7 +548,7 @@ Rules:
 - Tone must match the chosen tone throughout
 - Hook slide headline: 5–9 words, scroll-stopping
 - Content slide headlines: 6–10 words
-- Bullets: max 4 per slide, each ≤ 12 words
+- Bullets: max 4 per slide, each ≤ 12 words (max 3 bullets per slide if format is `linkedin-mobile`, each ≤ 10 words)
 - CTA slide: action verb + object + 1 sentence + contact line
 - Document title: ≤58 characters, includes ICP role/industry + core benefit, no generic words like "Carousel" or "Slides"
 - Short caption: hook line + 1–2 lines of value/urgency + 1 CTA line + 4–5 hashtags
@@ -611,8 +616,34 @@ Strip `aria-hidden` and `data-slot` attributes from the fetched SVG before inlin
 | Time savings | `clock` |
 | Ideas / insight | `light-bulb` |
 | Server / local AI | `server-stack` |
-| Hook slide | `cpu-chip` (large, accent-colored, centered above headline) |
+| Hook slide | determined by topic — see **Topic-based hook icon** below |
 | CTA slide | `arrow-top-right-on-square` or `globe-alt` |
+
+**Topic-based hook icon**
+
+After `<post-title>` is confirmed (end of Q1), silently match it against the table below and store the result as `<hook-icon>`. Use `<hook-icon>` on the hook slide — override the sub-agent's `suggested_icon` for slide 1 if it differs.
+
+| Topic keywords in `<post-title>` | Hook icon |
+|---|---|
+| AI, agent, agents, model, neural, LLM, GPT, machine learning | `sparkles` |
+| automation, workflow, repetitive, manual, process | `bolt` |
+| privacy, security, data protection, compliance, safe | `shield-check` |
+| cost, ROI, savings, money, revenue, budget, price | `banknotes` |
+| time, speed, efficiency, faster, productivity, hours | `clock` |
+| team, people, staff, adoption, hiring, HR, culture | `users` |
+| document, contract, report, file, paperwork, template | `document-text` |
+| server, local, on-premise, infrastructure, hardware, GPU | `server-stack` |
+| idea, insight, innovation, strategy, vision, future | `light-bulb` |
+| data, analytics, metrics, dashboard, numbers, stats | `chart-bar` |
+| code, engineering, technical, developer, software, API | `cpu-chip` |
+| legal, law, firm, lawyer, regulation, clause | `briefcase` |
+| growth, scale, startup, business, market, launch | `arrow-trending-up` |
+| education, learning, tips, guide, how-to, explained, what is | `academic-cap` |
+| story, founder, journey, personal, origin | `identification` |
+| communication, outreach, email, message, contact | `chat-bubble-left-right` |
+| no match | `sparkles` |
+
+Match the first row whose keywords appear in `<post-title>` (case-insensitive). If multiple rows match, pick the one whose keywords best describe the post's main theme.
 
 Choose the icon that best matches each slide's core message. Place it:
 - **Hook slide:** centered above the headline, 48×48px, accent color
@@ -870,30 +901,115 @@ Replace all `[TOTAL]` placeholders with the actual total slide count once all sl
 
 After writing the base CSS, apply every entry in `<format-typography>` as an override — replace the matching default value in the CSS with the stored value. If `<format-typography>` is empty, use the default values from the template unchanged.
 
-**Approved sizes for `linkedin-carousel` (loaded from `visual-theme.md → ## Typography`):**
+**Format-specific typography** (from `visual-theme.md → ## Typography`): values for all formats except `linkedin-mobile` are stored there. `linkedin-mobile` is always hardcoded below — never read from `visual-theme.md`.
 
-| CSS property | Default | linkedin-carousel |
+**Approved sizes for `linkedin-mobile` (1080 × 1350, 4:5 mobile-optimized):**
+
+Sizing rationale: LinkedIn shows a 1080px-wide card at ≈36% scale on a typical phone screen. At that scale, 60px (3.75rem) body text lands at ~22px on-screen — the research-backed minimum for readable mobile carousel text (sources: usevisuals.com, trymypost.com, carouselmaker.co). Minimum design-tool font size: 60px body, 90px headlines. **No element on the card may use a font smaller than 2.5rem (40px).** Do NOT reuse the `linkedin-carousel` font values for this format — they are too small.
+
+**Two visible font tiers only — strictly enforced:**
+
+| Tier | Elements | Target size | CSS rem |
+|---|---|---|---|
+| **Headline** | `.hook-headline`, `h2`, `.cta-action` | 80–90 px | 5–5.625rem |
+| **Body** | `p`, `li`, `.swipe-hint`, `.big-stat` context | 60 px | 3.75rem |
+| **Labels** | `.kicker`, `.slide-num`, `.brand-name`, `.cta-label`, `.tagline`, `.step-label`, `.comp-col-label`, `.comp-cell`, `.progress-*` | 44–48 px | 2.75–3rem |
+
+Never create a fourth tier. Never use any font size below 40px (2.5rem) on a card element. If a value would fall below 40px, round it up to 40px minimum. The three tiers above must be visually distinct but all readable at mobile scale (≈36% of canvas width on a typical phone).
+
+| CSS property | Default | linkedin-mobile |
 |---|---|---|
-| `.hook-headline` font-size | 2.8rem | 5.6rem |
-| `h2` font-size | 1.75rem | 3.5rem |
-| `.kicker` / `.slide-num` font-size | 0.8rem | 1.6rem |
-| `.brand-name` font-size | 0.75rem | 1.5rem |
-| `p` / `li` font-size | 1rem | 2rem |
-| `li` padding-left | 1.4rem | 2.8rem |
-| `.swipe-hint` font-size | 0.88rem | 1.76rem |
-| `.cta-label` font-size | 0.78rem | 1.56rem |
-| `.cta-action` font-size | 2rem | 4rem |
-| `.tagline` font-size | 0.85rem | 1.7rem |
-| `.stat-val` font-size | 2.4rem | 4.8rem |
-| `.stat-desc` font-size | 0.82rem | 1.64rem |
-| `.comp-col-label` font-size | 0.65rem | 1.3rem |
-| `.comp-cell` font-size | 0.82rem | 1.64rem |
-| `.progress-metric` font-size | 0.88rem | 1.76rem |
-| `.progress-val` font-size | 0.9rem | 1.8rem |
-| `.progress-compare` font-size | 0.75rem | 1.5rem |
-| `.icon svg` width/height | 28px | 56px |
-| `.icon-lg svg` width/height | 48px | 96px |
-| `.icon-md svg` width/height | 36px | 72px |
+| `.hook-headline` font-size | 2.8rem | 5.625rem |
+| `h2` font-size | 1.75rem | 5rem |
+| `.kicker` / `.slide-num` font-size | 0.8rem | 3rem |
+| `.brand-name` font-size | 0.75rem | 2.75rem |
+| `p` / `li` font-size | 1rem | 3.75rem |
+| `li` padding-left | 1.4rem | 3.5rem |
+| `.swipe-hint` font-size | 0.88rem | 3.375rem |
+| `.cta-label` font-size | 0.78rem | 2.75rem |
+| `.cta-action` font-size | 2rem | 5rem |
+| `.tagline` font-size | 0.85rem | 2.75rem |
+| `.stat-val` / `.big-stat` font-size | 2.4rem | 6.5rem |
+| `.stat-desc` font-size | 0.82rem | 3rem |
+| `.comp-col-label` font-size | 0.65rem | 3rem |
+| `.comp-cell` font-size | 0.82rem | 3rem |
+| `.comp-feature` font-size | (do not set — inherit from `.comp-cell`) | (do not set — inherit from `.comp-cell`) |
+| `.progress-metric` font-size | 0.88rem | 3rem |
+| `.progress-val` font-size | 0.9rem | 3rem |
+| `.progress-compare` font-size | 0.75rem | 2.75rem |
+| `.step-label` font-size | — | 3rem |
+| `.step-circle` font-size | — | 2.5rem |
+| `.step-arrow` font-size | — | 2.5rem |
+| `.step-circle` width/height | — | 100px |
+| `.icon svg` width/height | 28px | 72px |
+| `.icon-lg svg` width/height | 48px | 120px |
+| `.icon-md svg` width/height | 36px | 96px |
+
+**Critical rule — no font-size duplicate on `.comp-feature`:** `.comp-feature` elements always carry the class `.comp-cell` too. Never set `font-size` on `.comp-feature` — it would silently override `.comp-cell` with a smaller value. Set one `font-size` on `.comp-cell` only.
+
+**Content density for `linkedin-mobile`:** Cap bullets at **3 per slide** (not 4). Keep headlines to 5–8 words. Body text should be terse — each bullet ≤ 10 words. The extra vertical space (4:5 ratio) compensates for fewer items per slide; never squeeze in extra content just because there is room. Reduce infographic rows/steps to fit: comparison table max 3 rows, process steps max 3 steps.
+
+---
+
+### Base CSS block for `linkedin-mobile` — copy verbatim, do not regenerate
+
+**This block is for `linkedin-mobile` (1080 × 1350) only.** Do not use it for any other format. Copy it exactly into the `<style>` section whenever generating a `linkedin-mobile` carousel. Only the CSS custom properties (`--bg`, `--accent`, `--text`, `--text-muted`) change between carousels — the sizing rules below are fixed.
+
+```css
+/* ── linkedin-mobile typography & sizing (1080 × 1350) ── */
+/* Two headline tiers + body tier + labels tier. Min font: 2.5rem (40px). */
+
+/* Headline tier: 80–90 px */
+.hook-headline { font-size: 5.625rem; font-weight: 800; line-height: 1.1;  color: var(--text); margin-bottom: 1.5rem; }
+h2             { font-size: 5rem;     font-weight: 700; line-height: 1.12; color: var(--text); margin-bottom: 1.25rem; }
+.cta-action    { font-size: 5rem;     font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 1rem; }
+
+/* Body tier: 60 px */
+p              { font-size: 3.75rem; line-height: 1.55; color: var(--text-muted); margin-bottom: 0.6rem; }
+ul             { list-style: none; padding: 0; margin-top: 0.5rem; }
+li             { font-size: 3.75rem; line-height: 1.55; color: var(--text-muted); padding: 0.5rem 0 0.5rem 3.5rem; position: relative; }
+li::before     { content: "→"; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
+.swipe-hint    { font-size: 3.375rem; color: var(--text-muted); margin-top: 1.5rem; }
+.big-stat      { font-size: 6.5rem;   font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
+
+/* Labels tier: 44–48 px */
+.slide-num     { font-size: 3rem;    font-weight: 700; letter-spacing: 0.12em; color: var(--accent); }
+.brand-name    { font-size: 2.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.kicker        { font-size: 3rem;    font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.9rem; }
+.cta-label     { font-size: 2.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.75rem; }
+.tagline       { font-size: 2.75rem; color: var(--text-muted); }
+.accent-bar    { height: 3px; background: var(--accent); border-radius: 2px; width: 40px; }
+
+/* Icons */
+.icon          { display: inline-flex; align-items: center; flex-shrink: 0; }
+.icon svg      { width: 72px;  height: 72px;  color: var(--accent); }
+.icon-lg svg   { width: 120px; height: 120px; }
+.icon-md svg   { width: 96px;  height: 96px;  }
+.slide-header  { display: flex; align-items: center; gap: 24px; margin-bottom: 1.5rem; }
+.hook-icon     { display: flex; justify-content: center; margin-bottom: 2rem; }
+
+/* Infographic — process steps (linkedin-mobile) */
+.steps         { display: flex; align-items: flex-start; gap: 0; margin-top: 48px; }
+.step          { display: flex; flex-direction: column; align-items: center; flex: 1; }
+.step-circle   { width: 100px; height: 100px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; color: var(--bg); margin-bottom: 20px; flex-shrink: 0; }
+.step-circle.purple { background: linear-gradient(135deg, #9d2cff, var(--accent)); color: #fff; }
+.step-label    { font-size: 3rem; color: rgba(248,250,252,0.85); text-align: center; line-height: 1.3; }
+.step-arrow    { flex: 0 0 48px; margin-top: 36px; color: var(--accent); font-size: 2.5rem; font-weight: 700; }
+
+/* Infographic — comparison table (linkedin-mobile, max 3 rows) */
+.comp-table    { flex: 1; display: flex; flex-direction: column; gap: 0; margin-top: 40px; }
+.comp-header   { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.comp-col-label { font-size: 3rem; font-weight: 700; text-align: center; padding: 14px; border-radius: 6px; }
+.comp-col-label.old { background: rgba(255,255,255,0.05); color: rgba(248,250,252,0.4); }
+.comp-col-label.new { background: rgba(34,211,238,0.15); color: var(--accent); }
+.comp-row      { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.comp-cell     { font-size: 3rem; padding: 24px 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+/* IMPORTANT: never set font-size on .comp-feature — it inherits from .comp-cell */
+.comp-feature  { background: rgba(255,255,255,0.04); color: rgba(248,250,252,0.85); justify-content: flex-start; }
+.comp-cell.no  { background: rgba(239,68,68,0.08);  color: #ef4444; font-weight: 700; }
+.comp-cell.yes { background: rgba(34,197,94,0.1);   color: #22c55e; font-weight: 700; }
+/* ── end linkedin-mobile typography & sizing ── */
+```
 
 ### Post Caption
 
@@ -1203,6 +1319,7 @@ After saving the output file:
 - Never recommend color changes for style preference alone — the reason must be tied to emotional fit, readability, or tone reinforcement
 - Present color changes as a binary choice (keep brand vs. recommendation) — never apply changes without explicit user confirmation
 - Always include inline SVG icons (Heroicons, MIT license) on every slide — never generate a carousel with text only
+- Always resolve `<hook-icon>` from the topic keyword table immediately after Q1 — never use a default icon on the hook slide without checking the table first; override the sub-agent's `suggested_icon` for slide 1 if it differs
 - Fetch Heroicon SVG paths live from `raw.githubusercontent.com/tailwindlabs/heroicons/master/optimized/24/outline/<name>.svg` — never reconstruct paths from memory
 - Strip `aria-hidden` and `data-slot` attributes from fetched SVGs before inlining; set `stroke="currentColor"` so icons inherit CSS color
 - If a Heroicon fetch fails, fall back to a Unicode character inline in the headline — never leave a broken `<img>` or empty element
@@ -1218,7 +1335,7 @@ After saving the output file:
 - Never downscale slide images when building the PDF — draw at native resolution for maximum quality
 - Ask which platform/format (Question 1) before asking for a topic — `<format-slug>` and dimensions must be set before any HTML is generated
 - Size `.card` elements using `--card-w` and `--card-h` CSS variables set to the exact pixel dimensions of the chosen format — never hardcode 700px
-- Apply format-ratio infographic adaptations: `stories` → vertically stacked; `presentation`/`link-preview` → horizontally arranged
+- Apply format-ratio infographic adaptations: `stories` → vertically stacked; `presentation`/`link-preview` → horizontally arranged; `linkedin-mobile` → standard portrait layouts, max 3 bullets per slide, headlines ≤ 8 words, bullet text ≤ 10 words
 - Load `visual-theme.md` silently after brand colors are confirmed — before generating any HTML
 - Always read `memory/startup-context.md` to extract company name, city/region, industry, niche, and technology — extend background keyword categories with these terms before matching
 - One background SVG per carousel — inject the same `<bg-svg>` into every card, never mix backgrounds across slides
