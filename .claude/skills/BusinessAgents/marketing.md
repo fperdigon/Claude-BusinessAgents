@@ -597,6 +597,30 @@ Wait for the sub-agent to return the JSON. Store it as `<carousel-content>`. The
 
 > 🤖 **Model: Haiku** — resume here after sub-agent returns `<carousel-content>` JSON
 
+### Topic Validation Check (silent — runs before HTML assembly)
+> 🤖 **Model: Haiku**
+
+Before assembling any HTML, check each slide in `<carousel-content>.slides` for topic drift:
+
+For each slide, evaluate: does the `headline` field directly address the specific angle in `<post-title>`? A headline **drifts** if it could apply to any carousel about the company's domain generally — nothing unique to the post title's argument.
+
+Collect drifted slide objects into `<drifted-slides>`.
+
+**If `<drifted-slides>` has 2 or more slides:** dispatch a correction Sonnet sub-agent via the Agent tool with `model: "sonnet"` and this prompt:
+
+> The post title is: "[post-title]"
+>
+> The following slides drifted from this topic. Rewrite only these slides so each headline directly addresses the post title's specific angle. Return a JSON array containing only the corrected slides — same schema as the input (number, kicker, headline, content_type, bullets, stat, stat_context, swipe_hint, cta_action, cta_sentence, cta_contact, suggested_icon, layout_hint).
+>
+> Drifted slides:
+> [paste `<drifted-slides>` as JSON array]
+
+Wait for the correction sub-agent's response. For each corrected slide in the returned array, replace the matching object in `<carousel-content>.slides` by matching `number`. Proceed with HTML assembly using the merged `<carousel-content>`.
+
+**If `<drifted-slides>` has 0 or 1 slides:** skip the correction step entirely — proceed directly to HTML assembly.
+
+**If the correction sub-agent fails or returns invalid JSON:** proceed with the original `<carousel-content>` without blocking.
+
 Use `<carousel-content>.slides` to populate every card, `<carousel-content>.document_title` for the title block, and `<carousel-content>.short_caption` / `<carousel-content>.long_caption` for the caption tab switcher. For each slide, use the `layout_hint` field as the layout key for infographic injection (subject to the visual density rules below). Use the `suggested_icon` field to drive Heroicon fetches.
 
 ### Template reference (for Haiku post-processing)
