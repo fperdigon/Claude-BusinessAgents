@@ -1348,6 +1348,7 @@ After saving the output file:
 - Apply brand colors via CSS `--bg`, `--accent`, `--text`, `--text-muted` custom properties — default to dark navy + blue if none provided
 - Save to `<carousel-output-path>` set in Q4: `outputs/marketing/` for company brand, `outputs/ideas/<working-slug>/marketing/` for product brand — never to the flat `outputs/` root
 - `<topic-slug>` in all file and folder names must be derived from `<post-title>` (Q1), slugified to lowercase hyphenated form — never from the template category name (e.g., `how-law-firms-can-use-ai-to-analyze-contracts`, not `tips-education`)
+- After receiving `<carousel-content>` from Sonnet, run a silent topic check against `<post-title>` before HTML assembly — if 2+ slide headlines drift from the title's specific angle, dispatch a minimal correction sub-agent to fix only those slides; merge corrections by slide `number`; never block HTML assembly on correction failure
 - All file and folder names must include the full timestamp as `YYYY-MM-DD-HH-MM-SS` (hyphens only, no colons) — never date-only
 - Replace all `[TOTAL]` placeholders with the actual slide count
 - Always update `memory/ideas.md` after saving — record the marketing stage date
