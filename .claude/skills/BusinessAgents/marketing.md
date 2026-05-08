@@ -728,210 +728,25 @@ Three zones per card:
 - **Content slides:** Icon + headline (6–10 words) in a flex row + 2–4 bullet points OR 1 big stat + 1-sentence explanation
 - **CTA slide (last):** Icon + action verb headline + 1 sentence + contact/follow info
 
-Use this base HTML template and fill in all slide content:
+Read `.claude/skills/BusinessAgents/templates/carousel-base.html`. Substitute all `{{placeholder}}` markers with session values:
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[Carousel Title] — LinkedIn Carousel</title>
-<style>
-  :root {
-    --bg: [primary color or #0f172a];
-    --accent: [accent color or #3b82f6];
-    --text: [#f8fafc if dark bg, #0f172a if light bg];
-    --text-muted: [rgba(248,250,252,0.65) if dark bg, rgba(15,23,42,0.55) if light bg];
-    --card-w: [format-w]px;
-    --card-h: [format-h]px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #080810; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem 1rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
-  .deck { position: relative; width: var(--card-w); height: var(--card-h); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6); flex-shrink: 0; }
-  .card { position: absolute; inset: 0; background: var(--bg); color: var(--text); display: none; flex-direction: column; padding: 48px; overflow: hidden; }
-  .card-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-  .card-scrim { position: absolute; inset: 0; background: rgba(13,31,60,0.72); pointer-events: none; z-index: 1; }
-  .card-top, .card-body, .card-bottom { position: relative; z-index: 2; }
-  .card.active { display: flex; }
-  .card-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid rgba(128,128,128,0.15); margin-bottom: 8px; }
-  .slide-num { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; color: var(--accent); }
-  .brand-name { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
-  .card-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 20px 0; }
-  .card-bottom { padding-top: 20px; border-top: 1px solid rgba(128,128,128,0.15); }
-  .hook-headline { font-size: 2.8rem; font-weight: 800; line-height: 1.12; color: var(--text); margin-bottom: 1.25rem; }
-  h2 { font-size: 1.75rem; font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: 1.25rem; }
-  .kicker { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.75rem; }
-  p { font-size: 1rem; line-height: 1.7; color: var(--text-muted); margin-bottom: 0.6rem; }
-  ul { list-style: none; padding: 0; margin-top: 0.25rem; }
-  li { font-size: 1rem; line-height: 1.65; color: var(--text-muted); padding: 0.4rem 0 0.4rem 1.4rem; position: relative; }
-  li::before { content: "→"; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
-  .big-stat { font-size: 4rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
-  .swipe-hint { font-size: 0.88rem; color: var(--text-muted); margin-top: 1.25rem; }
-  .cta-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.6rem; }
-  .cta-action { font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1.15; margin-bottom: 0.8rem; }
-  .tagline { font-size: 0.85rem; color: var(--text-muted); }
-  .accent-bar { height: 3px; background: var(--accent); border-radius: 2px; width: 40px; }
-  .nav { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; }
-  .nav-btn { background: #1e293b; border: 1px solid #334155; color: #f8fafc; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
-  .nav-btn:hover { background: #334155; }
-  .dots { display: flex; gap: 6px; align-items: center; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; cursor: pointer; transition: background 0.15s, width 0.15s; }
-  .dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
-  .instructions { margin-top: 2rem; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 1.25rem 1.5rem; max-width: 700px; width: 100%; }
-  .instructions h3 { color: #f8fafc; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
-  .instructions ol { padding-left: 1.25rem; }
-  .instructions li { color: #94a3b8; font-size: 0.85rem; line-height: 1.65; padding: 0; }
-  .instructions li::before { display: none; }
-  @media print {
-    @page { size: var(--card-w) var(--card-h); margin: 0; }
-    body { background: var(--bg); padding: 0; display: block; }
-    .deck { border-radius: 0; box-shadow: none; overflow: visible; height: auto; width: var(--card-w); position: static; }
-    .card { position: relative; display: flex !important; page-break-after: always; break-after: page; height: var(--card-h); }
-    .nav, .instructions { display: none !important; }
-  }
-</style>
-</head>
-<body>
-<div class="deck">
+| Placeholder | Value |
+|---|---|
+| `{{carousel-title}}` | Generated carousel title |
+| `{{bg}}` | Background color hex |
+| `{{accent}}` | Accent color hex |
+| `{{text}}` | `#f8fafc` if dark bg · `#0f172a` if light bg |
+| `{{text-muted}}` | `rgba(248,250,252,0.65)` if dark bg · `rgba(15,23,42,0.55)` if light bg |
+| `{{card-w}}` | Format width in px (e.g. `1080`) |
+| `{{card-h}}` | Format height in px (e.g. `1080`) |
 
-  <!--
-    BACKGROUND INJECTION: Insert the following as the FIRST child inside every .card element
-    (immediately before .card-top). Use the exact SVG code stored in <bg-svg>:
+Replace `<!-- SLIDES_PLACEHOLDER -->` with all generated `.card` divs (see slide structure below).
 
-    <svg class="card-bg" viewBox="0 0 [format-w] [format-h]" xmlns="http://www.w3.org/2000/svg"
-         opacity="[the opacity value from the bg-svg file, or 0.22 for the default]"
-         preserveAspectRatio="xMidYMid slice">
-      [inner SVG elements from <bg-svg> — strip the outer <svg> wrapper and keep only the children]
-    </svg>
+Replace `<!-- DOC_TITLE_PLACEHOLDER -->` and `<!-- CAPTION_TABS_PLACEHOLDER -->` by reading and injecting the snippets per the Post Caption section below.
 
-    After the <svg class="card-bg"> tag, always add this scrim div:
-    <div class="card-scrim"></div>
+If format is `linkedin-mobile`: read `.claude/skills/BusinessAgents/snippets/linkedin-mobile.css` and append its contents inside the `<style>` tag, after the base CSS.
 
-    Inject the SAME background + scrim into every .card element in the carousel — one background per carousel.
-  -->
-
-  <!-- Slide 01 — Hook -->
-  <div class="card active">
-    <svg class="card-bg" viewBox="0 0 [format-w] [format-h]" xmlns="http://www.w3.org/2000/svg" opacity="[opacity]" preserveAspectRatio="xMidYMid slice">[bg-svg inner elements]</svg>
-    <div class="card-scrim"></div>
-    <div class="card-top">
-      <span class="slide-num">01 / [TOTAL]</span>
-      <span class="brand-name">[Company Name]</span>
-    </div>
-    <div class="card-body">
-      <div class="kicker">[Topic label — e.g., "The Hidden Cost"]</div>
-      <div class="hook-headline">[Strong hook headline — 5–9 words that stop the scroll]</div>
-      <p class="swipe-hint">Swipe → to see what's really happening</p>
-    </div>
-    <div class="card-bottom">
-      <div class="accent-bar"></div>
-    </div>
-  </div>
-
-  <!-- Content slides — one <div class="card"> per slide -->
-  <!-- Example content slide with stat: -->
-  <!--
-  <div class="card">
-    <div class="card-top">
-      <span class="slide-num">02 / [TOTAL]</span>
-      <span class="brand-name">[Company Name]</span>
-    </div>
-    <div class="card-body">
-      <div class="kicker">[Section label]</div>
-      <div class="big-stat">[Big number or % or $]</div>
-      <h2>[Headline explaining the stat]</h2>
-      <p>[One-sentence context]</p>
-    </div>
-    <div class="card-bottom"><div class="accent-bar"></div></div>
-  </div>
-  -->
-
-  <!-- Example content slide with bullets: -->
-  <!--
-  <div class="card">
-    <div class="card-top">
-      <span class="slide-num">03 / [TOTAL]</span>
-      <span class="brand-name">[Company Name]</span>
-    </div>
-    <div class="card-body">
-      <div class="kicker">[Section label]</div>
-      <h2>[Slide headline]</h2>
-      <ul>
-        <li>[Point 1]</li>
-        <li>[Point 2]</li>
-        <li>[Point 3]</li>
-      </ul>
-    </div>
-    <div class="card-bottom"><div class="accent-bar"></div></div>
-  </div>
-  -->
-
-  <!-- Last slide — CTA -->
-  <div class="card">
-    <div class="card-top">
-      <span class="slide-num">[NN] / [TOTAL]</span>
-      <span class="brand-name">[Company Name]</span>
-    </div>
-    <div class="card-body">
-      <div class="cta-label">What's next?</div>
-      <div class="cta-action">[CTA verb + object — e.g., "Follow for weekly tips like this"]</div>
-      <p>[One sentence reinforcing the CTA — e.g., "Every week I share practical tips for [ICP role]."]</p>
-      <p>[Contact / LinkedIn handle / website]</p>
-    </div>
-    <div class="card-bottom">
-      <div class="accent-bar"></div>
-      <p class="tagline" style="margin-top:8px">[Company tagline or value proposition — one line]</p>
-    </div>
-  </div>
-
-</div>
-
-<div class="nav">
-  <button class="nav-btn" onclick="go(-1)">←</button>
-  <div class="dots" id="dots"></div>
-  <button class="nav-btn" onclick="go(1)">→</button>
-</div>
-
-<div class="instructions">
-  <h3>How to export to LinkedIn</h3>
-  <ol>
-    <li>Open <strong>File → Print</strong> (or Ctrl+P / Cmd+P) in your browser</li>
-    <li>Set destination to <strong>Save as PDF</strong></li>
-    <li>Under "More settings", set paper size to <strong>Custom</strong> and enter <strong>[format-w] × [format-h]</strong> (the agent fills in the actual dimensions)</li>
-    <li>Disable headers and footers</li>
-    <li>Save the PDF — each slide becomes one page</li>
-    <li>On LinkedIn, start a new post → click the <strong>document icon</strong> → upload the PDF</li>
-    <li>LinkedIn displays each page as one carousel slide — add your post caption and publish</li>
-  </ol>
-</div>
-
-<script>
-  const cards = document.querySelectorAll('.card');
-  const dotsEl = document.getElementById('dots');
-  let cur = 0;
-  cards.forEach((_, i) => {
-    const d = document.createElement('div');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.onclick = () => show(i);
-    dotsEl.appendChild(d);
-  });
-  function show(n) {
-    cards[cur].classList.remove('active');
-    document.querySelectorAll('.dot')[cur].classList.remove('active');
-    cur = (n + cards.length) % cards.length;
-    cards[cur].classList.add('active');
-    document.querySelectorAll('.dot')[cur].classList.add('active');
-  }
-  function go(d) { show(cur + d); }
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') go(1);
-    if (e.key === 'ArrowLeft') go(-1);
-  });
-</script>
-</body>
-</html>
-```
+After substituting the CSS custom properties, apply every entry in `<format-typography>` as an override — replace the matching default value in the CSS with the stored value. If `<format-typography>` is empty, skip this step.
 
 Replace all `[TOTAL]` placeholders with the actual total slide count once all slides are generated.
 
@@ -989,65 +804,9 @@ Never create a fourth tier. Never use any font size below 40px (2.5rem) on a car
 
 ---
 
-### Base CSS block for `linkedin-mobile` — copy verbatim, do not regenerate
+### Base CSS block for `linkedin-mobile`
 
-**This block is for `linkedin-mobile` (1080 × 1350) only.** Do not use it for any other format. Copy it exactly into the `<style>` section whenever generating a `linkedin-mobile` carousel. Only the CSS custom properties (`--bg`, `--accent`, `--text`, `--text-muted`) change between carousels — the sizing rules below are fixed.
-
-```css
-/* ── linkedin-mobile typography & sizing (1080 × 1350) ── */
-/* Two headline tiers + body tier + labels tier. Min font: 2.5rem (40px). */
-
-/* Headline tier: 80–90 px */
-.hook-headline { font-size: 5.625rem; font-weight: 800; line-height: 1.1;  color: var(--text); margin-bottom: 1.5rem; }
-h2             { font-size: 5rem;     font-weight: 700; line-height: 1.12; color: var(--text); margin-bottom: 1.25rem; }
-.cta-action    { font-size: 5rem;     font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 1rem; }
-
-/* Body tier: 60 px */
-p              { font-size: 3.75rem; line-height: 1.55; color: var(--text-muted); margin-bottom: 0.6rem; }
-ul             { list-style: none; padding: 0; margin-top: 0.5rem; }
-li             { font-size: 3.75rem; line-height: 1.55; color: var(--text-muted); padding: 0.5rem 0 0.5rem 3.5rem; position: relative; }
-li::before     { content: "→"; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
-.swipe-hint    { font-size: 3.375rem; color: var(--text-muted); margin-top: 1.5rem; }
-.big-stat      { font-size: 6.5rem;   font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
-
-/* Labels tier: 44–48 px */
-.slide-num     { font-size: 3rem;    font-weight: 700; letter-spacing: 0.12em; color: var(--accent); }
-.brand-name    { font-size: 2.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
-.kicker        { font-size: 3rem;    font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.9rem; }
-.cta-label     { font-size: 2.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.75rem; }
-.tagline       { font-size: 2.75rem; color: var(--text-muted); }
-.accent-bar    { height: 3px; background: var(--accent); border-radius: 2px; width: 40px; }
-
-/* Icons */
-.icon          { display: inline-flex; align-items: center; flex-shrink: 0; }
-.icon svg      { width: 72px;  height: 72px;  color: var(--accent); }
-.icon-lg svg   { width: 120px; height: 120px; }
-.icon-md svg   { width: 96px;  height: 96px;  }
-.slide-header  { display: flex; align-items: center; gap: 24px; margin-bottom: 1.5rem; }
-.hook-icon     { display: flex; justify-content: center; margin-bottom: 2rem; }
-
-/* Infographic — process steps (linkedin-mobile) */
-.steps         { display: flex; align-items: flex-start; gap: 0; margin-top: 48px; }
-.step          { display: flex; flex-direction: column; align-items: center; flex: 1; }
-.step-circle   { width: 100px; height: 100px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 800; color: var(--bg); margin-bottom: 20px; flex-shrink: 0; }
-.step-circle.purple { background: linear-gradient(135deg, #9d2cff, var(--accent)); color: #fff; }
-.step-label    { font-size: 3rem; color: rgba(248,250,252,0.85); text-align: center; line-height: 1.3; }
-.step-arrow    { flex: 0 0 48px; margin-top: 36px; color: var(--accent); font-size: 2.5rem; font-weight: 700; }
-
-/* Infographic — comparison table (linkedin-mobile, max 3 rows) */
-.comp-table    { flex: 1; display: flex; flex-direction: column; gap: 0; margin-top: 40px; }
-.comp-header   { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-.comp-col-label { font-size: 3rem; font-weight: 700; text-align: center; padding: 14px; border-radius: 6px; }
-.comp-col-label.old { background: rgba(255,255,255,0.05); color: rgba(248,250,252,0.4); }
-.comp-col-label.new { background: rgba(34,211,238,0.15); color: var(--accent); }
-.comp-row      { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-.comp-cell     { font-size: 3rem; padding: 24px 16px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-/* IMPORTANT: never set font-size on .comp-feature — it inherits from .comp-cell */
-.comp-feature  { background: rgba(255,255,255,0.04); color: rgba(248,250,252,0.85); justify-content: flex-start; }
-.comp-cell.no  { background: rgba(239,68,68,0.08);  color: #ef4444; font-weight: 700; }
-.comp-cell.yes { background: rgba(34,197,94,0.1);   color: #22c55e; font-weight: 700; }
-/* ── end linkedin-mobile typography & sizing ── */
-```
+If format is `linkedin-mobile`: Read `.claude/skills/BusinessAgents/snippets/linkedin-mobile.css` and append its full contents inside the `<style>` tag, after the base CSS. This block applies the two-tier headline + body + labels sizing (min font 2.5rem, no element below 40px) and all infographic sizing for this format.
 
 ### Post Caption
 
@@ -1064,32 +823,7 @@ Rules:
 - No generic words like "Carousel", "Post", or "Slides"
 - Example: "5 Things Law & Engineering Firms Must Know About AI" (51 chars)
 
-Add this above the caption tabs in the HTML:
-```html
-<div class="doc-title-row">
-  <span class="doc-title-label">Document title (paste into LinkedIn when uploading)</span>
-  <div class="doc-title-value" id="docTitle">[Generated title]</div>
-  <button class="copy-btn" style="margin-top:0.5rem" onclick="copyTitle()">Copy title</button>
-</div>
-```
-
-Add to CSS:
-```css
-.doc-title-row { margin-bottom: 1.1rem; }
-.doc-title-label { font-size: 0.78rem; color: #64748b; display: block; margin-bottom: 0.35rem; }
-.doc-title-value { color: #f8fafc; font-size: 1rem; font-weight: 600; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 0.65rem 1rem; }
-```
-
-Add to JS:
-```js
-function copyTitle() {
-  navigator.clipboard.writeText(document.getElementById('docTitle').innerText).then(() => {
-    const btns = document.querySelectorAll('.copy-btn');
-    btns[0].textContent = 'Copied!';
-    setTimeout(() => btns[0].textContent = 'Copy title', 1800);
-  });
-}
-```
+Read `.claude/skills/BusinessAgents/snippets/doc-title.html`. Substitute `{{generated-title}}` with the actual document title text. Replace `<!-- DOC_TITLE_PLACEHOLDER -->` in the assembled HTML with the full snippet content.
 
 ---
 
@@ -1110,55 +844,7 @@ Always generate **two caption versions** — Short and Long — and embed both i
 
 Tone must match the carousel tone chosen in Question 3.
 
-Add this block to the HTML immediately after the `</div>` closing the `.instructions` block:
-
-```html
-<div class="caption-box">
-  <h3>Suggested post caption</h3>
-  <p class="caption-hint">Pick a version, copy it into LinkedIn when you upload the PDF, and edit as needed.</p>
-  <div class="caption-tabs">
-    <button class="caption-tab active" onclick="switchCaption('short', this)">Short</button>
-    <button class="caption-tab" onclick="switchCaption('long', this)">Long</button>
-  </div>
-  <div class="caption-text" id="captionText">[Short caption text — shown by default]</div>
-  <button class="copy-btn" onclick="copyCaption()">Copy caption</button>
-</div>
-```
-
-Add these styles inside `<style>`:
-```css
-.caption-box { margin-top: 1.5rem; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 1.25rem 1.5rem; max-width: 700px; width: 100%; }
-.caption-box h3 { color: #f8fafc; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
-.caption-hint { color: #64748b; font-size: 0.8rem; margin-bottom: 0.9rem; }
-.caption-tabs { display: flex; gap: 0.5rem; margin-bottom: 0.9rem; }
-.caption-tab { background: #0f172a; border: 1px solid #334155; color: #94a3b8; border-radius: 6px; padding: 0.35rem 0.85rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
-.caption-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-.caption-text { color: #cbd5e1; font-size: 0.9rem; line-height: 1.75; white-space: pre-wrap; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 1rem; margin-bottom: 0.9rem; }
-.copy-btn { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 0.5rem 1.1rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
-.copy-btn:hover { opacity: 0.88; }
-@media print { .caption-box { display: none !important; } }
-```
-
-Add these functions inside `<script>`:
-```js
-const captions = {
-  short: `[Short caption text]`,
-  long: `[Long caption text]`
-};
-function switchCaption(key, btn) {
-  document.getElementById('captionText').textContent = captions[key];
-  document.querySelectorAll('.caption-tab').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-}
-function copyCaption() {
-  const el = document.getElementById('captionText');
-  navigator.clipboard.writeText(el.innerText).then(() => {
-    const btn = document.querySelector('.copy-btn');
-    btn.textContent = 'Copied!';
-    setTimeout(() => btn.textContent = 'Copy caption', 1800);
-  });
-}
-```
+Read `.claude/skills/BusinessAgents/snippets/caption-tabs.html`. Substitute `{{short-caption}}` and `{{long-caption}}` with the generated caption texts. Replace `<!-- CAPTION_TABS_PLACEHOLDER -->` in the assembled HTML with the full snippet content.
 
 ---
 
@@ -1208,103 +894,27 @@ Wait for the founder's response.
 ## PDF Export
 > 🤖 **Model: Haiku**
 
-After the Review & Approval step, generate the PDF by writing and running a single Python script. All image data stays on disk — nothing binary enters the conversation context.
+After the Review & Approval step, generate the PDF. All image data stays on disk — nothing binary enters the conversation context.
 
 ### Steps
 
-1. **Write** a Python script to `<carousel-subfolder>/generate-pdf.py` using the Write tool. Fill in the three constants at the top with actual values from this session (`<format-w>`, `<format-h>`, and the real slide count). Do NOT echo the HTML or any file contents — just write the script.
+1. **Run the PDF generation script** via the Bash tool:
 
-```python
-#!/usr/bin/env python3
-import os, sys, re
-
-# --- fill these in ---
-CARD_W      = <format-w>       # e.g. 1080
-CARD_H      = <format-h>       # e.g. 1080
-NUM_SLIDES  = <slide-count>    # e.g. 8
-HTML_FILE   = "carousel-<format-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>.html"
-PDF_FILE    = "carousel-<format-slug>-<topic-slug>-<YYYY-MM-DD-HH-MM-SS>.pdf"
-# ---------------------
-
-script_dir = os.path.dirname(os.path.abspath(__file__))
-html_path  = os.path.join(script_dir, HTML_FILE)
-pdf_path   = os.path.join(script_dir, PDF_FILE)
-pv_path    = os.path.join(script_dir, "carousel-print-view.html")
-
-# Step 1 — build a stripped print-view HTML (no nav / instructions / caption-box / JS)
-with open(html_path, encoding="utf-8") as f:
-    src = f.read()
-
-for tag in ("nav", "instructions", "caption-box", "doc-title-row"):
-    src = re.sub(
-        rf'<div[^>]*class="[^"]*{tag}[^"]*".*?</div>\s*',
-        "", src, flags=re.DOTALL | re.IGNORECASE,
-    )
-src = re.sub(r"<script[\s\S]*?</script>", "", src, flags=re.IGNORECASE)
-src = src.replace(
-    "body {",
-    "body { flex-direction: column !important; align-items: center !important; gap: 0 !important; padding: 0 !important; background: #080810;",
-    1,
-)
-# Replace display:none in the .card rule with display:flex — no !important so JS inline
-# styles can override it per-slide during screenshotting
-src = re.sub(
-    r'(\.card\s*\{[^}]*?)display:\s*none',
-    r'\1display: flex',
-    src,
-)
-with open(pv_path, "w", encoding="utf-8") as f:
-    f.write(src)
-
-# Step 2 — screenshot each slide individually with Playwright
-from playwright.sync_api import sync_playwright
-
-slide_paths = []
-with sync_playwright() as pw:
-    browser = pw.chromium.launch(headless=True)
-    page = browser.new_page(viewport={"width": CARD_W, "height": CARD_H})
-    page.goto(f"file://{pv_path}")
-    page.wait_for_load_state("networkidle", timeout=8000)
-
-    for i in range(NUM_SLIDES):
-        page.evaluate(f"""
-            document.querySelectorAll('.card').forEach((c, idx) => {{
-                c.style.display = idx === {i} ? 'flex' : 'none';
-            }});
-        """)
-        slide_file = os.path.join(script_dir, f"_slide_{i+1:02d}.png")
-        page.screenshot(
-            path=slide_file,
-            clip={"x": 0, "y": 0, "width": CARD_W, "height": CARD_H},
-        )
-        slide_paths.append(slide_file)
-
-    browser.close()
-
-# Step 3 — assemble PDF with ReportLab
-from reportlab.pdfgen import canvas as rl_canvas
-
-c = rl_canvas.Canvas(pdf_path, pagesize=(CARD_W, CARD_H))
-for sp in slide_paths:
-    c.drawImage(sp, 0, 0, CARD_W, CARD_H)
-    c.showPage()
-c.save()
-
-# Step 4 — clean up temp files
-os.remove(pv_path)
-for sp in slide_paths:
-    os.remove(sp)
-os.remove(__file__)   # delete this script too
-
-print(f"PDF saved: {pdf_path}")
+```bash
+python .claude/skills/BusinessAgents/scripts/generate-pdf.py \
+  --width <format-w> \
+  --height <format-h> \
+  --slides <slide-count> \
+  --html <full-path-to-carousel-html> \
+  --pdf <full-path-to-output-pdf> \
+  2>&1 | tail -3
 ```
 
-2. **Run the script** via the Bash tool (suppress verbose output — only show the last 3 lines):
-```
-cd <carousel-subfolder> && python generate-pdf.py 2>&1 | tail -3
-```
+Where `<full-path-to-carousel-html>` and `<full-path-to-output-pdf>` are the paths used when saving the HTML file. Paths are relative to the project root.
 
-3. Confirm the `PDF saved:` line appears. If the script errors, show the error message and ask the founder if they want to skip the PDF step and use the HTML export instructions instead.
+2. Confirm the `PDF saved:` line appears in the output.
+
+If the script errors, show the error message and ask the founder if they want to skip the PDF step and use the HTML export instructions instead.
 
 ### Tell the founder
 
@@ -1368,9 +978,9 @@ After saving the output file:
 - Short caption defaults to visible; Long is available via tab switch
 - Caption tone must match the carousel tone chosen in Question 3 — never use a generic template
 - Always generate the PDF automatically after the Review & Approval step — never ask the founder to export it manually
-- PDF generation: write a self-contained Python script (`generate-pdf.py`) to the carousel subfolder, run it with `python generate-pdf.py 2>&1 | tail -3`, confirm "PDF saved:" appears — zero binary data enters the conversation context
+- PDF generation: run `.claude/skills/BusinessAgents/scripts/generate-pdf.py` with `--width`, `--height`, `--slides`, `--html`, and `--pdf` args; confirm "PDF saved:" appears — zero binary data enters the conversation context
 - The script uses Playwright (headless Chromium) to screenshot each slide individually at exact card dimensions, then ReportLab to assemble the PDF — never use Scrapling MCP tools for the PDF step
-- Always delete the temporary print-view HTML, per-slide PNGs, and the script itself inside the script after the PDF is saved
+- Always delete the temporary print-view HTML and per-slide PNGs inside the script after the PDF is saved (the script itself lives in `scripts/` and is never deleted)
 - Never downscale slide images when building the PDF — draw at native resolution for maximum quality
 - Ask which platform/format (Question 1) before asking for a topic — `<format-slug>` and dimensions must be set before any HTML is generated
 - Size `.card` elements using `--card-w` and `--card-h` CSS variables set to the exact pixel dimensions of the chosen format — never hardcode 700px
