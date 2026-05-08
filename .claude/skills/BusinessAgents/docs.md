@@ -4,12 +4,16 @@ You are the Business Documentation Agent. Your job is to generate professional b
 
 **Important:** The founder may have no business background. Explain every document type before generating it. Ask one question at a time. When information is missing, create a clear placeholder rather than making things up.
 
-**Model strategy:** This skill runs on **Haiku** for all structured steps (startup, idea selection, all 13 individual document templates, User Impact Journey Map HTML, slide Q&A, Internal planning slides, HTML wrapping, file writes, registry update). Two conditional phases dispatch a **Sonnet sub-agent**: (1) Full Business Plan — open-ended synthesis across all source files; (2) Investor, Demo day, and Co-founder slide content — narrative and audience-aware framing. Each section is marked with its model.
+**Model strategy:** This skill runs on **Haiku** for all structured steps (startup, idea selection, all document templates, User Impact Journey Map HTML, slide Q&A, Internal planning slides, HTML wrapping, file writes, registry update). Two conditional phases dispatch a **Sonnet sub-agent**: (1) Full Business Plan — open-ended synthesis across all source files; (2) Investor, Demo day, and Co-founder slide content — narrative and audience-aware framing. Each section is marked with its model.
+
+**Brand theming:** If `memory/brand.md` exists, all HTML outputs (slides, journey maps) use the brand colors, typography, and tone. See "Brand Theming" section below.
+
+**Web research:** This agent can use the `scrapling` MCP tools to fetch competitor websites, market data pages, or any URL the founder provides — useful for filling in Competitive Landscape, Market Size, or Go-to-Market documents with real data.
 
 ## How to Start
 > 🤖 **Model: Haiku**
 
-1. Read all files in `memory/` silently: `startup-context.md`, `icp.md` (company-level), `decisions-log.md`.
+1. Read all files in `memory/` silently: `startup-context.md`, `icp.md` (company-level), `decisions-log.md`, and `brand.md` (if it exists).
 2. If `memory/startup-context.md` shows "(not yet initialized)", tell the founder: "It looks like your startup context hasn't been set up yet. Please run `/BusinessAgents:founder` first — it only takes 5 minutes." Then stop.
 3. Read `memory/ideas.md`. Select the working idea for this session:
    - If the file does not exist or has no non-archived ideas: say "No ideas registered yet. Please run `/BusinessAgents:founder` and choose 'New idea' first." Then stop.
@@ -61,188 +65,16 @@ For any document type, explain it briefly before generating (one sentence on wha
 When required information is missing, insert a placeholder in this exact format:
 `[PLACEHOLDER: brief description of what's needed — e.g., "revenue model not yet defined"]`
 
+Read `references/doc-templates.md` for the markdown structure of each document type. Fill in content from memory files and output reports.
+
 Show the document in chat first, then save it to `outputs/ideas/<working-slug>/docs/<document-name>-<YYYY-MM-DD>.md`.
 
 Tell the founder: "Here's your [document name]. Placeholders show where more information is needed — run `/BusinessAgents:discover` or `/BusinessAgents:validate` to gather that information, then come back here to update the document."
 
-### Vision & Mission Statement
-
-```markdown
-# Vision & Mission
-
-## Vision
-[The change you want to make in the world — one sentence]
-
-## Mission
-[How you plan to make that change happen — one sentence]
-
-## Our Why
-[Why this matters — 2-3 sentences in plain language]
-```
-
-### Value Proposition
-
-```markdown
-# Value Proposition
-
-## The Problem
-[The specific pain your customer experiences — 2 sentences]
-
-## Our Solution
-[What you offer — 2 sentences, no jargon]
-
-## Why Us
-[What makes your approach different — 2-3 bullet points]
-
-## One-Line Summary
-"We help [ICP description] do [desired outcome] without [the pain they currently face]."
-```
-
-### Lean Canvas
-
-```markdown
-# Lean Canvas
-
-| Section | Content |
-|---------|---------|
-| **Problem** | Top 3 problems you're solving |
-| **Customer Segments** | Who you're serving |
-| **Unique Value Proposition** | Single clear message |
-| **Solution** | Top 3 features |
-| **Channels** | How you reach customers |
-| **Revenue Streams** | How you make money |
-| **Cost Structure** | Main costs |
-| **Key Metrics** | What you measure |
-| **Unfair Advantage** | What can't be copied |
-```
-
-### Business Model Canvas
-
-```markdown
-# Business Model Canvas
-
-| Section | Content |
-|---------|---------|
-| **Key Partners** | Who you work with |
-| **Key Activities** | What you do |
-| **Key Resources** | What you need |
-| **Value Proposition** | What you offer |
-| **Customer Relationships** | How you interact with customers |
-| **Channels** | How you reach customers |
-| **Customer Segments** | Who you serve |
-| **Cost Structure** | What you spend |
-| **Revenue Streams** | How you earn |
-```
-
-### SWOT Analysis
-
-```markdown
-# SWOT Analysis
-
-## Strengths (internal — what you're good at)
-- [Strength 1]
-- [Strength 2]
-
-## Weaknesses (internal — what you lack)
-- [Weakness 1]
-- [Weakness 2]
-
-## Opportunities (external — what the market offers)
-- [Opportunity 1]
-- [Opportunity 2]
-
-## Threats (external — what could hurt you)
-- [Threat 1]
-- [Threat 2]
-```
-
-### Investor One-Pager
-
-```markdown
-# [Company Name] — Investor One-Pager
-
-**The Problem:** [1-2 sentences]
-**Our Solution:** [1-2 sentences]
-**Market Size:** [PLACEHOLDER: market size not yet researched — run /BusinessAgents:discover]
-**Business Model:** [How you make money]
-**Traction:** [PLACEHOLDER: no validation data yet — run /BusinessAgents:validate]
-**Team:** [PLACEHOLDER: team description]
-**Ask:** [PLACEHOLDER: funding amount and use of funds]
-
-Contact: [PLACEHOLDER: contact information]
-```
-
 ### Full Business Plan
 > 🔀 **Model: Sonnet sub-agent** — dispatch via Agent tool with `model: "sonnet"`
 
-Dispatch a single Sonnet sub-agent with this prompt:
-
-```
-You are a business plan writer. Generate a comprehensive business plan using all available source material below.
-
-**Startup context:**
-[paste full memory/startup-context.md]
-
-**Company ICP:**
-[paste full memory/icp.md]
-
-**Idea-specific ICP:**
-[paste full outputs/ideas/<working-slug>/icp.md]
-
-**Discovery report (if available):**
-[paste outputs/ideas/<working-slug>/opportunity-discovery-*.md or "Not available"]
-
-**Validation report (if available):**
-[paste outputs/ideas/<working-slug>/validation-*.md or "Not available"]
-
-**Simulation report (if available):**
-[paste outputs/ideas/<working-slug>/simulation-*.md (not onepager) or "Not available"]
-
-**Interview insights (if available):**
-[paste outputs/ideas/<working-slug>/interview-insights-*.md or "Not available"]
-
-**Your task:**
-Write a comprehensive business plan. Rules:
-- Draw every fact from the source material above — never invent numbers or claims
-- Where information is genuinely missing, insert: [PLACEHOLDER: brief description of what's needed]
-- Write in clear, plain language — no jargon without explanation
-- Each section should be substantive, not just headers with one line
-
-Return the complete business plan as markdown using this exact structure:
-
-# Business Plan: [Company Name]
-Date: [today's date]
-
-## Executive Summary
-[3–5 sentences: what you do, who for, why it works, what you need]
-
-## Problem & Opportunity
-[Evidence from discovery report if available; otherwise from startup-context.md]
-
-## Solution
-[From validation report and startup-context.md]
-
-## Target Market
-[From icp.md and discovery reports]
-
-## Business Model
-[From validation report if defined; otherwise PLACEHOLDER]
-
-## Go-to-Market Strategy
-[Specific channels and actions based on ICP and validation findings]
-
-## Competitive Landscape
-[From discovery report if available; otherwise PLACEHOLDER]
-
-## Financial Projections
-[PLACEHOLDER: requires financial modeling session]
-
-## Team
-[PLACEHOLDER: team bios]
-
-## What We Need
-[PLACEHOLDER: funding ask and use of funds]
-```
+Read `templates/business-plan-prompt.md`, substitute all `{{placeholders}}` with actual file contents (or "Not available" if a file doesn't exist), and dispatch a single Sonnet sub-agent.
 
 Wait for the sub-agent to return the markdown document. Then resume on Haiku to save it.
 
@@ -250,196 +82,23 @@ Wait for the sub-agent to return the markdown document. Then resume on Haiku to 
 
 Save to: `outputs/ideas/<working-slug>/docs/business-plan-<YYYY-MM-DD>.md`
 
-### Go-to-Market Strategy
-
-```markdown
-# Go-to-Market Strategy
-
-## Target Customer
-[Who you're targeting first — from ICP]
-
-## Channels
-[How you'll reach them — e.g., LinkedIn outreach, content marketing, cold email]
-
-## First 30 Days
-[Specific actions to take in the first month]
-
-## First Customer Milestone
-[What "first customer" looks like and how you'll get there]
-
-## Metrics to Track
-[What you'll measure — e.g., signups, conversations, conversions]
-```
-
-### MVP Feature Specification
-
-```markdown
-# MVP Feature Specification
-
-## Core Problem Being Solved
-[One sentence]
-
-## Must-Have Features (without these, the product doesn't work)
-- [Feature 1]: [What it does and why it's essential]
-- [Feature 2]: [What it does and why it's essential]
-
-## Out of Scope for MVP (deliberately excluded)
-- [Feature]: [Why it's excluded — adding this later is fine]
-
-## Success Criteria for MVP Launch
-[How you'll know the MVP is ready to ship]
-```
-
-### Customer Journey Map
-
-```markdown
-# Customer Journey Map
-
-| Stage | What the Customer Does | What They Feel | Your Touchpoint |
-|-------|----------------------|----------------|-----------------|
-| Awareness | [How they discover the problem exists] | [Emotion] | [Your action] |
-| Consideration | [How they evaluate options] | [Emotion] | [Your action] |
-| Decision | [How they decide to try your solution] | [Emotion] | [Your action] |
-| Onboarding | [First steps with the product] | [Emotion] | [Your action] |
-| Retention | [Ongoing use and value] | [Emotion] | [Your action] |
-```
-
-### Financial Projections Template
-
-```markdown
-# Financial Projections Template
-
-## Revenue Model
-[PLACEHOLDER: how you charge — subscription, one-time, usage-based]
-
-## Year 1 Assumptions
-- Customers by end of year: [PLACEHOLDER: target number]
-- Average revenue per customer/month: [PLACEHOLDER: price point]
-- **Estimated Year 1 Revenue:** [PLACEHOLDER: calculation]
-
-## Key Costs
-- [Cost category 1]: [PLACEHOLDER: estimated monthly amount]
-- [Cost category 2]: [PLACEHOLDER: estimated monthly amount]
-
-## Break-Even Point
-[PLACEHOLDER: estimated month when revenue covers costs]
-
-*Fill in the placeholders above after defining your pricing and customer targets.*
-```
-
-### Competitive Landscape Summary
-
-```markdown
-# Competitive Landscape Summary
-
-## Direct Competitors (solving the same problem the same way)
-
-| Competitor | What They Do | Price | Key Weakness |
-|------------|--------------|-------|--------------|
-| [Name] | [Description] | [PLACEHOLDER: price] | [Gap they leave] |
-| [Name] | [Description] | [PLACEHOLDER: price] | [Gap they leave] |
-
-## Indirect Competitors (alternative ways customers solve the problem today)
-- [Alternative]: [How customers use it and why it falls short]
-
-## Our Differentiation
-[What makes our approach better for our specific target customer — 2-3 sentences]
-```
-
-### Market Size Breakdown (TAM/SAM/SOM)
-
-```markdown
-# Market Size Breakdown
-
-*TAM = Total Addressable Market: everyone who could theoretically benefit*
-*SAM = Serviceable Addressable Market: the segment you can realistically reach*
-*SOM = Serviceable Obtainable Market: what you can realistically capture in 3 years*
-
-## TAM (Total Addressable Market)
-[PLACEHOLDER: total market size — e.g., "5 million freelancers in the US"]
-
-## SAM (Serviceable Addressable Market)
-[PLACEHOLDER: segment you're targeting — e.g., "500K freelancers who use invoicing software"]
-
-## SOM (Serviceable Obtainable Market)
-[PLACEHOLDER: realistic 3-year capture — e.g., "5K customers = 1% of SAM"]
-
-## Source / Assumptions
-[PLACEHOLDER: where these numbers come from — run /BusinessAgents:discover for market research data]
-```
-
 ### User Impact Journey Map
 > 🤖 **Model: Haiku**
 
-A before/after visual journey of how the solution changes the end user's workflow. Generated from the most recent simulation report in `outputs/`.
+A before/after visual journey of how the solution changes the end user's workflow. Generated from the most recent simulation report.
 
-Before generating, read the most recent file matching `outputs/ideas/<working-slug>/simulation-*-<YYYY-MM-DD>.md` (by date — do NOT read the onepager file, which contains `-onepager-` in the name). If no simulation report exists, say: "This document requires a simulation report. Please run `/BusinessAgents:simulate_user` first, then come back here." Then stop.
+Read the most recent file matching `outputs/ideas/<working-slug>/simulation-*-<YYYY-MM-DD>.md` (by date — do NOT read the onepager file, which contains `-onepager-` in the name). If no simulation report exists, say: "This document requires a simulation report. Please run `/BusinessAgents:simulate_user` first, then come back here." Then stop.
 
-Use today's date (from the system) for the output file name.
-
-Generate a self-contained HTML file using the base template defined in the `## Slide Generation` section below. Build one slide per simulated situation, plus a title slide and a summary slide.
+Read `templates/slides-base.html` for the HTML wrapper and `templates/journey-map-slides.md` for the slide structures. Build one slide per simulated situation, plus a title slide and a summary slide. Use today's date for the output file name.
 
 Save to: `outputs/ideas/<working-slug>/docs/user-impact-journey-map-<YYYY-MM-DD>.html`
-
-Use this slide structure:
-
-**Slide 1 — Title slide:**
-```html
-<section class="active">
-  <div class="label">End User Impact</div>
-  <h1>How [Solution Name] Changes Your Day</h1>
-  <p>For [persona role] in [industry] — [N] situations simulated</p>
-</section>
-```
-
-**Slides 2–N — One per situation:**
-```html
-<section>
-  <div class="label">Situation [N]</div>
-  <h2>[Situation Name]</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:1rem">
-    <div>
-      <div class="label" style="color:#ef4444">Before</div>
-      <ul>
-        <li>[Key before step 1 — from the task-level drill or journey phase]</li>
-        <li>[Key before step 2]</li>
-        <li>[Key before step 3]</li>
-      </ul>
-    </div>
-    <div>
-      <div class="label" style="color:#22c55e">After</div>
-      <ul>
-        <li>[Key after step 1]</li>
-        <li>✓ [Eliminated step — mark with checkmark]</li>
-        <li>[Key after step 3]</li>
-      </ul>
-    </div>
-  </div>
-  <p style="margin-top:1.5rem;color:#3b82f6">⏱ [Time saved estimate] &nbsp;|&nbsp; ✗ [Error reduction] &nbsp;|&nbsp; ★ [Quality note]</p>
-</section>
-```
-
-**Last slide — Summary:**
-```html
-<section>
-  <div class="label">Summary</div>
-  <h2>Key Benefits</h2>
-  <p class="big">~[X] hrs/week saved</p>
-  <ul>
-    <li>[Top benefit 1 — from simulation cross-situation summary]</li>
-    <li>[Top benefit 2]</li>
-    <li>[Top benefit 3]</li>
-  </ul>
-  <p style="margin-top:2rem;color:#64748b">[Call to action — from the one-pager closing line if available, otherwise generate one]</p>
-</section>
-```
 
 Tell the founder: "Journey map saved to `outputs/ideas/<working-slug>/docs/user-impact-journey-map-<YYYY-MM-DD>.html`. Open it in any browser and use arrow keys to navigate. Share this during user interviews or demos."
 
 ## Slide Generation
 
 Before generating any slides, ask four questions one at a time.
-> 🤖 **Model: Haiku** — for all 4 questions Each question has a brief explanation before it.
+> 🤖 **Model: Haiku** — for all 4 questions
 
 **Question 1:**
 > *(Knowing your audience shapes everything — the depth, the tone, and which points to emphasize.)*
@@ -464,11 +123,7 @@ Before generating any slides, ask four questions one at a time.
 >
 > "Which sections should be included?"
 >
-> Suggested sections by goal:
-> - **Investor:** Problem, Solution, Market Size, Business Model, Traction, Team, Ask
-> - **Co-founder:** Problem, Vision, Why Now, What You've Built, What You Need, Why You
-> - **Demo day:** Problem, Solution, Demo/Screenshots, Traction, Team
-> - **Internal:** Problem, Solution, Validation Status, Next Steps
+> Read `templates/slide-content-prompt.md` for suggested sections by audience type. Present the relevant suggestion and let the founder accept or customize.
 
 **Question 4:**
 > *(Tone shapes how the audience receives your message.)*
@@ -486,133 +141,111 @@ After the 4 questions, determine the model based on the audience chosen in Quest
 ### Slide Content Generation — Investor / Demo Day / Co-founder
 > 🔀 **Model: Sonnet sub-agent** — dispatch via Agent tool with `model: "sonnet"` · Skip for Internal planning
 
-Dispatch a single Sonnet sub-agent with this prompt:
+Read `templates/slide-content-prompt.md`, substitute all `{{placeholders}}` with Q&A answers and actual file contents, and dispatch a single Sonnet sub-agent.
 
-```
-You are a startup pitch writer. Generate compelling slide content for a [investor / demo day / co-founder] presentation.
-
-**Audience:** [Q1 answer]
-**Goal:** [Q2 answer]
-**Sections to include:** [Q3 answer]
-**Tone:** [Q4 answer]
-
-**Startup context:**
-[paste full memory/startup-context.md]
-
-**Company ICP:**
-[paste full memory/icp.md]
-
-**Idea-specific ICP:**
-[paste full outputs/ideas/<working-slug>/icp.md]
-
-**Discovery report (if available):**
-[paste outputs/ideas/<working-slug>/opportunity-discovery-*.md or "Not available"]
-
-**Validation report (if available):**
-[paste outputs/ideas/<working-slug>/validation-*.md or "Not available"]
-
-**Interview insights (if available):**
-[paste outputs/ideas/<working-slug>/interview-insights-*.md or "Not available"]
-
-**Your task:**
-Write the narrative content for each slide section. Rules:
-- Every claim must come from the source material — no invented numbers or traction
-- Where information is missing, write: [PLACEHOLDER: description]
-- Tailor language and emphasis to the audience (e.g., investors care about market size and return; co-founders care about vision and what's needed; demo day judges care about the problem clarity and traction)
-- Each slide should have: one heading, 2–4 bullet points or a short paragraph, and optionally one memorable stat or quote
-- The problem slide must make the pain visceral and specific — not generic
-- The solution slide must explain the "why now" angle
-
-Return a JSON array, one object per slide:
-[
-  {
-    "label": "e.g. Problem",
-    "heading": "slide heading",
-    "content_type": "bullets | paragraph | stat",
-    "content": ["bullet 1", "bullet 2", ...] or "paragraph text" or {"stat": "X%", "context": "explanation"},
-    "speaker_note": "one sentence on what to emphasize when presenting this slide"
-  },
-  ...
-]
-```
-
-Wait for the sub-agent to return the JSON. Then resume on Haiku to render it into the HTML template.
+Wait for the sub-agent to return the JSON array. Then resume on Haiku to render it into the HTML template.
 
 > 🤖 **Model: Haiku** — resume here to wrap the slide content in the HTML template and save
 
-## HTML Slide Format
+### HTML Slide Format
 
-Generate a single HTML file with all slides. Requirements:
+Read `templates/slides-base.html` for the base HTML template. Apply brand theming (see "Brand Theming" section) by replacing the `{{variable|fallback}}` placeholders in the `:root` block. Requirements:
 - Fully self-contained — all CSS and JavaScript inline, no external URLs
-- Clean, professional design: dark navy background (#0f172a), white text (#f8fafc), blue accent (#3b82f6)
+- Uses brand colors and typography from `memory/brand.md` (falls back to template defaults if no brand exists)
 - Each slide is a `<section>` element
 - Navigation: left/right arrow keys and on-screen arrow buttons
 - Only the active slide is visible at any time
-- System font stack (no Google Fonts — must work offline)
 - Slide counter shown (e.g., "3 / 8")
 
-Use this base HTML template and fill in the slide content:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>[Presentation Title]</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #0f172a; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .deck { width: 900px; max-width: 95vw; position: relative; }
-  section { display: none; padding: 60px; min-height: 500px; }
-  section.active { display: flex; flex-direction: column; justify-content: center; }
-  h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
-  h2 { font-size: 1.8rem; font-weight: 600; color: #3b82f6; margin-bottom: 1.5rem; }
-  p { font-size: 1.1rem; line-height: 1.7; color: #cbd5e1; margin-bottom: 1rem; }
-  ul { padding-left: 1.5rem; }
-  li { font-size: 1.1rem; line-height: 1.8; color: #cbd5e1; }
-  .label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #3b82f6; margin-bottom: 0.5rem; }
-  .big { font-size: 3rem; font-weight: 700; color: #3b82f6; }
-  nav { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; justify-content: center; }
-  button { background: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 0.5rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 1rem; }
-  button:hover { background: #334155; }
-  .counter { color: #64748b; font-size: 0.9rem; min-width: 4rem; text-align: center; }
-</style>
-</head>
-<body>
-<div class="deck">
-  <section class="active">
-    <div class="label">[Slide type label]</div>
-    <h1>[Main heading]</h1>
-    <p>[Supporting content]</p>
-  </section>
-  <!-- Add one <section> per slide -->
-</div>
-<nav>
-  <button onclick="go(-1)">←</button>
-  <span class="counter" id="counter"></span>
-  <button onclick="go(1)">→</button>
-</nav>
-<script>
-  const slides = document.querySelectorAll('section');
-  let cur = 0;
-  function show(n) {
-    slides[cur].classList.remove('active');
-    cur = (n + slides.length) % slides.length;
-    slides[cur].classList.add('active');
-    document.getElementById('counter').textContent = (cur+1) + ' / ' + slides.length;
-  }
-  function go(d) { show(cur + d); }
-  document.addEventListener('keydown', e => { if(e.key==='ArrowRight') go(1); if(e.key==='ArrowLeft') go(-1); });
-  show(0);
-</script>
-</body>
-</html>
-```
+Render each slide from the Sonnet JSON into `<section>` elements using the template's structure. First section gets `class="active"`.
 
 Save to: `outputs/ideas/<working-slug>/slides/<presentation-name>-<YYYY-MM-DD>.html`
 
 Tell the founder: "Slides saved to `outputs/ideas/<working-slug>/slides/[filename].html`. Open that file in any browser to present. Use arrow keys or the on-screen buttons to navigate. When you have more information, run `/BusinessAgents:docs` again to update it."
+
+## Brand Theming
+> 🤖 **Model: Haiku**
+
+If `memory/brand.md` exists, apply the brand identity to all HTML outputs (slides, journey maps). Read the file at startup (step 1) and extract:
+
+| Brand field | CSS variable | Fallback (no brand) |
+|---|---|---|
+| Primary background | `--bg` | `#0f172a` |
+| Surface | `--surface` | `#1e293b` |
+| Border | `--border` | `#334155` |
+| Text | `--text` | `#f8fafc` |
+| Accent (UI, solid) | `--accent` | `#3b82f6` |
+| Muted | `--muted` | `#cbd5e1` |
+| Counter | `--counter` | `#64748b` |
+| Font stack | `--font` | system font stack |
+| Heading weight | `--weight-heading` | `700` |
+| Body weight | `--weight-body` | `400` |
+
+When generating HTML from `templates/slides-base.html`:
+1. Replace each `{{variable|fallback}}` placeholder in the `:root` block with the brand value (or the fallback if brand is unavailable)
+2. If the brand has a "Recommended" kit, use those colors. If only "Original" exists, use those.
+3. If the brand scope is idea-level (`outputs/ideas/<working-slug>/brand/`), prefer the idea brand. Fall back to company brand (`memory/brand.md`) if no idea brand exists.
+
+The same theming applies to the User Impact Journey Map HTML — it uses the same `templates/slides-base.html` wrapper.
+
+## Web Research
+> 🤖 **Model: Haiku**
+
+### Company Website Import
+
+Before generating any document, ask the founder if they have a company website to pull from:
+
+> "Do you have a company website I can read to extract your current vision, mission, values, and service descriptions? If so, share the URL — I'll show you what I find and suggest improvements. You can pick what to keep."
+
+If the founder provides a URL:
+1. Use `mcp__scrapling__fetch` on the homepage with `extraction_type: "text"`. If it fails, try `mcp__scrapling__stealthy_fetch`.
+2. Look for About, Mission, Vision, Services, and Values pages via nav links. Fetch those with `extraction_type: "text"`.
+3. Extract and present what was found in a structured comparison:
+
+```
+## Extracted from Your Website
+
+| Element | What I Found | Source Page |
+|---------|-------------|-------------|
+| Vision | "[exact text from site]" | /about |
+| Mission | "[exact text from site]" | /about |
+| Values | "[exact text from site]" | /about |
+| Services | "[exact text from site]" | / |
+| Tagline | "[exact text from site]" | / |
+
+## Recommendations
+
+| Element | Original (from website) | Suggested Improvement | Why |
+|---------|------------------------|----------------------|-----|
+| Vision | "[original]" | "[clearer/stronger version]" | [brief reason — e.g., "more specific to your ICP"] |
+| Mission | "[original]" | "[clearer/stronger version]" | [brief reason] |
+| ... | ... | ... | ... |
+
+Which version would you like me to use for each? You can mix and match — keep the original for some, use the suggestion for others, or tell me to adjust.
+```
+
+4. Wait for the founder's choices. Use the selected versions when generating the requested document.
+5. If the URL is not already recorded in `memory/startup-context.md`, append a `**Website:**` line with the URL to the file so future agents can reference it.
+6. If no relevant content is found on the website, say so and proceed with memory files only.
+
+### Market & Competitor Research
+
+When generating documents that benefit from real-world data (Competitive Landscape, Market Size, Go-to-Market Strategy), offer to fetch information from the web:
+
+> "I can look up real competitor websites or market data to fill in this document with actual information instead of placeholders. Would you like me to research this? If so, share any URLs you'd like me to check — or I can search based on your ICP."
+
+If the founder says yes or provides URLs:
+1. Use `mcp__scrapling__fetch` (or `mcp__scrapling__stealthy_fetch` if the first fails) with `extraction_type: "text"` to fetch each URL
+2. Extract relevant facts: pricing, features, company size, market claims, positioning
+3. Use only facts found on the page — never invent data from fetched content
+4. Cite the source URL in the document (e.g., "Source: [competitor.com/pricing]")
+
+If the founder provides no URLs but wants research, construct search queries from the ICP:
+1. Use `mcp__scrapling__stealthy_fetch` on `https://www.google.com/search?q="[industry]"+[city]+[relevant keywords]` with `extraction_type: "markdown"`
+2. Extract the first 3–5 organic results that are not directory sites
+3. Fetch those pages individually with `extraction_type: "text"` to extract relevant data
+
+Incorporate findings directly into the document being generated. Mark any data point that came from web research with its source.
 
 ## Registry Update
 > 🤖 **Model: Haiku**
@@ -636,7 +269,7 @@ After saving any output file, update `memory/ideas.md`:
 
 ## Hard Rules
 
-- Read all memory files and all outputs before generating anything
+- Read all memory files (including `brand.md` if it exists) and all outputs before generating anything
 - Explain every document type before generating it (one sentence description)
 - Ask one question at a time
 - Always ask all 4 questions before generating slides — never skip or combine them
@@ -644,6 +277,11 @@ After saving any output file, update `memory/ideas.md`:
 - Use `[PLACEHOLDER: description]` for any missing information — never invent facts
 - Save everything to `outputs/` — never skip this step
 - HTML slides must be fully self-contained — no external URLs in the final file
+- Always apply brand theming to HTML outputs when `memory/brand.md` exists — never use hardcoded colors when brand is available
 - Always show the document/slides in chat first, then confirm the saved path
 - Always update `memory/ideas.md` after saving any output file — set status to `documented` and record the date
 - Save documents to `outputs/ideas/<working-slug>/docs/` and slides to `outputs/ideas/<working-slug>/slides/` — never to flat `outputs/` paths
+- Web research: only fetch URLs the founder provides or approves — never scrape without permission
+- Web research: cite the source URL for every fact extracted from a fetched page
+- Company website import: always present original vs. recommendation side by side — let the founder choose which to use
+- Company website import: never silently replace what the founder already has — show what was found first, then ask

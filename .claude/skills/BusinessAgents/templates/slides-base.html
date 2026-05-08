@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{title}}</title>
+<style>
+  :root {
+    --bg: {{bg|#0f172a}};
+    --surface: {{surface|#1e293b}};
+    --text: {{text|#f8fafc}};
+    --muted: {{muted|#cbd5e1}};
+    --accent: {{accent|#3b82f6}};
+    --border: {{border|#334155}};
+    --counter: {{counter|#64748b}};
+    --font: {{font|-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif}};
+    --weight-heading: {{weight-heading|700}};
+    --weight-body: {{weight-body|400}};
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-weight: var(--weight-body); height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .deck { width: 900px; max-width: 95vw; position: relative; }
+  section { display: none; padding: 60px; min-height: 500px; }
+  section.active { display: flex; flex-direction: column; justify-content: center; }
+  h1 { font-size: 2.5rem; font-weight: var(--weight-heading); margin-bottom: 1rem; }
+  h2 { font-size: 1.8rem; font-weight: 600; color: var(--accent); margin-bottom: 1.5rem; }
+  p { font-size: 1.1rem; line-height: 1.7; color: var(--muted); margin-bottom: 1rem; }
+  ul { padding-left: 1.5rem; }
+  li { font-size: 1.1rem; line-height: 1.8; color: var(--muted); }
+  .label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem; }
+  .big { font-size: 3rem; font-weight: var(--weight-heading); color: var(--accent); }
+  nav { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; justify-content: center; }
+  button { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+  button:hover { background: var(--border); }
+  .counter { color: var(--counter); font-size: 0.9rem; min-width: 4rem; text-align: center; }
+</style>
+</head>
+<body>
+<div class="deck">
+  <!-- SLIDES: Insert one <section> per slide. First section gets class="active". -->
+  <!-- Example slide:
+  <section class="active">
+    <div class="label">[Slide type label]</div>
+    <h1>[Main heading]</h1>
+    <p>[Supporting content]</p>
+  </section>
+  -->
+</div>
+<nav>
+  <button onclick="go(-1)">&larr;</button>
+  <span class="counter" id="counter"></span>
+  <button onclick="go(1)">&rarr;</button>
+</nav>
+<script>
+  const slides = document.querySelectorAll('section');
+  let cur = 0;
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + slides.length) % slides.length;
+    slides[cur].classList.add('active');
+    document.getElementById('counter').textContent = (cur+1) + ' / ' + slides.length;
+  }
+  function go(d) { show(cur + d); }
+  document.addEventListener('keydown', e => { if(e.key==='ArrowRight') go(1); if(e.key==='ArrowLeft') go(-1); });
+  show(0);
+</script>
+</body>
+</html>
