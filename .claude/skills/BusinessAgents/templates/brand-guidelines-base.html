@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{company-name}} — Brand Guidelines</title>
+<style>
+  :root {
+    --primary: {{primary}};
+    --accent: {{accent}};
+    --text: {{text}};
+    --text-muted: {{text-muted}};
+    --surface: {{surface}};
+    --bg: {{bg}};
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: {{font-stack}}; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .page { max-width: 960px; margin: 0 auto; padding: 3rem 2rem; }
+  .section { margin-bottom: 4rem; }
+  .section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 0.75rem; }
+  h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+  h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.75rem; }
+  p { color: var(--text-muted); margin-bottom: 1rem; }
+  /* Logo showcase */
+  .logo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .logo-tile { padding: 2.5rem; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; min-height: 180px; }
+  .logo-tile.light { background: #ffffff; border: 1px solid #e2e8f0; }
+  .logo-tile.dark { background: var(--primary); }
+  .logo-tile.accent { background: var(--accent); }
+  .logo-tile-label { font-size: 0.75rem; color: #94a3b8; text-align: center; margin-top: 0.5rem; }
+  /* Color swatches */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+  .swatch { border-radius: 8px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); }
+  .swatch-color { height: 80px; }
+  .swatch-info { padding: 0.75rem; background: #fff; }
+  .swatch-name { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .swatch-hex { font-size: 0.75rem; color: #64748b; font-family: monospace; }
+  .swatch-use { font-size: 0.7rem; color: #94a3b8; margin-top: 0.25rem; }
+  /* Typography samples */
+  .type-sample { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 2rem; margin-bottom: 1rem; }
+  .type-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; margin-bottom: 0.5rem; }
+  /* Do/don't rules */
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .rule-box { border-radius: 8px; padding: 1.5rem; }
+  .rule-box.do { background: #f0fdf4; border: 1px solid #86efac; }
+  .rule-box.dont { background: #fef2f2; border: 1px solid #fca5a5; }
+  .rule-box h3 { margin-bottom: 0.75rem; }
+  .rule-box.do h3 { color: #16a34a; }
+  .rule-box.dont h3 { color: #dc2626; }
+  ul.rules { padding-left: 1.25rem; }
+  ul.rules li { font-size: 0.9rem; color: var(--text); line-height: 1.7; }
+  /* Icon library */
+  .icon-grid { display: flex; flex-wrap: wrap; gap: 1.25rem; margin-top: 1rem; }
+  .icon-tile { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 72px; }
+  .icon-preview { width: 40px; height: 40px; color: var(--accent); display: flex; align-items: center; justify-content: center; }
+  .icon-preview svg { width: 32px; height: 32px; }
+  .icon-name { font-size: 0.65rem; color: #64748b; text-align: center; font-family: monospace; word-break: break-all; }
+  /* Asset table */
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; padding: 0.5rem 0.75rem; border-bottom: 2px solid #e2e8f0; }
+  td { padding: 0.6rem 0.75rem; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; font-family: monospace; color: #334155; }
+  hr { border: none; border-top: 1px solid #e2e8f0; margin: 2rem 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="section">
+    <div class="section-label">Brand Guidelines · {{scope-label}}</div>
+    <h1>{{company-name}}</h1>
+    <p>{{tagline}}</p>
+    <p style="font-size:0.82rem;color:#94a3b8">Version 1.0 · {{date}}</p>
+  </div>
+
+  <hr>
+
+  <!-- LOGO_SHOWCASE -->
+
+  <!-- COLOR_PALETTE -->
+
+  <!-- TYPOGRAPHY -->
+
+  <!-- MODE_VARIANTS -->
+
+  <!-- ICON_LIBRARY -->
+
+  <!-- BRAND_VOICE -->
+
+  <!-- USAGE_RULES -->
+
+  <!-- ASSET_INDEX -->
+
+</div>
+</body>
+</html>
