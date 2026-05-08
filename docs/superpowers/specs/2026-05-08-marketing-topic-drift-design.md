@@ -59,7 +59,7 @@ You are a LinkedIn content strategist and copywriter...
 **Logic:**
 1. For each slide, Haiku checks whether the headline directly addresses the angle in `<post-title>`. A slide drifts if its headline could apply to any carousel about the company's domain — nothing specific to the post title's angle.
 2. If **2 or more slides** are flagged as drifted, Haiku dispatches a second minimal Sonnet sub-agent.
-3. The correction sub-agent receives: post title, drifted slides JSON only (not the full carousel), and the instruction: "Rewrite only these slides so each headline directly addresses the post title's specific angle." Returns the same JSON format for those slides only.
+3. The correction sub-agent receives: the post title string, the subset of slide objects from `<carousel-content>.slides` that were flagged (same JSON schema as the original — `number`, `kicker`, `headline`, `content_type`, `bullets`, etc.), and one instruction: "Rewrite only these slides so each headline directly addresses the post title's specific angle. Return the same JSON array with only the corrected slides." Haiku merges by slide `number`.
 4. Haiku merges corrections into `<carousel-content>` and proceeds with HTML assembly.
 5. Fully silent — no user interruption. If correction sub-agent fails or is unclear, Haiku proceeds with original content.
 
