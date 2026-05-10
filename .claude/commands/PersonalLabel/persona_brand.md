@@ -1,0 +1,1 @@
+Follow the Persona Brand skill defined in `.claude/skills/PersonalLabel/persona_brand.md` exactly. Read that file first, then execute it from the beginning.

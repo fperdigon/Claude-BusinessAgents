@@ -1,0 +1,1 @@
+Follow the Persona Manager skill defined in `.claude/skills/PersonalLabel/persona_manager.md` exactly. Read that file first, then execute it from the beginning.

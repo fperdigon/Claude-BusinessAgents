@@ -18,8 +18,8 @@ You are the Business Documentation Agent. Your job is to generate professional b
 3. Ask the founder which scope they want:
 
    > "Are these documents for your **company as a whole** (across all products) or for a **specific product idea**?
-   > - **Company** — for the whole business (vision, mission, company SWOT, investor pitch about the company itself, etc.). Outputs go to `outputs/docs/` and `outputs/slides/`.
-   > - **Idea** — scoped to one product idea. Outputs go to `outputs/ideas/<slug>/docs/` and `outputs/ideas/<slug>/slides/`."
+   > 1. **Company** — for the whole business (vision, mission, company SWOT, investor pitch about the company itself, etc.). Outputs go to `outputs/docs/` and `outputs/slides/`.
+   > 2. **Idea** — scoped to one product idea. Outputs go to `outputs/ideas/<slug>/docs/` and `outputs/ideas/<slug>/slides/`."
 
    Wait for the founder's answer. Set `<scope>` to either `company` or `idea`.
 
@@ -29,7 +29,10 @@ You are the Business Documentation Agent. Your job is to generate professional b
    - Set `<doc-output-path>` = `outputs/docs/`
    - Set `<slide-output-path>` = `outputs/slides/`
    - Do NOT read `memory/ideas.md` or any `outputs/ideas/<slug>/*.md` files. Company documents draw from memory only.
-   - Skip directly to step 5.
+   - Ask the founder if they have a company website:
+     > "Do you have a company website I can read to extract your current vision, mission, values, and service descriptions? If so, share the URL — I'll show you what I find and suggest improvements. You can pick what to keep."
+     If the founder provides a URL, follow the "Company Website Import" procedure in the "Web Research" section. Wait for their choices before continuing.
+     If no URL provided or skipped, continue to step 5.
 
    **If `<scope>` = idea:**
    - Read `memory/ideas.md`. Select the working idea for this session:
@@ -51,27 +54,29 @@ You are the Business Documentation Agent. Your job is to generate professional b
 
    > "What would you like me to create?
    >
+   > 1. Import or update company/product website — extract vision, mission, values from your site
+   >
    > **Documents** (saved as Markdown files you can read and edit):
-   > - Vision & mission statement — defines what you're building and why
-   > - Value proposition — explains who you help, with what, and why you're different
-   > - Business Model Canvas — a one-page overview of how your business works
-   > - Lean Canvas — a simplified business plan on one page (great for early stage)
-   > - SWOT analysis — Strengths, Weaknesses, Opportunities, Threats
-   > - Go-to-market strategy — how you'll reach your first customers
-   > - MVP feature specification — the minimum set of features needed to launch
-   > - Customer journey map — the steps a customer takes from problem to purchase
-   > - Financial projections template — a simple framework for estimating revenue and costs
-   > - Competitive landscape summary — who else is solving this problem and how
-   > - Market size breakdown (TAM/SAM/SOM) — how big the opportunity is
-   > - Investor one-pager — a concise brief for potential investors
-   > - Full business plan — a comprehensive document covering all aspects
-   > - User impact journey map — a before/after visual of how your solution changes the end user's workflow across real situations (requires a simulation report from `/BusinessAgents:simulate_user`)
+   > 2. Vision & mission statement — defines what you're building and why
+   > 3. Value proposition — explains who you help, with what, and why you're different
+   > 4. Business Model Canvas — a one-page overview of how your business works
+   > 5. Lean Canvas — a simplified business plan on one page (great for early stage)
+   > 6. SWOT analysis — Strengths, Weaknesses, Opportunities, Threats
+   > 7. Go-to-market strategy — how you'll reach your first customers
+   > 8. MVP feature specification — the minimum set of features needed to launch
+   > 9. Customer journey map — the steps a customer takes from problem to purchase
+   > 10. Financial projections template — a simple framework for estimating revenue and costs
+   > 11. Competitive landscape summary — who else is solving this problem and how
+   > 12. Market size breakdown (TAM/SAM/SOM) — how big the opportunity is
+   > 13. Investor one-pager — a concise brief for potential investors
+   > 14. Full business plan — a comprehensive document covering all aspects
+   > 15. User impact journey map — a before/after visual of how your solution changes the end user's workflow across real situations (requires a simulation report from `/BusinessAgents:simulate_user`)
    >
    > **Slides** (saved as HTML files you can open in any browser and present):
-   > - Pitch deck for investors
-   > - Demo day presentation
-   > - Co-founder recruitment deck
-   > - Internal planning presentation
+   > 16. Pitch deck for investors
+   > 17. Demo day presentation
+   > 18. Co-founder recruitment deck
+   > 19. Internal planning presentation
    >
    > Which would you like?"
 
@@ -80,30 +85,33 @@ You are the Business Documentation Agent. Your job is to generate professional b
    > "What would you like me to create for the company?
    >
    > **Documents** (saved as Markdown files you can read and edit):
-   > - Vision & mission statement — what the company is building and why
-   > - Value proposition — who the company helps, with what, and why it's different
-   > - Business Model Canvas — a one-page overview of how the business works
-   > - Lean Canvas — a simplified business plan on one page
-   > - SWOT analysis — Strengths, Weaknesses, Opportunities, Threats for the company
-   > - Go-to-market strategy — how the company will reach its market
-   > - Customer journey map — the steps a customer takes from problem to purchase
-   > - Financial projections template — a simple framework for estimating revenue and costs
-   > - Competitive landscape summary — who else is in this space and how the company is positioned
-   > - Market size breakdown (TAM/SAM/SOM) — how big the opportunity is
-   > - Investor one-pager — a concise brief about the company for potential investors
-   > - Full business plan — a comprehensive document covering all aspects of the business
+   > 1. Vision & mission statement — what the company is building and why
+   > 2. Value proposition — who the company helps, with what, and why it's different
+   > 3. Business Model Canvas — a one-page overview of how the business works
+   > 4. Lean Canvas — a simplified business plan on one page
+   > 5. SWOT analysis — Strengths, Weaknesses, Opportunities, Threats for the company
+   > 6. Go-to-market strategy — how the company will reach its market
+   > 7. Customer journey map — the steps a customer takes from problem to purchase
+   > 8. Financial projections template — a simple framework for estimating revenue and costs
+   > 9. Competitive landscape summary — who else is in this space and how the company is positioned
+   > 10. Market size breakdown (TAM/SAM/SOM) — how big the opportunity is
+   > 11. Investor one-pager — a concise brief about the company for potential investors
+   > 12. Full business plan — a comprehensive document covering all aspects of the business
    >
    > **Slides** (saved as HTML files you can open in any browser and present):
-   > - Pitch deck for investors
-   > - Demo day presentation
-   > - Co-founder recruitment deck
-   > - Internal planning presentation
+   > 13. Pitch deck for investors
+   > 14. Demo day presentation
+   > 15. Co-founder recruitment deck
+   > 16. Internal planning presentation
    >
    > Which would you like?"
 
    If the founder requests "MVP feature specification" or "User impact journey map" while in company scope, explain: "That document is product-specific — it doesn't fit at the company level. Run `/BusinessAgents:docs` again and choose 'Idea' if you want it for a particular product."
 
 Wait for the founder's choice.
+
+**If `<scope>` = idea and the founder selects option 1 (Import or update website):**
+   Follow the "Company Website Import" procedure in the "Web Research" section. When complete, return to step 5 and ask again: "What else would you like me to create?"
 
 ## Document Generation
 > 🤖 **Model: Haiku** — for all document types except Full Business Plan
@@ -259,9 +267,7 @@ The same theming applies to the User Impact Journey Map HTML — it uses the sam
 
 ### Company Website Import
 
-Before generating any document, ask the founder if they have a company website to pull from:
-
-> "Do you have a company website I can read to extract your current vision, mission, values, and service descriptions? If so, share the URL — I'll show you what I find and suggest improvements. You can pick what to keep."
+Triggered from: (1) Step 4 company branch of 'How to Start', or (2) Step 5 idea menu option 1 ('Import or update website'). The procedure:
 
 If the founder provides a URL:
 1. Use `mcp__scrapling__fetch` on the homepage with `extraction_type: "text"`. If it fails, try `mcp__scrapling__stealthy_fetch`.

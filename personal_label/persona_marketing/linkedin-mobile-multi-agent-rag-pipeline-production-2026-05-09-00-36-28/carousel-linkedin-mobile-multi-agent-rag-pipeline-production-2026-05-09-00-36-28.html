@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG in Production: 6 Tips for AI Engineers — LinkedIn Carousel</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --accent: #22d3ee;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --card-w: 1080px;
+    --card-h: 1350px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080810; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2rem 1rem; font-family: 'Inter', 'Outfit', system-ui, -apple-system, sans-serif; }
+  .deck { position: relative; width: var(--card-w); height: var(--card-h); border-radius: 12px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.6); flex-shrink: 0; }
+  .card { position: absolute; inset: 0; background: var(--bg); color: var(--text); display: none; flex-direction: column; padding: 80px; overflow: hidden; }
+  .card-bg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .card-scrim { position: absolute; inset: 0; background: rgba(13,31,60,0.72); pointer-events: none; z-index: 1; }
+  .card-top, .card-body, .card-bottom { position: relative; z-index: 2; }
+  .card.active { display: flex; }
+  .card-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 32px; border-bottom: 1px solid rgba(128,128,128,0.15); margin-bottom: 16px; }
+  .card-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 32px 0; }
+  .card-bottom { padding-top: 28px; border-top: 1px solid rgba(128,128,128,0.15); }
+
+  /* linkedin-mobile typography overrides */
+  .hook-headline { font-size: 5.625rem; font-weight: 800; line-height: 1.1; color: var(--text); margin-bottom: 1.5rem; }
+  h2             { font-size: 5rem;     font-weight: 700; line-height: 1.12; color: var(--text); margin-bottom: 1.25rem; }
+  .cta-action    { font-size: 5rem;     font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 1rem; }
+  p              { font-size: 3.75rem; line-height: 1.55; color: var(--text-muted); margin-bottom: 0.6rem; }
+  ul             { list-style: none; padding: 0; margin-top: 0.5rem; }
+  li             { font-size: 3.75rem; line-height: 1.55; color: var(--text-muted); padding: 0.5rem 0 0.5rem 3.5rem; position: relative; }
+  li::before     { content: "→"; color: var(--accent); position: absolute; left: 0; font-weight: 700; }
+  .swipe-hint    { font-size: 3.375rem; color: var(--text-muted); margin-top: 1.5rem; }
+  .big-stat      { font-size: 6.5rem;   font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
+  /* persona banner override — keeps "05 / 08  Francisco Perdigon Romero" on one line */
+  .slide-num     { font-size: 1.75rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); white-space: nowrap; }
+  .brand-name    { font-size: 1.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+  .kicker        { font-size: 3rem;    font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.9rem; }
+  .cta-label     { font-size: 2.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 0.75rem; }
+  .tagline       { font-size: 2.75rem; color: var(--text-muted); }
+  .accent-bar    { height: 3px; background: var(--accent); border-radius: 2px; width: 40px; }
+
+  /* Icons */
+  .icon          { display: inline-flex; align-items: center; flex-shrink: 0; }
+  .icon svg      { width: 72px;  height: 72px;  color: var(--accent); }
+  .icon-lg svg   { width: 120px; height: 120px; }
+  .icon-md svg   { width: 96px;  height: 96px;  }
+  .slide-header  { display: flex; align-items: center; gap: 24px; margin-bottom: 1.5rem; }
+  .hook-icon     { display: flex; justify-content: center; margin-bottom: 2rem; }
+
+  /* Nav */
+  .nav { display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; }
+  .nav-btn { background: #1e293b; border: 1px solid #334155; color: #f8fafc; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+  .nav-btn:hover { background: #334155; }
+  .dots { display: flex; gap: 6px; align-items: center; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; cursor: pointer; transition: background 0.15s, width 0.15s; }
+  .dot.active { background: var(--accent); width: 20px; border-radius: 4px; }
+
+  /* Instructions */
+  .instructions { margin-top: 2rem; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 1.25rem 1.5rem; max-width: 700px; width: 100%; }
+  .instructions h3 { color: #f8fafc; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+  .instructions ol { padding-left: 1.25rem; }
+  .instructions li { color: #94a3b8; font-size: 0.85rem; line-height: 1.65; padding: 0; }
+  .instructions li::before { display: none; }
+  .copy-btn { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 0.5rem 1.1rem; font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+  .copy-btn:hover { opacity: 0.88; }
+
+  /* Caption box */
+  .caption-box { margin-top: 1.5rem; background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 1.25rem 1.5rem; max-width: 700px; width: 100%; }
+  .caption-box h3 { color: #f8fafc; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .caption-hint { color: #64748b; font-size: 0.8rem; margin-bottom: 0.9rem; }
+  .caption-tabs { display: flex; gap: 0.5rem; margin-bottom: 0.9rem; }
+  .caption-tab { background: #0f172a; border: 1px solid #334155; color: #94a3b8; border-radius: 6px; padding: 0.35rem 0.85rem; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+  .caption-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .caption-text { color: #cbd5e1; font-size: 0.9rem; line-height: 1.75; white-space: pre-wrap; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 1rem; margin-bottom: 0.9rem; }
+
+  /* Doc title */
+  .doc-title-row { margin-bottom: 1.1rem; }
+  .doc-title-label { font-size: 0.78rem; color: #64748b; display: block; margin-bottom: 0.35rem; }
+  .doc-title-value { color: #f8fafc; font-size: 1rem; font-weight: 600; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 0.65rem 1rem; }
+
+  @media print {
+    @page { size: 1080px 1350px; margin: 0; }
+    body { background: var(--bg); padding: 0; display: block; }
+    .deck { border-radius: 0; box-shadow: none; overflow: visible; height: auto; width: 1080px; position: static; }
+    .card { position: relative; display: flex !important; page-break-after: always; break-after: page; height: 1350px; }
+    .nav, .instructions, .caption-box, .doc-title-row { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- SLIDE 1: Hook -->
+  <div class="card active">
+    <svg class="card-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" opacity="0.22" preserveAspectRatio="xMidYMid slice">
+      <circle cx="120" cy="100" r="5" fill="var(--accent)"/>
+      <circle cx="300" cy="180" r="7" fill="var(--accent)"/>
+      <circle cx="500" cy="90" r="5" fill="var(--accent)"/>
+      <circle cx="200" cy="320" r="6" fill="var(--accent)"/>
+      <circle cx="420" cy="280" r="8" fill="var(--accent)"/>
+      <circle cx="600" cy="350" r="5" fill="var(--accent)"/>
+      <circle cx="150" cy="500" r="6" fill="var(--accent)"/>
+      <circle cx="360" cy="460" r="7" fill="var(--accent)"/>
+      <circle cx="550" cy="530" r="5" fill="var(--accent)"/>
+      <circle cx="250" cy="620" r="6" fill="var(--accent)"/>
+      <circle cx="480" cy="650" r="5" fill="var(--accent)"/>
+      <line x1="120" y1="100" x2="300" y2="180" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="500" y2="90" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="200" y2="320" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="420" y2="280" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="600" y2="350" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="200" y1="320" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="150" y2="500" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="550" y2="530" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="550" y1="530" x2="480" y2="650" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="150" y1="500" x2="250" y2="620" stroke="var(--accent)" stroke-width="1"/>
+    </svg>
+    <div class="card-scrim"></div>
+    <div class="card-top">
+      <span class="slide-num">01 / 08</span>
+      <span class="brand-name">Francisco Perdigon Romero</span>
+    </div>
+    <div class="card-body">
+      <div class="hook-icon">
+        <span class="icon icon-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"/>
+          </svg>
+        </span>
+      </div>
+      <div class="kicker">THE REAL TALK</div>
+      <div class="hook-headline">6 things every AI engineer should know before shipping RAG to production</div>
+      <div class="swipe-hint">Swipe to see tip 1 →</div>
+    </div>
+    <div class="card-bottom">
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: Tip 1 -->
+  <div class="card">
+    <svg class="card-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" opacity="0.22" preserveAspectRatio="xMidYMid slice">
+      <circle cx="120" cy="100" r="5" fill="var(--accent)"/>
+      <circle cx="300" cy="180" r="7" fill="var(--accent)"/>
+      <circle cx="500" cy="90" r="5" fill="var(--accent)"/>
+      <circle cx="200" cy="320" r="6" fill="var(--accent)"/>
+      <circle cx="420" cy="280" r="8" fill="var(--accent)"/>
+      <circle cx="600" cy="350" r="5" fill="var(--accent)"/>
+      <circle cx="150" cy="500" r="6" fill="var(--accent)"/>
+      <circle cx="360" cy="460" r="7" fill="var(--accent)"/>
+      <circle cx="550" cy="530" r="5" fill="var(--accent)"/>
+      <circle cx="250" cy="620" r="6" fill="var(--accent)"/>
+      <circle cx="480" cy="650" r="5" fill="var(--accent)"/>
+      <line x1="120" y1="100" x2="300" y2="180" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="500" y2="90" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="200" y2="320" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="420" y2="280" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="600" y2="350" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="200" y1="320" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="150" y2="500" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="550" y2="530" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="550" y1="530" x2="480" y2="650" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="150" y1="500" x2="250" y2="620" stroke="var(--accent)" stroke-width="1"/>
+    </svg>
+    <div class="card-scrim"></div>
+    <div class="card-top">
+      <span class="slide-num">02 / 08</span>
+      <span class="brand-name">Francisco Perdigon Romero</span>
+    </div>
+    <div class="card-body">
+      <div class="slide-header">
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"/>
+          </svg>
+        </span>
+        <div class="kicker">TIP 1</div>
+      </div>
+      <h2>Retrieval quality beats model size every time</h2>
+      <ul>
+        <li>Chunk strategy defines what the retriever finds</li>
+        <li>Bad chunks = hallucinated answers, every time</li>
+        <li>I test chunking before I touch the LLM</li>
+      </ul>
+      <div class="swipe-hint">Swipe to see tip 2 →</div>
+    </div>
+    <div class="card-bottom">
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Tip 2 -->
+  <div class="card">
+    <svg class="card-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" opacity="0.22" preserveAspectRatio="xMidYMid slice">
+      <circle cx="120" cy="100" r="5" fill="var(--accent)"/>
+      <circle cx="300" cy="180" r="7" fill="var(--accent)"/>
+      <circle cx="500" cy="90" r="5" fill="var(--accent)"/>
+      <circle cx="200" cy="320" r="6" fill="var(--accent)"/>
+      <circle cx="420" cy="280" r="8" fill="var(--accent)"/>
+      <circle cx="600" cy="350" r="5" fill="var(--accent)"/>
+      <circle cx="150" cy="500" r="6" fill="var(--accent)"/>
+      <circle cx="360" cy="460" r="7" fill="var(--accent)"/>
+      <circle cx="550" cy="530" r="5" fill="var(--accent)"/>
+      <circle cx="250" cy="620" r="6" fill="var(--accent)"/>
+      <circle cx="480" cy="650" r="5" fill="var(--accent)"/>
+      <line x1="120" y1="100" x2="300" y2="180" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="500" y2="90" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="200" y2="320" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="420" y2="280" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="600" y2="350" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="200" y1="320" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="150" y2="500" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="550" y2="530" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="550" y1="530" x2="480" y2="650" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="150" y1="500" x2="250" y2="620" stroke="var(--accent)" stroke-width="1"/>
+    </svg>
+    <div class="card-scrim"></div>
+    <div class="card-top">
+      <span class="slide-num">03 / 08</span>
+      <span class="brand-name">Francisco Perdigon Romero</span>
+    </div>
+    <div class="card-body">
+      <div class="slide-header">
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 6.75v10.5a2.25 2.25 0 0 0 2.25 2.25Zm.75-12h9v9h-9v-9Z"/>
+          </svg>
+        </span>
+        <div class="kicker">TIP 2</div>
+      </div>
+      <h2>Agent boundaries prevent cascade failures in production</h2>
+      <ul>
+        <li>Each agent owns one job — no cross-agent side effects</li>
+        <li>I define explicit input/output contracts per agent</li>
+        <li>Failures stay local; they don't cascade</li>
+      </ul>
+      <div class="swipe-hint">Swipe to see tip 3 →</div>
+    </div>
+    <div class="card-bottom">
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Tip 3 -->
+  <div class="card">
+    <svg class="card-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" opacity="0.22" preserveAspectRatio="xMidYMid slice">
+      <circle cx="120" cy="100" r="5" fill="var(--accent)"/>
+      <circle cx="300" cy="180" r="7" fill="var(--accent)"/>
+      <circle cx="500" cy="90" r="5" fill="var(--accent)"/>
+      <circle cx="200" cy="320" r="6" fill="var(--accent)"/>
+      <circle cx="420" cy="280" r="8" fill="var(--accent)"/>
+      <circle cx="600" cy="350" r="5" fill="var(--accent)"/>
+      <circle cx="150" cy="500" r="6" fill="var(--accent)"/>
+      <circle cx="360" cy="460" r="7" fill="var(--accent)"/>
+      <circle cx="550" cy="530" r="5" fill="var(--accent)"/>
+      <circle cx="250" cy="620" r="6" fill="var(--accent)"/>
+      <circle cx="480" cy="650" r="5" fill="var(--accent)"/>
+      <line x1="120" y1="100" x2="300" y2="180" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="500" y2="90" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="200" y2="320" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="420" y2="280" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="600" y2="350" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="200" y1="320" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="150" y2="500" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="550" y2="530" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="550" y1="530" x2="480" y2="650" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="150" y1="500" x2="250" y2="620" stroke="var(--accent)" stroke-width="1"/>
+    </svg>
+    <div class="card-scrim"></div>
+    <div class="card-top">
+      <span class="slide-num">04 / 08</span>
+      <span class="brand-name">Francisco Perdigon Romero</span>
+    </div>
+    <div class="card-body">
+      <div class="slide-header">
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"/>
+          </svg>
+        </span>
+        <div class="kicker">TIP 3</div>
+      </div>
+      <h2>Observability is not optional past the prototype stage</h2>
+      <ul>
+        <li>Log every retrieval call with query, chunks, scores</li>
+        <li>Trace agent decisions end-to-end before going live</li>
+        <li>You can't debug what you can't see</li>
+      </ul>
+      <div class="swipe-hint">Swipe to see tip 4 →</div>
+    </div>
+    <div class="card-bottom">
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Tip 4 -->
+  <div class="card">
+    <svg class="card-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" opacity="0.22" preserveAspectRatio="xMidYMid slice">
+      <circle cx="120" cy="100" r="5" fill="var(--accent)"/>
+      <circle cx="300" cy="180" r="7" fill="var(--accent)"/>
+      <circle cx="500" cy="90" r="5" fill="var(--accent)"/>
+      <circle cx="200" cy="320" r="6" fill="var(--accent)"/>
+      <circle cx="420" cy="280" r="8" fill="var(--accent)"/>
+      <circle cx="600" cy="350" r="5" fill="var(--accent)"/>
+      <circle cx="150" cy="500" r="6" fill="var(--accent)"/>
+      <circle cx="360" cy="460" r="7" fill="var(--accent)"/>
+      <circle cx="550" cy="530" r="5" fill="var(--accent)"/>
+      <circle cx="250" cy="620" r="6" fill="var(--accent)"/>
+      <circle cx="480" cy="650" r="5" fill="var(--accent)"/>
+      <line x1="120" y1="100" x2="300" y2="180" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="500" y2="90" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="200" y2="320" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="420" y2="280" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="600" y2="350" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="200" y1="320" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="150" y2="500" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="550" y2="530" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="550" y1="530" x2="480" y2="650" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="150" y1="500" x2="250" y2="620" stroke="var(--accent)" stroke-width="1"/>
+    </svg>
+    <div class="card-scrim"></div>
+    <div class="card-top">
+      <span class="slide-num">05 / 08</span>
+      <span class="brand-name">Francisco Perdigon Romero</span>
+    </div>
+    <div class="card-body">
+      <div class="slide-header">
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/>
+          </svg>
+        </span>
+        <div class="kicker">TIP 4</div>
+      </div>
+      <h2>Evaluate retrieval and generation separately</h2>
+      <ul>
+        <li>Retrieval eval: does the right chunk appear in top-k?</li>
+        <li>Generation eval: is the answer grounded in context?</li>
+        <li>Combined metrics hide which layer is failing</li>
+      </ul>
+      <div class="swipe-hint">Swipe to see tip 5 →</div>
+    </div>
+    <div class="card-bottom">
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Tip 5 -->
+  <div class="card">
+    <svg class="card-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" opacity="0.22" preserveAspectRatio="xMidYMid slice">
+      <circle cx="120" cy="100" r="5" fill="var(--accent)"/>
+      <circle cx="300" cy="180" r="7" fill="var(--accent)"/>
+      <circle cx="500" cy="90" r="5" fill="var(--accent)"/>
+      <circle cx="200" cy="320" r="6" fill="var(--accent)"/>
+      <circle cx="420" cy="280" r="8" fill="var(--accent)"/>
+      <circle cx="600" cy="350" r="5" fill="var(--accent)"/>
+      <circle cx="150" cy="500" r="6" fill="var(--accent)"/>
+      <circle cx="360" cy="460" r="7" fill="var(--accent)"/>
+      <circle cx="550" cy="530" r="5" fill="var(--accent)"/>
+      <circle cx="250" cy="620" r="6" fill="var(--accent)"/>
+      <circle cx="480" cy="650" r="5" fill="var(--accent)"/>
+      <line x1="120" y1="100" x2="300" y2="180" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="500" y2="90" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="200" y2="320" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="420" y2="280" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="600" y2="350" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="200" y1="320" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="150" y2="500" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="550" y2="530" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="550" y1="530" x2="480" y2="650" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="150" y1="500" x2="250" y2="620" stroke="var(--accent)" stroke-width="1"/>
+    </svg>
+    <div class="card-scrim"></div>
+    <div class="card-top">
+      <span class="slide-num">06 / 08</span>
+      <span class="brand-name">Francisco Perdigon Romero</span>
+    </div>
+    <div class="card-body">
+      <div class="slide-header">
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/>
+          </svg>
+        </span>
+        <div class="kicker">TIP 5</div>
+      </div>
+      <h2>Guard against prompt injection at every agent boundary</h2>
+      <ul>
+        <li>Retrieved docs can carry adversarial instructions</li>
+        <li>I sanitize and scope context before passing to LLM</li>
+        <li>One unguarded boundary can hijack the whole pipeline</li>
+      </ul>
+      <div class="swipe-hint">Swipe to see tip 6 →</div>
+    </div>
+    <div class="card-bottom">
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: The Most Important -->
+  <div class="card">
+    <svg class="card-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" opacity="0.22" preserveAspectRatio="xMidYMid slice">
+      <circle cx="120" cy="100" r="5" fill="var(--accent)"/>
+      <circle cx="300" cy="180" r="7" fill="var(--accent)"/>
+      <circle cx="500" cy="90" r="5" fill="var(--accent)"/>
+      <circle cx="200" cy="320" r="6" fill="var(--accent)"/>
+      <circle cx="420" cy="280" r="8" fill="var(--accent)"/>
+      <circle cx="600" cy="350" r="5" fill="var(--accent)"/>
+      <circle cx="150" cy="500" r="6" fill="var(--accent)"/>
+      <circle cx="360" cy="460" r="7" fill="var(--accent)"/>
+      <circle cx="550" cy="530" r="5" fill="var(--accent)"/>
+      <circle cx="250" cy="620" r="6" fill="var(--accent)"/>
+      <circle cx="480" cy="650" r="5" fill="var(--accent)"/>
+      <line x1="120" y1="100" x2="300" y2="180" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="500" y2="90" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="200" y2="320" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="420" y2="280" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="600" y2="350" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="200" y1="320" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="150" y2="500" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="550" y2="530" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="550" y1="530" x2="480" y2="650" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="150" y1="500" x2="250" y2="620" stroke="var(--accent)" stroke-width="1"/>
+    </svg>
+    <div class="card-scrim"></div>
+    <div class="card-top">
+      <span class="slide-num">07 / 08</span>
+      <span class="brand-name">Francisco Perdigon Romero</span>
+    </div>
+    <div class="card-body">
+      <div class="slide-header">
+        <span class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"/>
+          </svg>
+        </span>
+        <div class="kicker">THE MOST IMPORTANT</div>
+      </div>
+      <h2>Start with one agent. Earn complexity.</h2>
+      <ul>
+        <li>Most failed RAG deployments were over-architected early</li>
+        <li>I shipped a single-agent pipeline first; scaled later</li>
+        <li>Complexity is a liability until the baseline works</li>
+      </ul>
+      <div class="swipe-hint">Swipe for the CTA →</div>
+    </div>
+    <div class="card-bottom">
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: CTA -->
+  <div class="card">
+    <svg class="card-bg" viewBox="0 0 700 700" xmlns="http://www.w3.org/2000/svg" opacity="0.22" preserveAspectRatio="xMidYMid slice">
+      <circle cx="120" cy="100" r="5" fill="var(--accent)"/>
+      <circle cx="300" cy="180" r="7" fill="var(--accent)"/>
+      <circle cx="500" cy="90" r="5" fill="var(--accent)"/>
+      <circle cx="200" cy="320" r="6" fill="var(--accent)"/>
+      <circle cx="420" cy="280" r="8" fill="var(--accent)"/>
+      <circle cx="600" cy="350" r="5" fill="var(--accent)"/>
+      <circle cx="150" cy="500" r="6" fill="var(--accent)"/>
+      <circle cx="360" cy="460" r="7" fill="var(--accent)"/>
+      <circle cx="550" cy="530" r="5" fill="var(--accent)"/>
+      <circle cx="250" cy="620" r="6" fill="var(--accent)"/>
+      <circle cx="480" cy="650" r="5" fill="var(--accent)"/>
+      <line x1="120" y1="100" x2="300" y2="180" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="500" y2="90" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="200" y2="320" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="300" y1="180" x2="420" y2="280" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="600" y2="350" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="200" y1="320" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="420" y1="280" x2="360" y2="460" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="150" y2="500" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="360" y1="460" x2="550" y2="530" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="550" y1="530" x2="480" y2="650" stroke="var(--accent)" stroke-width="1"/>
+      <line x1="150" y1="500" x2="250" y2="620" stroke="var(--accent)" stroke-width="1"/>
+    </svg>
+    <div class="card-scrim"></div>
+    <div class="card-top">
+      <span class="slide-num">08 / 08</span>
+      <span class="brand-name">Francisco Perdigon Romero</span>
+    </div>
+    <div class="card-body">
+      <div class="hook-icon">
+        <span class="icon icon-md">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+          </svg>
+        </span>
+      </div>
+      <div class="cta-label">FOLLOW</div>
+      <div class="cta-action">Follow Francisco Perdigon Romero</div>
+      <p class="tagline">I post on agentic AI, RAG pipelines, and ML for telecom — applied lessons from production systems.</p>
+      <p class="tagline" style="margin-top:1rem;">linkedin.com/in/fperdigon</p>
+    </div>
+    <div class="card-bottom">
+      <div class="accent-bar"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav">
+  <button class="nav-btn" onclick="go(-1)">←</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" onclick="go(1)">→</button>
+</div>
+
+<div class="instructions">
+  <h3>How to export to LinkedIn</h3>
+  <ol>
+    <li>Open <strong>File → Print</strong> (or Ctrl+P / Cmd+P) in your browser</li>
+    <li>Set destination to <strong>Save as PDF</strong></li>
+    <li>Under "More settings", set paper size to <strong>Custom</strong> and enter <strong>1080 × 1350</strong></li>
+    <li>Disable headers and footers</li>
+    <li>Save the PDF — each slide becomes one page</li>
+    <li>On LinkedIn, start a new post → click the <strong>document icon</strong> → upload the PDF</li>
+    <li>LinkedIn displays each page as one carousel slide — add your post caption and publish</li>
+  </ol>
+</div>
+
+<div style="margin-top:1.5rem; max-width:700px; width:100%;">
+  <div class="doc-title-row">
+    <span class="doc-title-label">Document title (paste into LinkedIn when uploading)</span>
+    <div class="doc-title-value" id="docTitle">RAG in Production: 6 Tips for AI Engineers</div>
+    <button class="copy-btn" style="margin-top:0.5rem" onclick="copyTitle()">Copy title</button>
+  </div>
+</div>
+
+<div class="caption-box">
+  <h3>Suggested post caption</h3>
+  <p class="caption-hint">Pick a version, copy it into LinkedIn when you upload the PDF, and edit as needed.</p>
+  <div class="caption-tabs">
+    <button class="caption-tab active" onclick="switchCaption('short', this)">Short</button>
+    <button class="caption-tab" onclick="switchCaption('long', this)">Long</button>
+  </div>
+  <div class="caption-text" id="captionText">Most RAG pipelines fail in production — not because of the model, but because of the architecture around it.
+
+I've built multi-agent RAG systems for enterprise telecom at Ericsson. Here's what actually matters when you go beyond the demo.
+
+Follow Francisco Perdigon Romero for more applied AI lessons.</div>
+  <button class="copy-btn" onclick="copyCaption()">Copy caption</button>
+</div>
+
+<script>
+const captions = {
+  short: `Most RAG pipelines fail in production — not because of the model, but because of the architecture around it.
+
+I've built multi-agent RAG systems for enterprise telecom at Ericsson. Here's what actually matters when you go beyond the demo.
+
+Follow Francisco Perdigon Romero for more applied AI lessons.`,
+  long: `Most RAG pipelines fail in production — not because of the model, but because of the architecture around it.
+
+→ Retrieval quality determines answer quality — fix chunking first
+→ Agent boundaries prevent cascade failures at scale
+→ Observability is non-negotiable past the prototype stage
+→ Evaluate retrieval and generation as separate layers
+→ Prompt injection at agent boundaries is a real production risk
+→ The best production systems started with one agent, not five
+
+I've shipped agentic RAG systems in enterprise telecom. These are lessons from real deployments — not theory.
+
+Follow Francisco Perdigon Romero for more on agentic AI, RAG, and ML for telecom.`
+};
+function switchCaption(key, btn) {
+  document.getElementById('captionText').textContent = captions[key];
+  document.querySelectorAll('.caption-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+function copyCaption() {
+  const el = document.getElementById('captionText');
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy caption', 1800);
+  });
+}
+function copyTitle() {
+  navigator.clipboard.writeText(document.getElementById('docTitle').innerText).then(() => {
+    const btns = document.querySelectorAll('.copy-btn');
+    btns[0].textContent = 'Copied!';
+    setTimeout(() => btns[0].textContent = 'Copy title', 1800);
+  });
+}
+
+const cards = document.querySelectorAll('.card');
+const dotsEl = document.getElementById('dots');
+let cur = 0;
+cards.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => show(i);
+  dotsEl.appendChild(d);
+});
+function show(n) {
+  cards[cur].classList.remove('active');
+  document.querySelectorAll('.dot')[cur].classList.remove('active');
+  cur = (n + cards.length) % cards.length;
+  cards[cur].classList.add('active');
+  document.querySelectorAll('.dot')[cur].classList.add('active');
+}
+function go(d) { show(cur + d); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') go(1);
+  if (e.key === 'ArrowLeft') go(-1);
+});
+</script>
+</body>
+</html>

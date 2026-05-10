@@ -159,6 +159,70 @@ All HTML files are self-contained (no internet required). Missing information is
 
 ---
 
+## Personal Label
+
+A parallel track of three skills for building and broadcasting your **personal professional identity** — separate from any business. Use it for thought leadership, job hunting, speaking invites, audience growth, or any content where the person (not the company) is the brand. Existing BusinessAgents skills are not modified; persona skills can optionally read business memory but **never write to it**.
+
+### 1. `/PersonalLabel:persona_manager` — Persona Memory Manager
+
+**Job:** Ingest your professional profile from any combination of: a CV PDF, a LinkedIn URL, a personal website URL, and a GitHub URL. Extract a structured persona (headline, bio, skills, experience, voice signals, audience, goals).
+
+**Reads:** the inputs you provide; optionally `memory/startup-context.md`, `memory/ideas.md`, `memory/brand.md` if you opt into the cross-link prompt.
+
+**Asks:** 8 questions over ~10 minutes — CV path, three URLs, positioning sentence, audience, 12-month goals, off-limits topics. Skip any input you don't have.
+
+**Online enrichment:** light only — fetches the URLs you provide. LinkedIn often blocks automated fetches; falls back to manual paste.
+
+**Outputs:**
+- `personal_label/persona_memory/persona-context.md` — canonical profile
+- `personal_label/persona_memory/decisions-log.md` — every change, dated
+
+**Hands off to:** `/PersonalLabel:persona_brand` to build the visual identity.
+
+---
+
+### 2. `/PersonalLabel:persona_brand` — Personal Brand Identity
+
+**Job:** Build a complete personal brand kit — logo SVGs (monogram, wordmark, icon, monochrome), color palette, typography, brand guidelines HTML — tailored to a person rather than a company.
+
+**Reads:** `personal_label/persona_memory/persona-context.md` + (optionally) `memory/brand.md` for harmony/contrast guidance.
+
+**Asks:** 6 questions — personality keywords, photo presence, color preference (5 persona palette families), typography, logo concept (monogram / wordmark / silhouette / photo-circle), AI image prompts.
+
+**Reuses:** `BusinessAgents/templates/brand-guidelines-base.html`, `BusinessAgents/references/brand-palettes.md` (theme/brightness rules), `BusinessAgents/references/icon-libraries.md`. The existing `/BusinessAgents:brand` skill is not invoked.
+
+**Outputs:**
+- `personal_label/persona_brand/logo-monogram-*.svg`, `logo-wordmark-*.svg`, `logo-icon-*.svg`, `logo-mono-*.svg`
+- `personal_label/persona_brand/brand-guidelines-*.html`
+- `personal_label/persona_brand/ai-image-prompts-*.md` (optional)
+- `personal_label/persona_memory/persona-brand.md` — palette/typography/logo paths for marketing to read
+
+**Hands off to:** `/PersonalLabel:persona_marketing` to generate posts.
+
+---
+
+### 3. `/PersonalLabel:persona_marketing` — Personal Content Agent
+
+**Job:** Generate personal-brand posts in any of four formats. Voice-anchored on `persona-context.md` for every dispatch.
+
+**Reads:** `persona-context.md` and `persona-brand.md`; optionally `memory/startup-context.md` or a specific idea folder if you opt in at the start of each post.
+
+**Formats:**
+1. **LinkedIn carousel** — multi-slide HTML + PDF (reuses BusinessAgents `carousel-base.html`, `format-specs.md`, `icon-mapping.md`, `generate-pdf.py`)
+2. **LinkedIn text post** — paste-ready markdown, configurable hook style, length cap (500 / 1500 / 3000 chars)
+3. **Twitter / X thread** — numbered tweets, ≤280 chars enforced (auto-retry on overflow)
+4. **Personal blog article** — long-form markdown, 800 / 1200 / 1500 word target, how-to / opinion / case-study styles
+
+**Outputs:**
+- `personal_label/persona_marketing/<format-slug>-<topic-slug>-<timestamp>/carousel-*.html` and `.pdf` (carousels)
+- `personal_label/persona_marketing/linkedin-post-<topic-slug>-<date>.md`
+- `personal_label/persona_marketing/x-thread-<topic-slug>-<date>.md`
+- `personal_label/persona_marketing/blog-<topic-slug>-<date>.md`
+
+**Hands off to:** itself — run again whenever you want another post in any format.
+
+---
+
 ## Intended Flow
 
 ```
@@ -260,6 +324,28 @@ outputs/
         *.html           ← user impact journey map slides
       slides/
         *.html           ← pitch decks and presentations
+
+personal_label/                  ← Personal Label track (parallel to memory/ + outputs/)
+  persona_memory/
+    persona-context.md           ← canonical persona profile (headline, bio, voice, audience, goals)
+    persona-brand.md             ← persona brand state (palette, fonts, logo paths)
+    decisions-log.md             ← every persona change, dated
+  persona_brand/
+    logo-monogram-*.svg
+    logo-wordmark-*.svg
+    logo-icon-*.svg
+    logo-mono-*.svg
+    brand-guidelines-*.html
+    ai-image-prompts-*.md        ← optional
+    icons/                       ← optional UI icon set
+    dark/  light/                ← mode variants when needed
+  persona_marketing/
+    <format-slug>-<topic-slug>-<timestamp>/   ← carousel posts (HTML + PDF per folder)
+      carousel-*.html
+      carousel-*.pdf
+    linkedin-post-<topic-slug>-*.md
+    x-thread-<topic-slug>-*.md
+    blog-<topic-slug>-*.md
 ```
 
 ---

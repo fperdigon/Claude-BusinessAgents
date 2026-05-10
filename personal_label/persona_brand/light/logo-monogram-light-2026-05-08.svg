@@ -1,0 +1,27 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="monogram-light-clip">
+      <rect x="0" y="0" width="200" height="200" rx="28"/>
+    </clipPath>
+  </defs>
+  <rect x="0" y="0" width="200" height="200" rx="28" fill="#f1f5f9"/>
+  <g clip-path="url(#monogram-light-clip)">
+    <!-- Ghosted attention arcs -->
+    <path d="M 52,60 Q 100,42 148,60" stroke="#0891b2" stroke-width="2" fill="none" opacity="0.12" stroke-linecap="round"/>
+    <path d="M 52,100 Q 100,82 148,100" stroke="#0891b2" stroke-width="2" fill="none" opacity="0.12" stroke-linecap="round"/>
+    <path d="M 52,140 Q 100,158 148,140" stroke="#0891b2" stroke-width="2" fill="none" opacity="0.12" stroke-linecap="round"/>
+    <path d="M 52,60 Q 100,48 148,100" stroke="#0891b2" stroke-width="1.5" fill="none" opacity="0.08" stroke-linecap="round"/>
+    <path d="M 52,100 Q 100,128 148,140" stroke="#0891b2" stroke-width="1.5" fill="none" opacity="0.08" stroke-linecap="round"/>
+    <!-- Ghosted nodes -->
+    <circle cx="52" cy="60" r="6" fill="#0891b2" opacity="0.12"/>
+    <circle cx="52" cy="100" r="6" fill="#0891b2" opacity="0.12"/>
+    <circle cx="52" cy="140" r="6" fill="#0891b2" opacity="0.12"/>
+    <circle cx="148" cy="60" r="6" fill="#0891b2" opacity="0.12"/>
+    <circle cx="148" cy="100" r="6" fill="#0891b2" opacity="0.12"/>
+    <circle cx="148" cy="140" r="6" fill="#0891b2" opacity="0.12"/>
+    <!-- FP initials -->
+    <text x="100" y="108" font-family="'Inter','Outfit',system-ui,-apple-system,sans-serif"
+          font-size="72" font-weight="700" fill="#0891b2"
+          text-anchor="middle" dominant-baseline="central" letter-spacing="-2">FP</text>
+  </g>
+</svg>

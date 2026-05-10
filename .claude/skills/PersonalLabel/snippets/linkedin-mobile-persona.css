@@ -1,0 +1,9 @@
+/* ── persona label: linkedin-mobile banner override ── */
+/* Overrides .slide-num and .brand-name from BusinessAgents linkedin-mobile.css  */
+/* so the full "05 / 08  Francisco Perdigon Romero" banner fits on one line.     */
+/* Append this block AFTER the BusinessAgents linkedin-mobile.css content        */
+/* when assembling carousel HTML for the persona_marketing linkedin-mobile format. */
+
+.slide-num  { font-size: 1.75rem; font-weight: 700; letter-spacing: 0.06em; color: var(--accent); white-space: nowrap; }
+.brand-name { font-size: 1.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+/* ── end persona label banner override ── */
