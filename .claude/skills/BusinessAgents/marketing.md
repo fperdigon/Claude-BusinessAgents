@@ -343,6 +343,18 @@ Wait for the correction sub-agent's response. For each corrected slide in the re
 
 **If the correction sub-agent fails or returns invalid JSON:** discard all corrections and proceed with the unmodified `<carousel-content>` without blocking.
 
+### 4c. Fact-Check Dispatch
+> 🔀 **Model: Sonnet sub-agent** — dispatch via `/BusinessAgents:fact-checker`
+
+Invoke the fact-checker skill with:
+- `<carousel-content>` — the current (post-drift-correction) JSON
+- `<post-title>` — from Q2
+- `<source-files>` — full text of: `memory/startup-context.md`, operative ICP file (`<operative-icp-path>`), and any validation or simulation report read in step 3c (pass the text, not the paths)
+- `<is-persona>` = false
+- `<is-mobile>` = true if `<format-slug>` = `linkedin-mobile`, otherwise false
+
+Wait for the fact-checker to return the corrected `<carousel-content>` and print the audit report inline. Proceed to HTML assembly with the corrected `<carousel-content>`.
+
 ---
 
 ## 5. HTML Assembly
